@@ -1,0 +1,34 @@
+feature:
+  name: "sales"
+  description: "Core sales flow management including accounts, products, sales orders, and line items."
+  exists_reason: "Provides REST endpoints for CRM and order processing flows required by the application."
+  criticality: "HIGH"
+  
+  business_logic:
+    core_rules:
+      - "Active sales orders are retrieved excluding soft-deleted ones."
+      - "Accounts and Products are validated against database records during Sales Order creation."
+      - "Line items automatically inherit default purchase rates from product catalog details if not explicitly provided."
+      - "Updating a Sales Order will sync the related line items."
+      
+  dependencies:
+    database:
+      type: "PostgreSQL / AlloyDB Omni"
+      schema: "blute"
+      tables:
+        - "accounts"
+        - "products"
+        - "sales_order"
+        - "map_sales_order_products"
+        
+  architecture_decisions:
+    pattern: "Feature-First Vertical Slice Package Structure"
+    orm: "JPA / Hibernate"
+    data_access:
+      account: "AccountRepository (JPA)"
+      product: "ProductRepository (JPA)"
+      sales_order: "SalesOrderRepository (JPA)"
+    handler:
+      protocol: "REST HTTP"
+      path: "/api/v1/sales-orders"
+      class: "SalesOrderController"
