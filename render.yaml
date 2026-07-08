@@ -6,10 +6,18 @@ services:
     plan: free
     healthCheckPath: /actuator/health
     envVars:
-      - key: SPRING_DATASOURCE_URL
+      - key: DB_HOST
         fromDatabase:
           name: procureiq-db
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: procureiq-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: procureiq-db
+          property: database
       - key: SPRING_DATASOURCE_USERNAME
         fromDatabase:
           name: procureiq-db
