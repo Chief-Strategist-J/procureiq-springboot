@@ -4,222 +4,135 @@ info:
   description: API for managing CRM Sales Orders, Products, and Accounts in ProcureIQ.
   version: 1.0.0
 paths:
-  /api/v1/sales-orders:
-    get:
-      summary: Retrieve all active sales orders
-      responses:
-        '200':
-          description: A list of sales orders.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SalesOrder'
+  /api/v1/auth/signup:
     post:
-      summary: Create a new sales order
+      summary: Register a new user
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesOrder'
+              $ref: '#/components/schemas/SignupRequest'
       responses:
         '201':
-          description: Created sales order.
+          description: User registered successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SalesOrder'
+                $ref: '#/components/schemas/UserResponse'
         '400':
-          description: Invalid input
+          description: Username or email already exists / invalid input
 
-  /api/v1/sales-orders/{id}:
-    get:
-      summary: Get a sales order by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Detailed sales order info.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SalesOrder'
-        '404':
-          description: Sales order not found
-    put:
-      summary: Update a sales order
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+  /api/v1/auth/login:
+    post:
+      summary: Authenticate user and retrieve JWT token
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SalesOrder'
+              $ref: '#/components/schemas/LoginRequest'
       responses:
         '200':
-          description: Updated sales order details.
+          description: Successful authentication
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SalesOrder'
-        '404':
-          description: Sales order not found
-    delete:
-      summary: Soft-delete a sales order
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials
+
+  /api/v1/auth/forgot-password:
+    post:
+      summary: Request a password reset link/token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
       responses:
-        '204':
-          description: Sales order soft-deleted successfully
-        '404':
-          description: Sales order not found
+        '200':
+          description: If the email matches an account, a reset email will be sent
+        '400':
+          description: Invalid email format
+
+  /api/v1/auth/reset-password:
+    post:
+      summary: Reset password using token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Password reset successfully
+        '400':
+          description: Invalid or expired reset token / validation failure
 
 components:
   schemas:
-    SalesOrder:
-      type: OBJECT
+    ForgotPasswordRequest:
+      type: object
       required:
-        - deliveryDate
-        - salesOrderDate
-        - account
+        - email
       properties:
-        id:
-          type: integer
-        amdNo:
-          type: integer
-        assignAll:
-          type: boolean
-        deliveryDate:
+        email:
           type: string
-          format: date
-        description:
+
+    ResetPasswordRequest:
+      type: object
+      required:
+        - token
+        - newPassword
+      properties:
+        token:
           type: string
-        entryDateTime:
+        newPassword:
           type: string
-          format: date-time
-        idVal:
-          type: integer
-        isActive:
-          type: boolean
-        isDeleted:
-          type: boolean
-        payMode:
-          type: string
-        poNumber:
-          type: string
-        poDate:
-          type: string
-          format: date
-        salesOrderDate:
-          type: string
-          format: date
-        updateEntryDateTime:
-          type: string
-          format: date-time
+
+    SignupRequest:
+      type: object
+      required:
+        - username
+        - password
+        - email
+      properties:
         username:
           type: string
-        updateUsername:
-          type: string
-        account:
-          $ref: '#/components/schemas/Account'
-        orderProducts:
-          type: array
-          items:
-            $ref: '#/components/schemas/SalesOrderProduct'
-
-    Account:
-      type: OBJECT
-      required:
-        - id
-        - accountName
-        - displayName
-      properties:
-        id:
-          type: integer
-        accountCode:
-          type: string
-        accountName:
-          type: string
-        displayName:
+        password:
           type: string
         email:
           type: string
-        phone:
-          type: string
-        description:
-          type: string
-        isActive:
-          type: boolean
-        isDeleted:
-          type: boolean
 
-    SalesOrderProduct:
-      type: OBJECT
-      required:
-        - product
-        - qty
-        - ratePerQty
-        - taxPer
+    UserResponse:
+      type: object
       properties:
         id:
           type: integer
-        salesOrderId:
-          type: integer
-        product:
-          $ref: '#/components/schemas/Product'
-        qty:
-          type: number
-        ratePerQty:
-          type: number
-        purchaseRatePerQty:
-          type: number
-        taxPer:
-          type: number
-        discountValue:
-          type: number
-        discountValueType:
+        username:
           type: string
-        productInfo:
+        email:
           type: string
-        isRemove:
-          type: boolean
 
-    Product:
-      type: OBJECT
+    LoginRequest:
+      type: object
       required:
-        - id
-        - productName
+        - username
+        - password
       properties:
-        id:
-          type: integer
-        productName:
+        username:
           type: string
-        description:
+        password:
           type: string
-        hsnCode:
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
           type: string
-        mfrPartNo:
-          type: string
-        purchaseCost:
-          type: number
-        unitRate:
-          type: number
-        isActive:
-          type: boolean
-        isDeleted:
-          type: boolean
+        user:
+          $ref: '#/components/schemas/UserResponse'
+
