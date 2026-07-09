@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
   title: ProcureIQ Sales API
-  description: API for managing CRM Sales Orders, Products, and Accounts in ProcureIQ.
-  version: 1.0.0
+  description: API for managing CRM Sales Orders, Products, Accounts, and Notifications in ProcureIQ.
+  version: 1.1.0
 paths:
   /api/v1/auth/signup:
     post:
@@ -72,6 +72,91 @@ paths:
         '400':
           description: Invalid or expired reset token / validation failure
 
+  /api/v1/notifications:
+    get:
+      summary: Retrieve paginated notifications feed for the authenticated user
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [all, pending, read, dismissed, failed]
+            default: all
+      responses:
+        '200':
+          description: A paginated list of notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationListResponse'
+    post:
+      summary: Trigger / send a new notification (producer invocation)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendNotificationRequest'
+      responses:
+        '202':
+          description: Notification accepted for delivery
+
+  /api/v1/notifications/{id}/status:
+    put:
+      summary: Update status of a notification for the recipient
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateNotificationStatusRequest'
+      responses:
+        '200':
+          description: Status updated successfully
+
+  /api/v1/notifications/unread-count:
+    get:
+      summary: Retrieve the combined count of unread targeted and broadcast notifications
+      responses:
+        '200':
+          description: Combined unread count response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnreadCountResponse'
+
+  /api/v1/notifications/devices:
+    post:
+      summary: Register or update a user device for push notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDeviceRequest'
+      responses:
+        '200':
+          description: Device registered successfully
+
 components:
   schemas:
     ForgotPasswordRequest:
@@ -136,3 +221,102 @@ components:
         user:
           $ref: '#/components/schemas/UserResponse'
 
+    NotificationResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        typeCode:
+          type: string
+        sourceService:
+          type: string
+        payload:
+          type: object
+        metadata:
+          type: object
+        priority:
+          type: integer
+        targetScope:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    NotificationListResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationResponse'
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+
+    SendNotificationRequest:
+      type: object
+      required:
+        - typeCode
+        - sourceService
+        - targetScope
+        - payload
+      properties:
+        typeCode:
+          type: string
+        sourceService:
+          type: string
+        targetScope:
+          type: string
+          enum: [user, org, broadcast, segment]
+        targetId:
+          type: integer
+        dedupKey:
+          type: string
+        payload:
+          type: object
+        metadata:
+          type: object
+        priority:
+          type: integer
+        scheduledFor:
+          type: string
+          format: date-time
+
+    UpdateNotificationStatusRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [read, dismissed]
+
+    UnreadCountResponse:
+      type: object
+      properties:
+        unreadCount:
+          type: integer
+
+    RegisterDeviceRequest:
+      type: object
+      required:
+        - platform
+      properties:
+        platform:
+          type: string
+          enum: [web, ios, android]
+        pushToken:
+          type: string
+        webPushEndpoint:
+          type: object
+        appVersion:
+          type: string
+        osVersion:
+          type: string
+        capabilities:
+          type: object
