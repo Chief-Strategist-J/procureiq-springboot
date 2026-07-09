@@ -45,7 +45,7 @@ public class NotificationService {
         this.deliveryRepository = deliveryRepository;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public NotificationListResponse getNotifications(Long userId, String status, int page, int size) {
         if (userId == null || userId <= 0) {
             return new NotificationListResponse(Collections.emptyList(), page, size, 0);
@@ -98,7 +98,7 @@ public class NotificationService {
         return new NotificationListResponse(mergedList, page, size, totalElements);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public UnreadCountResponse getUnreadCount(Long userId) {
         if (userId == null || userId <= 0) {
             return new UnreadCountResponse(0);
