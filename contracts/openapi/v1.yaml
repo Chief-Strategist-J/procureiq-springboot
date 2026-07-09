@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: ProcureIQ Sales API
   description: API for managing CRM Sales Orders, Products, Accounts, and Notifications in ProcureIQ.
-  version: 1.1.0
+  version: 1.2.0
 paths:
   /api/v1/auth/signup:
     post:
@@ -19,9 +19,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserResponse'
+                $ref: '#/components/schemas/ApiResponseUserResponse'
         '400':
           description: Username or email already exists / invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseErrorOnly'
 
   /api/v1/auth/login:
     post:
@@ -38,9 +42,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
+                $ref: '#/components/schemas/ApiResponseLoginResponse'
         '401':
           description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseErrorOnly'
 
   /api/v1/auth/forgot-password:
     post:
@@ -53,9 +61,17 @@ paths:
               $ref: '#/components/schemas/ForgotPasswordRequest'
       responses:
         '200':
-          description: If the email matches an account, a reset email will be sent
+          description: If the email matches an account, a reset token is generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseString'
         '400':
           description: Invalid email format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseErrorOnly'
 
   /api/v1/auth/reset-password:
     post:
@@ -69,8 +85,16 @@ paths:
       responses:
         '200':
           description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseString'
         '400':
           description: Invalid or expired reset token / validation failure
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseErrorOnly'
 
   /api/v1/notifications:
     get:
@@ -101,7 +125,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NotificationListResponse'
+                $ref: '#/components/schemas/ApiResponseNotificationListResponse'
     post:
       summary: Trigger / send a new notification (producer invocation)
       requestBody:
@@ -113,6 +137,10 @@ paths:
       responses:
         '202':
           description: Notification accepted for delivery
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseString'
 
   /api/v1/notifications/{id}/status:
     put:
@@ -132,6 +160,10 @@ paths:
       responses:
         '200':
           description: Status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseString'
 
   /api/v1/notifications/unread-count:
     get:
@@ -142,7 +174,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UnreadCountResponse'
+                $ref: '#/components/schemas/ApiResponseUnreadCountResponse'
 
   /api/v1/notifications/devices:
     post:
@@ -156,9 +188,110 @@ paths:
       responses:
         '200':
           description: Device registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseString'
 
 components:
   schemas:
+    ApiError:
+      type: object
+      properties:
+        message:
+          type: string
+
+    ApiResponseErrorOnly:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        code:
+          type: integer
+          example: 400
+        data:
+          type: object
+          nullable: true
+          example: null
+        error:
+          $ref: '#/components/schemas/ApiError'
+
+    ApiResponseString:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 200
+        data:
+          type: string
+        error:
+          $ref: '#/components/schemas/ApiError'
+          nullable: true
+
+    ApiResponseUserResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 201
+        data:
+          $ref: '#/components/schemas/UserResponse'
+        error:
+          $ref: '#/components/schemas/ApiError'
+          nullable: true
+
+    ApiResponseLoginResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/LoginResponse'
+        error:
+          $ref: '#/components/schemas/ApiError'
+          nullable: true
+
+    ApiResponseNotificationListResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/NotificationListResponse'
+        error:
+          $ref: '#/components/schemas/ApiError'
+          nullable: true
+
+    ApiResponseUnreadCountResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/UnreadCountResponse'
+        error:
+          $ref: '#/components/schemas/ApiError'
+          nullable: true
+
     ForgotPasswordRequest:
       type: object
       required:
