@@ -2,6 +2,7 @@ package com.procureiq.springboot_app.api.rest.v1.handlers;
 
 import com.procureiq.springboot_app.features.notifications.dto.*;
 import com.procureiq.springboot_app.features.notifications.service.NotificationService;
+import com.procureiq.springboot_app.shared.types.ApiResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -33,10 +34,10 @@ public class NotificationController {
         try (Scope scope = span.makeCurrent()) {
             NotificationListResponse response = notificationService.getNotifications(userId, status, page, size);
             span.setStatus(StatusCode.OK);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(ApiResponse.success(200, response));
         } catch (Exception e) {
             span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
         } finally {
             span.end();
         }
@@ -48,10 +49,10 @@ public class NotificationController {
         try (Scope scope = span.makeCurrent()) {
             notificationService.sendNotification(request);
             span.setStatus(StatusCode.OK);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.success(202, "Notification accepted for delivery"));
         } catch (Exception e) {
             span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
         } finally {
             span.end();
         }
@@ -66,10 +67,10 @@ public class NotificationController {
         try (Scope scope = span.makeCurrent()) {
             notificationService.updateStatus(userId, id, request.status());
             span.setStatus(StatusCode.OK);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(ApiResponse.success(200, "Status updated successfully"));
         } catch (Exception e) {
             span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
         } finally {
             span.end();
         }
@@ -82,10 +83,10 @@ public class NotificationController {
         try (Scope scope = span.makeCurrent()) {
             UnreadCountResponse response = notificationService.getUnreadCount(userId);
             span.setStatus(StatusCode.OK);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(ApiResponse.success(200, response));
         } catch (Exception e) {
             span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
         } finally {
             span.end();
         }
@@ -99,10 +100,10 @@ public class NotificationController {
         try (Scope scope = span.makeCurrent()) {
             notificationService.registerDevice(userId, request);
             span.setStatus(StatusCode.OK);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok(ApiResponse.success(200, "Device registered successfully"));
         } catch (Exception e) {
             span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
         } finally {
             span.end();
         }

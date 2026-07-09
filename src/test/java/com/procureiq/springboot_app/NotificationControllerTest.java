@@ -101,17 +101,17 @@ public class NotificationControllerTest {
                 .header("X-User-Id", "100")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(1)))
-                .andExpect(jsonPath("$.content[0].typeCode", is("system_alert")))
-                .andExpect(jsonPath("$.content[0].sourceService", is("test-service")))
-                .andExpect(jsonPath("$.content[0].status", is("pending")));
+                .andExpect(jsonPath("$.data.content", hasSize(1)))
+                .andExpect(jsonPath("$.data.content[0].typeCode", is("system_alert")))
+                .andExpect(jsonPath("$.data.content[0].sourceService", is("test-service")))
+                .andExpect(jsonPath("$.data.content[0].status", is("pending")));
 
         // 3. Verify unread count
         mockMvc.perform(get("/api/v1/notifications/unread-count")
                 .header("X-User-Id", "100")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.unreadCount", is(1)));
+                .andExpect(jsonPath("$.data.unreadCount", is(1)));
     }
 
     @Test
@@ -161,7 +161,7 @@ public class NotificationControllerTest {
                 .header("X-User-Id", "200")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.unreadCount", is(0)));
+                .andExpect(jsonPath("$.data.unreadCount", is(0)));
     }
 
     @Test
@@ -239,13 +239,13 @@ public class NotificationControllerTest {
                 .header("X-User-Id", "500")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(0)));
+                .andExpect(jsonPath("$.data.content", hasSize(0)));
 
         // 3. Verify unread count is 0
         mockMvc.perform(get("/api/v1/notifications/unread-count")
                 .header("X-User-Id", "500")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.unreadCount", is(0)));
+                .andExpect(jsonPath("$.data.unreadCount", is(0)));
     }
 }
