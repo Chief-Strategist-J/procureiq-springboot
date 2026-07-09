@@ -2,6 +2,7 @@ package com.procureiq.springboot_app.api.rest.v1.handlers;
 
 import com.procureiq.springboot_app.features.auth.dto.*;
 import com.procureiq.springboot_app.features.auth.service.AuthService;
+import com.procureiq.springboot_app.shared.types.ApiResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,10 +30,10 @@ public class AuthController {
         try (Scope scope = span.makeCurrent()) {
             UserResponse response = authService.signup(request);
             span.setStatus(StatusCode.OK);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
         } catch (IllegalArgumentException e) {
             span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
         } finally {
             span.end();
         }
@@ -44,10 +45,10 @@ public class AuthController {
         try (Scope scope = span.makeCurrent()) {
             LoginResponse response = authService.login(request);
             span.setStatus(StatusCode.OK);
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(ApiResponse.success(200, response));
         } catch (IllegalArgumentException e) {
             span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error(401, e.getMessage()));
         } finally {
             span.end();
         }
@@ -59,10 +60,10 @@ public class AuthController {
         try (Scope scope = span.makeCurrent()) {
             authService.forgotPassword(request);
             span.setStatus(StatusCode.OK);
-            return ResponseEntity.ok("If the email matches an active account, a reset token has been generated.");
+            return ResponseEntity.ok(ApiResponse.success(200, "If the email matches an active account, a reset token has been generated."));
         } catch (Exception e) {
             span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
         } finally {
             span.end();
         }
@@ -74,10 +75,10 @@ public class AuthController {
         try (Scope scope = span.makeCurrent()) {
             authService.resetPassword(request);
             span.setStatus(StatusCode.OK);
-            return ResponseEntity.ok("Password has been reset successfully.");
+            return ResponseEntity.ok(ApiResponse.success(200, "Password has been reset successfully."));
         } catch (IllegalArgumentException e) {
             span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
         } finally {
             span.end();
         }

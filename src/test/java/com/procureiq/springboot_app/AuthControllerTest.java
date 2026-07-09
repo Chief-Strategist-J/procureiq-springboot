@@ -46,9 +46,9 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", notNullValue()))
-                .andExpect(jsonPath("$.username", is("devuser")))
-                .andExpect(jsonPath("$.email", is("dev@example.com")));
+                .andExpect(jsonPath("$.data.id", notNullValue()))
+                .andExpect(jsonPath("$.data.username", is("devuser")))
+                .andExpect(jsonPath("$.data.email", is("dev@example.com")));
     }
 
     @Test
@@ -79,8 +79,8 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(login)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token", notNullValue()))
-                .andExpect(jsonPath("$.user.username", is("loginuser")));
+                .andExpect(jsonPath("$.data.token", notNullValue()))
+                .andExpect(jsonPath("$.data.user.username", is("loginuser")));
     }
 
     @Test

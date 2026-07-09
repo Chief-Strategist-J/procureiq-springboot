@@ -58,6 +58,7 @@ public class NotificationControllerTest {
         deviceRepository.deleteAll();
         channelDeliveryRepository.deleteAll();
         typeRepository.deleteAll();
+        typeRepository.flush();
 
         // Seed a notification type
         NotificationType type = new NotificationType();
