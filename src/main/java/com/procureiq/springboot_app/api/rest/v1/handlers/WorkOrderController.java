@@ -12,6 +12,7 @@ import io.opentelemetry.context.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/fieldservice/work-orders")
@@ -23,6 +24,21 @@ public class WorkOrderController {
 
     public WorkOrderController(WorkOrderService workOrderService) {
         this.workOrderService = workOrderService;
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllWorkOrders() {
+        Span span = tracer.spanBuilder("REST.getAllWorkOrders").startSpan();
+        try (Scope scope = span.makeCurrent()) {
+            List<WorkOrderResponse> response = workOrderService.getAllWorkOrders();
+            span.setStatus(StatusCode.OK);
+            return ResponseEntity.ok(ApiResponse.success(200, response));
+        } catch (Exception e) {
+            span.setStatus(StatusCode.ERROR, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
+        } finally {
+            span.end();
+        }
     }
 
     @PostMapping

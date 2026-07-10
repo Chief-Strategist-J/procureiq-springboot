@@ -193,6 +193,70 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponseString'
 
+  /api/v1/reminders:
+    get:
+      summary: Retrieve all reminders
+      responses:
+        '200':
+          description: Reminders list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseReminderList'
+    post:
+      summary: Create new reminder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reminder'
+      responses:
+        '201':
+          description: Reminder created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseReminder'
+
+  /api/v1/reminders/{id}:
+    put:
+      summary: Update reminder details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reminder'
+      responses:
+        '200':
+          description: Reminder updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseReminder'
+    delete:
+      summary: Delete reminder
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Reminder deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseString'
+
   /api/v1/fieldservice/operating-hours:
     post:
       summary: Create operating hours
@@ -474,6 +538,15 @@ paths:
                 $ref: '#/components/schemas/ApiResponseString'
 
   /api/v1/fieldservice/work-orders:
+    get:
+      summary: Retrieve all work orders
+      responses:
+        '200':
+          description: Work orders list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseWorkOrderResponseList'
     post:
       summary: Create work order
       requestBody:
@@ -3050,6 +3123,85 @@ components:
           example: 201
         data:
           $ref: '#/components/schemas/CaseMilestoneResponse'
+        error:
+          $ref: '#/components/schemas/ApiError'
+          nullable: true
+
+    ApiResponseWorkOrderResponseList:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkOrderResponse'
+        error:
+          $ref: '#/components/schemas/ApiError'
+          nullable: true
+
+    Reminder:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        dueAt:
+          type: string
+          format: date-time
+        recurrence:
+          type: string
+        priority:
+          type: string
+        contactPreference:
+          type: string
+        assigneeName:
+          type: string
+        assigneeContact:
+          type: string
+        status:
+          type: string
+        snoozeCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    ApiResponseReminder:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/Reminder'
+        error:
+          $ref: '#/components/schemas/ApiError'
+          nullable: true
+
+    ApiResponseReminderList:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Reminder'
         error:
           $ref: '#/components/schemas/ApiError'
           nullable: true

@@ -8,3 +8,8 @@
 ### Added
 - Added notification endpoints (`GET /api/v1/notifications`, `POST /api/v1/notifications`, `PUT /api/v1/notifications/{id}/status`, `GET /api/v1/notifications/unread-count`, and `POST /api/v1/notifications/devices`) to v1.yaml.
 
+## [1.2.0] - 2026-07-10
+### Added
+- Added API endpoints for reminders (`GET /api/v1/reminders`, `POST /api/v1/reminders`, `PUT /api/v1/reminders/{id}`, and `DELETE /api/v1/reminders/{id}`).
+- Added list endpoint for field service work orders (`GET /api/v1/fieldservice/work-orders`).
+

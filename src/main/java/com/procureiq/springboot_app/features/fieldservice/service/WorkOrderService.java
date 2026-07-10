@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class WorkOrderService {
 
@@ -38,6 +40,31 @@ public class WorkOrderService {
     private final Tracer tracer = GlobalOpenTelemetry.getTracer("springboot-app", "1.0.0");
 
     public WorkOrderService() {}
+
+    @Transactional(readOnly = true)
+    public List<WorkOrderResponse> getAllWorkOrders() {
+        Span span = tracer.spanBuilder("WorkOrderService.getAllWorkOrders").startSpan();
+        try {
+            return workOrderRepository.findAll().stream()
+                    .map(wo -> new WorkOrderResponse(
+                            wo.getId(),
+                            wo.getParentWorkOrder() != null ? wo.getParentWorkOrder().getId() : null,
+                            wo.getCaseEntity() != null ? wo.getCaseEntity().getId() : null,
+                            wo.getAccount().getId(),
+                            wo.getEntitlement() != null ? wo.getEntitlement().getId() : null,
+                            wo.getContact() != null ? wo.getContact().getId() : null,
+                            wo.getAsset() != null ? wo.getAsset().getId() : null,
+                            wo.getWorkType() != null ? wo.getWorkType().getId() : null,
+                            wo.getPriceBook() != null ? wo.getPriceBook().getId() : null,
+                            wo.getStatus(),
+                            wo.getPriority(),
+                            wo.getCreatedAt()
+                    ))
+                    .toList();
+        } finally {
+            span.end();
+        }
+    }
 
     @Transactional
     public WorkOrderResponse createWorkOrder(WorkOrderRequest request) {
