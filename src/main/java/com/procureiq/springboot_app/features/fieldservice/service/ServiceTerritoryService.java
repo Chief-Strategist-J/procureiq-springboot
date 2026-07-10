@@ -25,6 +25,24 @@ public class ServiceTerritoryService {
         this.operatingHoursRepository = operatingHoursRepository;
     }
 
+    @Transactional(readOnly = true)
+    public java.util.List<ServiceTerritoryResponse> getAllServiceTerritories() {
+        Span span = tracer.spanBuilder("ServiceTerritoryService.getAllServiceTerritories").startSpan();
+        try {
+            return serviceTerritoryRepository.findAll().stream()
+                    .map(st -> new ServiceTerritoryResponse(
+                            st.getId(),
+                            st.getName(),
+                            st.getParentTerritory() != null ? st.getParentTerritory().getId() : null,
+                            st.getOperatingHours() != null ? st.getOperatingHours().getId() : null,
+                            st.getIsActive()
+                    ))
+                    .collect(java.util.stream.Collectors.toList());
+        } finally {
+            span.end();
+        }
+    }
+
     @Transactional
     public ServiceTerritoryResponse createServiceTerritory(ServiceTerritoryRequest request) {
         Span span = tracer.spanBuilder("ServiceTerritoryService.createServiceTerritory").startSpan();

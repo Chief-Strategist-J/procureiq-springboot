@@ -256,8 +256,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseString'
-
   /api/v1/fieldservice/operating-hours:
+    get:
+      summary: Retrieve all operating hours
+      responses:
+        '200':
+          description: Operating hours list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseOperatingHoursResponseList'
     post:
       summary: Create operating hours
       requestBody:
@@ -328,6 +336,15 @@ paths:
                 $ref: '#/components/schemas/ApiResponseString'
 
   /api/v1/fieldservice/territories:
+    get:
+      summary: Retrieve all service territories
+      responses:
+        '200':
+          description: Service territories list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseServiceTerritoryResponseList'
     post:
       summary: Create service territory
       requestBody:
@@ -398,6 +415,15 @@ paths:
                 $ref: '#/components/schemas/ApiResponseString'
 
   /api/v1/fieldservice/resources:
+    get:
+      summary: Retrieve all service resources
+      responses:
+        '200':
+          description: Service resources list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseServiceResourceResponseList'
     post:
       summary: Create service resource
       requestBody:
@@ -617,6 +643,15 @@ paths:
                 $ref: '#/components/schemas/ApiResponseString'
 
   /api/v1/fieldservice/appointments:
+    get:
+      summary: Retrieve all service appointments
+      responses:
+        '200':
+          description: Service appointments list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseServiceAppointmentResponseList'
     post:
       summary: Create service appointment
       requestBody:

@@ -31,6 +31,25 @@ public class ServiceResourceService {
         this.serviceCrewRepository = serviceCrewRepository;
     }
 
+    @Transactional(readOnly = true)
+    public List<ServiceResourceResponse> getAllServiceResources() {
+        Span span = tracer.spanBuilder("ServiceResourceService.getAllServiceResources").startSpan();
+        try {
+            return serviceResourceRepository.findAll().stream()
+                    .map(sr -> new ServiceResourceResponse(
+                            sr.getId(),
+                            sr.getName(),
+                            sr.getUser() != null ? sr.getUser().getId() : null,
+                            sr.getServiceCrew() != null ? sr.getServiceCrew().getId() : null,
+                            sr.getResourceType(),
+                            sr.getIsActive()
+                    ))
+                    .collect(Collectors.toList());
+        } finally {
+            span.end();
+        }
+    }
+
     @Transactional
     public ServiceResourceResponse createServiceResource(ServiceResourceRequest request) {
         Span span = tracer.spanBuilder("ServiceResourceService.createServiceResource").startSpan();

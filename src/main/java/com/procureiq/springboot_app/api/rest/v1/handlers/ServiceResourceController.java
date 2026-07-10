@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/fieldservice/resources")
 @CrossOrigin(origins = "*")
@@ -23,6 +25,21 @@ public class ServiceResourceController {
 
     public ServiceResourceController(ServiceResourceService serviceResourceService) {
         this.serviceResourceService = serviceResourceService;
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllServiceResources() {
+        Span span = tracer.spanBuilder("REST.getAllServiceResources").startSpan();
+        try (Scope scope = span.makeCurrent()) {
+            List<ServiceResourceResponse> response = serviceResourceService.getAllServiceResources();
+            span.setStatus(StatusCode.OK);
+            return ResponseEntity.ok(ApiResponse.success(200, response));
+        } catch (Exception e) {
+            span.setStatus(StatusCode.ERROR, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
+        } finally {
+            span.end();
+        }
     }
 
     @PostMapping

@@ -25,6 +25,21 @@ public class ServiceTerritoryController {
         this.serviceTerritoryService = serviceTerritoryService;
     }
 
+    @GetMapping
+    public ResponseEntity<?> getAllServiceTerritories() {
+        Span span = tracer.spanBuilder("REST.getAllServiceTerritories").startSpan();
+        try (Scope scope = span.makeCurrent()) {
+            java.util.List<ServiceTerritoryResponse> response = serviceTerritoryService.getAllServiceTerritories();
+            span.setStatus(StatusCode.OK);
+            return ResponseEntity.ok(ApiResponse.success(200, response));
+        } catch (Exception e) {
+            span.setStatus(StatusCode.ERROR, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
+        } finally {
+            span.end();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> createServiceTerritory(@RequestBody ServiceTerritoryRequest request) {
         Span span = tracer.spanBuilder("REST.createServiceTerritory").startSpan();

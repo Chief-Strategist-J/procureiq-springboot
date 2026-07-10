@@ -20,6 +20,18 @@ public class OperatingHoursService {
         this.operatingHoursRepository = operatingHoursRepository;
     }
 
+    @Transactional(readOnly = true)
+    public java.util.List<OperatingHoursResponse> getAllOperatingHours() {
+        Span span = tracer.spanBuilder("OperatingHoursService.getAllOperatingHours").startSpan();
+        try {
+            return operatingHoursRepository.findAll().stream()
+                    .map(oh -> new OperatingHoursResponse(oh.getId(), oh.getName(), oh.getTimezone()))
+                    .collect(java.util.stream.Collectors.toList());
+        } finally {
+            span.end();
+        }
+    }
+
     @Transactional
     public OperatingHoursResponse createOperatingHours(OperatingHoursRequest request) {
         Span span = tracer.spanBuilder("OperatingHoursService.createOperatingHours").startSpan();

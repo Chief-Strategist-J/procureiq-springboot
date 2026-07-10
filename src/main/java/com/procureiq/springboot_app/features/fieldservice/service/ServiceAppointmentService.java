@@ -35,6 +35,34 @@ public class ServiceAppointmentService {
 
     public ServiceAppointmentService() {}
 
+    @Transactional(readOnly = true)
+    public java.util.List<ServiceAppointmentResponse> getAllServiceAppointments() {
+        Span span = tracer.spanBuilder("ServiceAppointmentService.getAllServiceAppointments").startSpan();
+        try {
+            return serviceAppointmentRepository.findAll().stream()
+                    .map(sa -> new ServiceAppointmentResponse(
+                            sa.getId(),
+                            sa.getParentRecordType(),
+                            sa.getParentRecordId(),
+                            sa.getAccount() != null ? sa.getAccount().getId() : null,
+                            sa.getContact() != null ? sa.getContact().getId() : null,
+                            sa.getServiceTerritory() != null ? sa.getServiceTerritory().getId() : null,
+                            sa.getWorkType() != null ? sa.getWorkType().getId() : null,
+                            sa.getStatus(),
+                            sa.getScheduledStart(),
+                            sa.getScheduledEnd(),
+                            sa.getArrivalWindowStart(),
+                            sa.getArrivalWindowEnd(),
+                            sa.getDurationMinutes(),
+                            sa.getAddress(),
+                            sa.getCreatedAt()
+                    ))
+                    .collect(java.util.stream.Collectors.toList());
+        } finally {
+            span.end();
+        }
+    }
+
     @Transactional
     public ServiceAppointmentResponse createServiceAppointment(ServiceAppointmentRequest request) {
         Span span = tracer.spanBuilder("ServiceAppointmentService.createServiceAppointment").startSpan();

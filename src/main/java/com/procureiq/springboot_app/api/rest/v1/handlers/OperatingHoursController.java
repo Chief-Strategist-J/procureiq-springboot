@@ -15,14 +15,27 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/fieldservice/operating-hours")
-@CrossOrigin(origins = "*")
 public class OperatingHoursController {
-
     private final OperatingHoursService operatingHoursService;
     private final Tracer tracer = GlobalOpenTelemetry.getTracer("springboot-app", "1.0.0");
 
     public OperatingHoursController(OperatingHoursService operatingHoursService) {
         this.operatingHoursService = operatingHoursService;
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllOperatingHours() {
+        Span span = tracer.spanBuilder("REST.getAllOperatingHours").startSpan();
+        try (Scope scope = span.makeCurrent()) {
+            java.util.List<OperatingHoursResponse> response = operatingHoursService.getAllOperatingHours();
+            span.setStatus(StatusCode.OK);
+            return ResponseEntity.ok(ApiResponse.success(200, response));
+        } catch (Exception e) {
+            span.setStatus(StatusCode.ERROR, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
+        } finally {
+            span.end();
+        }
     }
 
     @PostMapping

@@ -30,6 +30,21 @@ public class ServiceAppointmentController {
         this.serviceResourceService = serviceResourceService;
     }
 
+    @GetMapping("/appointments")
+    public ResponseEntity<?> getAllServiceAppointments() {
+        Span span = tracer.spanBuilder("REST.getAllServiceAppointments").startSpan();
+        try (Scope scope = span.makeCurrent()) {
+            List<ServiceAppointmentResponse> response = serviceAppointmentService.getAllServiceAppointments();
+            span.setStatus(StatusCode.OK);
+            return ResponseEntity.ok(ApiResponse.success(200, response));
+        } catch (Exception e) {
+            span.setStatus(StatusCode.ERROR, e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
+        } finally {
+            span.end();
+        }
+    }
+
     @PostMapping("/appointments")
     public ResponseEntity<?> createServiceAppointment(@RequestBody ServiceAppointmentRequest request) {
         Span span = tracer.spanBuilder("REST.createServiceAppointment").startSpan();
