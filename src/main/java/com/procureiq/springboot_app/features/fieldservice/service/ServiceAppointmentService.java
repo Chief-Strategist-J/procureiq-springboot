@@ -1,0 +1,234 @@
+package com.procureiq.springboot_app.features.fieldservice.service;
+
+import com.procureiq.springboot_app.features.fieldservice.dto.*;
+import com.procureiq.springboot_app.features.fieldservice.entity.AssignedResource;
+import com.procureiq.springboot_app.features.fieldservice.entity.ServiceAppointment;
+import com.procureiq.springboot_app.features.fieldservice.repository.*;
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+public class ServiceAppointmentService {
+
+    @Autowired
+    private ServiceAppointmentRepository serviceAppointmentRepository;
+    @Autowired
+    private ServiceResourceRepository serviceResourceRepository;
+    @Autowired
+    private AssignedResourceRepository assignedResourceRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private ContactRepository contactRepository;
+    @Autowired
+    private ServiceTerritoryRepository serviceTerritoryRepository;
+    @Autowired
+    private WorkTypeRepository workTypeRepository;
+    @Autowired
+    private ServiceCrewRepository serviceCrewRepository;
+
+    private final Tracer tracer = GlobalOpenTelemetry.getTracer("springboot-app", "1.0.0");
+
+    public ServiceAppointmentService() {}
+
+    @Transactional
+    public ServiceAppointmentResponse createServiceAppointment(ServiceAppointmentRequest request) {
+        Span span = tracer.spanBuilder("ServiceAppointmentService.createServiceAppointment").startSpan();
+        try {
+            ServiceAppointment sa = new ServiceAppointment();
+            sa.setParentRecordType(request.parentRecordType() != null ? request.parentRecordType() : "work_order");
+            sa.setParentRecordId(request.parentRecordId());
+            if (request.accountId() != null) {
+                sa.setAccount(accountRepository.findById(request.accountId()).orElse(null));
+            }
+            if (request.contactId() != null) {
+                sa.setContact(contactRepository.findById(request.contactId()).orElse(null));
+            }
+            if (request.serviceTerritoryId() != null) {
+                sa.setServiceTerritory(serviceTerritoryRepository.findById(request.serviceTerritoryId()).orElse(null));
+            }
+            if (request.workTypeId() != null) {
+                sa.setWorkType(workTypeRepository.findById(request.workTypeId()).orElse(null));
+            }
+            if (request.status() != null) {
+                sa.setStatus(request.status());
+            }
+            sa.setScheduledStart(request.scheduledStart());
+            sa.setScheduledEnd(request.scheduledEnd());
+            sa.setArrivalWindowStart(request.arrivalWindowStart());
+            sa.setArrivalWindowEnd(request.arrivalWindowEnd());
+            sa.setDurationMinutes(request.durationMinutes());
+            sa.setAddress(request.address());
+
+            sa = serviceAppointmentRepository.save(sa);
+            return new ServiceAppointmentResponse(
+                    sa.getId(),
+                    sa.getParentRecordType(),
+                    sa.getParentRecordId(),
+                    sa.getAccount() != null ? sa.getAccount().getId() : null,
+                    sa.getContact() != null ? sa.getContact().getId() : null,
+                    sa.getServiceTerritory() != null ? sa.getServiceTerritory().getId() : null,
+                    sa.getWorkType() != null ? sa.getWorkType().getId() : null,
+                    sa.getStatus(),
+                    sa.getScheduledStart(),
+                    sa.getScheduledEnd(),
+                    sa.getArrivalWindowStart(),
+                    sa.getArrivalWindowEnd(),
+                    sa.getDurationMinutes(),
+                    sa.getAddress(),
+                    sa.getCreatedAt()
+            );
+        } finally {
+            span.end();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public ServiceAppointmentResponse getServiceAppointment(Long id) {
+        Span span = tracer.spanBuilder("ServiceAppointmentService.getServiceAppointment").startSpan();
+        try {
+            ServiceAppointment sa = serviceAppointmentRepository.findFirstById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("ServiceAppointment not found: " + id));
+            return new ServiceAppointmentResponse(
+                    sa.getId(),
+                    sa.getParentRecordType(),
+                    sa.getParentRecordId(),
+                    sa.getAccount() != null ? sa.getAccount().getId() : null,
+                    sa.getContact() != null ? sa.getContact().getId() : null,
+                    sa.getServiceTerritory() != null ? sa.getServiceTerritory().getId() : null,
+                    sa.getWorkType() != null ? sa.getWorkType().getId() : null,
+                    sa.getStatus(),
+                    sa.getScheduledStart(),
+                    sa.getScheduledEnd(),
+                    sa.getArrivalWindowStart(),
+                    sa.getArrivalWindowEnd(),
+                    sa.getDurationMinutes(),
+                    sa.getAddress(),
+                    sa.getCreatedAt()
+            );
+        } finally {
+            span.end();
+        }
+    }
+
+    @Transactional
+    public ServiceAppointmentResponse updateServiceAppointment(Long id, ServiceAppointmentRequest request) {
+        Span span = tracer.spanBuilder("ServiceAppointmentService.updateServiceAppointment").startSpan();
+        try {
+            ServiceAppointment sa = serviceAppointmentRepository.findFirstById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("ServiceAppointment not found: " + id));
+            if (request.parentRecordType() != null) {
+                sa.setParentRecordType(request.parentRecordType());
+            }
+            if (request.parentRecordId() != null) {
+                sa.setParentRecordId(request.parentRecordId());
+            }
+            if (request.accountId() != null) {
+                sa.setAccount(accountRepository.findById(request.accountId()).orElse(null));
+            }
+            if (request.contactId() != null) {
+                sa.setContact(contactRepository.findById(request.contactId()).orElse(null));
+            }
+            if (request.serviceTerritoryId() != null) {
+                sa.setServiceTerritory(serviceTerritoryRepository.findById(request.serviceTerritoryId()).orElse(null));
+            }
+            if (request.workTypeId() != null) {
+                sa.setWorkType(workTypeRepository.findById(request.workTypeId()).orElse(null));
+            }
+            if (request.status() != null) {
+                sa.setStatus(request.status());
+            }
+            sa.setScheduledStart(request.scheduledStart());
+            sa.setScheduledEnd(request.scheduledEnd());
+            sa.setArrivalWindowStart(request.arrivalWindowStart());
+            sa.setArrivalWindowEnd(request.arrivalWindowEnd());
+            sa.setDurationMinutes(request.durationMinutes());
+            sa.setAddress(request.address());
+            sa = serviceAppointmentRepository.save(sa);
+            return new ServiceAppointmentResponse(
+                    sa.getId(),
+                    sa.getParentRecordType(),
+                    sa.getParentRecordId(),
+                    sa.getAccount() != null ? sa.getAccount().getId() : null,
+                    sa.getContact() != null ? sa.getContact().getId() : null,
+                    sa.getServiceTerritory() != null ? sa.getServiceTerritory().getId() : null,
+                    sa.getWorkType() != null ? sa.getWorkType().getId() : null,
+                    sa.getStatus(),
+                    sa.getScheduledStart(),
+                    sa.getScheduledEnd(),
+                    sa.getArrivalWindowStart(),
+                    sa.getArrivalWindowEnd(),
+                    sa.getDurationMinutes(),
+                    sa.getAddress(),
+                    sa.getCreatedAt()
+            );
+        } finally {
+            span.end();
+        }
+    }
+
+    @Transactional
+    public void deleteServiceAppointment(Long id) {
+        Span span = tracer.spanBuilder("ServiceAppointmentService.deleteServiceAppointment").startSpan();
+        try {
+            ServiceAppointment sa = serviceAppointmentRepository.findFirstById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("ServiceAppointment not found: " + id));
+            serviceAppointmentRepository.delete(sa);
+        } finally {
+            span.end();
+        }
+    }
+
+    @Transactional
+    public AssignedResourceResponse assignResource(Long appointmentId, AssignResourceRequest request) {
+        Span span = tracer.spanBuilder("ServiceAppointmentService.assignResource").startSpan();
+        try {
+            ServiceAppointment sa = serviceAppointmentRepository.findFirstById(appointmentId)
+                    .orElseThrow(() -> new IllegalArgumentException("ServiceAppointment not found: " + appointmentId));
+
+            AssignedResource ar = new AssignedResource();
+            ar.setServiceAppointmentId(sa.getId());
+            ar.setServiceAppointmentCreatedAt(sa.getCreatedAt());
+            if (request.serviceResourceId() != null) {
+                ar.setServiceResource(serviceResourceRepository.findById(request.serviceResourceId()).orElse(null));
+            }
+            if (request.serviceCrewId() != null) {
+                ar.setServiceCrew(serviceCrewRepository.findById(request.serviceCrewId()).orElse(null));
+            }
+            if (request.isPrimaryResource() != null) {
+                ar.setIsPrimaryResource(request.isPrimaryResource());
+            }
+            if (request.status() != null) {
+                ar.setStatus(request.status());
+            }
+            ar = assignedResourceRepository.save(ar);
+
+            return new AssignedResourceResponse(
+                    ar.getId(),
+                    ar.getServiceAppointmentId(),
+                    ar.getServiceAppointmentCreatedAt(),
+                    ar.getServiceResource() != null ? ar.getServiceResource().getId() : null,
+                    ar.getServiceCrew() != null ? ar.getServiceCrew().getId() : null,
+                    ar.getIsPrimaryResource(),
+                    ar.getAssignedAt(),
+                    ar.getStatus()
+            );
+        } finally {
+            span.end();
+        }
+    }
+
+    @Transactional
+    public void deleteAssignedResource(Long id) {
+        Span span = tracer.spanBuilder("ServiceAppointmentService.deleteAssignedResource").startSpan();
+        try {
+            assignedResourceRepository.deleteById(id);
+        } finally {
+            span.end();
+        }
+    }
+}

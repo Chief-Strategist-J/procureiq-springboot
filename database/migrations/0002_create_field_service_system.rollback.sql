@@ -1,0 +1,17 @@
+DROP TABLE IF EXISTS resource_preferences CASCADE;
+DROP TABLE IF EXISTS resource_absences CASCADE;
+DROP TABLE IF EXISTS resource_capacities CASCADE;
+DROP TABLE IF EXISTS assigned_resources CASCADE;
+DROP TABLE IF EXISTS service_appointments CASCADE;
+DROP TABLE IF EXISTS skill_requirements CASCADE;
+DROP TABLE IF EXISTS work_order_line_items CASCADE;
+DROP TABLE IF EXISTS work_orders CASCADE;
+DROP TABLE IF EXISTS work_types CASCADE;
+DROP TABLE IF EXISTS assets CASCADE;
+DROP TABLE IF EXISTS service_resource_skills CASCADE;
+DROP TABLE IF EXISTS skills CASCADE;
+DROP TABLE IF EXISTS service_territory_members CASCADE;
+DROP TABLE IF EXISTS service_resources CASCADE;
+DROP TABLE IF EXISTS service_territories CASCADE;
+DROP TABLE IF EXISTS time_slots CASCADE;
+DROP TABLE IF EXISTS operating_hours CASCADE;
