@@ -16,13 +16,14 @@ public class JsonMapConverter implements AttributeConverter<Map<String, Object>,
 
     @Override
     public Object convertToDatabaseColumn(Map<String, Object> attribute) {
-        if (attribute == null) {
-            return null;
-        }
         try {
             PGobject po = new PGobject();
             po.setType("jsonb");
-            po.setValue(objectMapper.writeValueAsString(attribute));
+            if (attribute == null) {
+                po.setValue(null);
+            } else {
+                po.setValue(objectMapper.writeValueAsString(attribute));
+            }
             return po;
         } catch (Exception e) {
             return null;
