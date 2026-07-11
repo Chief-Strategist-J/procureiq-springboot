@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: ProcureIQ Sales API
   description: API for managing CRM Sales Orders, Products, Accounts, and Notifications in ProcureIQ.
-  version: 1.2.0
+  version: 1.5.0
 paths:
   /api/v1/auth/signup:
     post:
@@ -2332,6 +2332,89 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiResponseWorkflowRun'
 
+  # ---------------------------------------------------------------------------
+  # Voice Call Scheduler Paths
+  # ---------------------------------------------------------------------------
+
+  /api/v1/voice/schedule:
+    post:
+      summary: Schedule a new outbound voice call
+      tags: [Voice]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleVoiceCallRequest'
+      responses:
+        '201':
+          description: Voice call scheduled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseScheduledCall'
+        '400':
+          description: Missing or invalid request fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseErrorOnly'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseErrorOnly'
+
+  /api/v1/voice/scheduled:
+    get:
+      summary: List all scheduled voice calls
+      tags: [Voice]
+      responses:
+        '200':
+          description: List of all scheduled voice calls
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseScheduledCallList'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseErrorOnly'
+
+  /api/v1/voice/{id}:
+    delete:
+      summary: Delete / cancel a scheduled voice call by ID
+      tags: [Voice]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Scheduled call deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseString'
+        '404':
+          description: Scheduled call not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseErrorOnly'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseErrorOnly'
+
 components:
   schemas:
     ApiError:
@@ -4176,6 +4259,90 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/WorkflowRun'
+        error:
+          $ref: '#/components/schemas/ApiError'
+          nullable: true
+
+    # -------------------------------------------------------------------------
+    # Voice Call Scheduler Schemas
+    # -------------------------------------------------------------------------
+
+    ScheduleVoiceCallRequest:
+      type: object
+      required:
+        - phoneNumber
+        - instructions
+        - scheduledAt
+      properties:
+        phoneNumber:
+          type: string
+          description: E.164-formatted destination phone number
+          example: "+15551234567"
+        instructions:
+          type: string
+          description: Spoken text or script to deliver in the call
+          example: "Hello, your order has shipped and will arrive tomorrow."
+        scheduledAt:
+          type: string
+          format: date-time
+          description: ISO-8601 UTC timestamp when the call should be placed
+          example: "2026-07-12T12:00:00Z"
+        provider:
+          type: string
+          description: Voice provider to use (mock | twilio | vapi). Defaults to mock.
+          enum: [mock, twilio, vapi]
+          default: mock
+
+    ScheduledCall:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        phoneNumber:
+          type: string
+        instructions:
+          type: string
+        scheduledAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [PENDING, CALLED, FAILED]
+        provider:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    ApiResponseScheduledCall:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 201
+        data:
+          $ref: '#/components/schemas/ScheduledCall'
+        error:
+          $ref: '#/components/schemas/ApiError'
+          nullable: true
+
+    ApiResponseScheduledCallList:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScheduledCall'
         error:
           $ref: '#/components/schemas/ApiError'
           nullable: true
