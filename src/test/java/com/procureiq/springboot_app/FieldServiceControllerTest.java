@@ -148,8 +148,8 @@ public class FieldServiceControllerTest {
                 .content(objectMapper.writeValueAsString(assignRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status", is("success")))
-                .andExpect(jsonPath("$.data.serviceAppointmentId", is(appointmentId.intValue())))
-                .andExpect(jsonPath("$.data.serviceResourceId", is(resourceId.intValue())));
+                .andExpect(jsonPath("$.data.serviceAppointmentId", is(appointmentId)))
+                .andExpect(jsonPath("$.data.serviceResourceId", is(resourceId)));
 
         assertEquals(1, assignedResourceRepository.count());
     }

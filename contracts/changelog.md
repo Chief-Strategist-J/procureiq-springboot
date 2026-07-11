@@ -1,5 +1,13 @@
 # API Changelog
 
+## [1.4.0] - 2026-07-11
+### Added
+- Added API endpoints and schemas for jobs, job runs, workflows, and workflow runs.
+
+## [1.3.0] - 2026-07-11
+### Added
+- Added REST endpoint definitions for campaigns, schedules, and recipients to `v1.yaml`.
+
 ## [1.0.0] - 2026-07-07
 ### Added
 - Initial version of the Sales Order CRUD API contract supporting accounts, products, and order item mapping.
