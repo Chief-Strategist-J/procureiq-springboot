@@ -1,5 +1,9 @@
 # API Changelog
 
+## [1.6.0] - 2026-07-11
+### Added
+- Added `GET /api/v1/github/templates` and `GET /api/v1/github/templates/{id}` for the GitHub Action template catalog.
+
 ## [1.4.0] - 2026-07-11
 ### Added
 - Added API endpoints and schemas for jobs, job runs, workflows, and workflow runs.
