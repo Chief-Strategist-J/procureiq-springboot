@@ -69,4 +69,47 @@ public class GitHubApiControllerTest {
                 .andExpect(jsonPath("$.status", is("error")))
                 .andExpect(jsonPath("$.error.message", containsString("Repository owner is required")));
     }
+
+    @Test
+    public void testCreateWorkflowFileMock() throws Exception {
+        String yaml = "name: Test\non: [push]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - run: echo hello";
+
+        var req = new com.procureiq.springboot_app.api.rest.v1.handlers.GitHubApiController.CreateWorkflowRequest(
+                "owner", "repo", "test-workflow", yaml, "ci: add test workflow");
+
+        mockMvc.perform(post("/api/v1/github/create-workflow")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.status", is("success")))
+                .andExpect(jsonPath("$.data.path", is(".github/workflows/test-workflow.yml")))
+                .andExpect(jsonPath("$.data.sha", notNullValue()))
+                .andExpect(jsonPath("$.data.mock", is(true)));
+    }
+
+    @Test
+    public void testCreateWorkflowValidation() throws Exception {
+        var req = new com.procureiq.springboot_app.api.rest.v1.handlers.GitHubApiController.CreateWorkflowRequest(
+                "owner", "repo", "", "some yaml", null);
+
+        mockMvc.perform(post("/api/v1/github/create-workflow")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is("error")))
+                .andExpect(jsonPath("$.error.message", containsString("Workflow name is required")));
+    }
+
+    @Test
+    public void testDeleteWorkflowMock() throws Exception {
+        var req = new com.procureiq.springboot_app.api.rest.v1.handlers.GitHubApiController.DeleteWorkflowRequest(
+                "owner", "repo", "test-workflow", "ci: remove test workflow");
+
+        mockMvc.perform(delete("/api/v1/github/delete-workflow")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status", is("success")))
+                .andExpect(jsonPath("$.data", is("Workflow deleted successfully")));
+    }
 }

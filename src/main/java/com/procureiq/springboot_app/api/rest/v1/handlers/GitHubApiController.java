@@ -92,4 +92,83 @@ public class GitHubApiController {
             span.end();
         }
     }
+
+    public record CreateWorkflowRequest(
+        String owner,
+        String repo,
+        String workflowName,
+        String yamlContent,
+        String commitMessage
+    ) {}
+
+    /**
+     * Creates or updates a GitHub Actions workflow file at
+     * .github/workflows/{workflowName}.yml inside the target repository.
+     * In mock mode (no GITHUB_TOKEN), the file is stored in-memory and
+     * a mock response is returned — no real GitHub call is made.
+     */
+    @PostMapping("/create-workflow")
+    public ResponseEntity<?> createWorkflow(@RequestBody CreateWorkflowRequest request) {
+        Span span = tracer.spanBuilder("REST.createWorkflow").startSpan();
+        try (Scope scope = span.makeCurrent()) {
+            if (request.owner() == null || request.owner().trim().isEmpty())
+                throw new IllegalArgumentException("Repository owner is required");
+            if (request.repo() == null || request.repo().trim().isEmpty())
+                throw new IllegalArgumentException("Repository name is required");
+            if (request.workflowName() == null || request.workflowName().trim().isEmpty())
+                throw new IllegalArgumentException("Workflow name is required");
+            if (request.yamlContent() == null || request.yamlContent().trim().isEmpty())
+                throw new IllegalArgumentException("Workflow YAML content is required");
+
+            String msg = request.commitMessage() != null && !request.commitMessage().isBlank()
+                    ? request.commitMessage()
+                    : "ci: add " + request.workflowName() + " workflow via ProcureIQ";
+
+            Map<String, Object> result = gitHubApiService.createWorkflowFile(
+                    request.owner(), request.repo(),
+                    request.workflowName(), request.yamlContent(), msg);
+
+            span.setStatus(StatusCode.OK);
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, result));
+        } catch (Exception e) {
+            span.setStatus(StatusCode.ERROR, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
+        } finally {
+            span.end();
+        }
+    }
+
+    public record DeleteWorkflowRequest(
+        String owner, String repo, String workflowName, String commitMessage
+    ) {}
+
+    /** Deletes an existing .github/workflows/{workflowName}.yml from the repository. */
+    @DeleteMapping("/delete-workflow")
+    public ResponseEntity<?> deleteWorkflow(@RequestBody DeleteWorkflowRequest request) {
+        Span span = tracer.spanBuilder("REST.deleteWorkflow").startSpan();
+        try (Scope scope = span.makeCurrent()) {
+            if (request.owner() == null || request.owner().trim().isEmpty())
+                throw new IllegalArgumentException("Repository owner is required");
+            if (request.repo() == null || request.repo().trim().isEmpty())
+                throw new IllegalArgumentException("Repository name is required");
+            if (request.workflowName() == null || request.workflowName().trim().isEmpty())
+                throw new IllegalArgumentException("Workflow name is required");
+
+            String msg = request.commitMessage() != null && !request.commitMessage().isBlank()
+                    ? request.commitMessage()
+                    : "ci: remove " + request.workflowName() + " workflow via ProcureIQ";
+
+            gitHubApiService.deleteWorkflowFile(
+                    request.owner(), request.repo(), request.workflowName(), msg);
+
+            span.setStatus(StatusCode.OK);
+            return ResponseEntity.ok(ApiResponse.success(200, "Workflow deleted successfully"));
+        } catch (Exception e) {
+            span.setStatus(StatusCode.ERROR, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
+        } finally {
+            span.end();
+        }
+    }
 }
+

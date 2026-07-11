@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -21,6 +22,7 @@ public class GitHubApiService {
     private final Map<String, Map<String, Object>> mockRepos = new HashMap<>();
     private final List<Map<String, Object>> mockDispatches = new ArrayList<>();
     private final List<Map<String, Object>> mockWorkflowRuns = new ArrayList<>();
+    private final Map<String, String> mockWorkflowFiles = new HashMap<>();
 
     @PostConstruct
     public void init() {
@@ -139,5 +141,87 @@ public class GitHubApiService {
             list.add(repo.getFullName());
         }
         return list;
+    }
+
+    /**
+     * Creates or updates a GitHub Actions workflow file at .github/workflows/{workflowName}.yml
+     * inside the target repository. If the file already exists, it will be updated in-place.
+     *
+     * @param owner        Repository owner (org or user)
+     * @param repoName     Repository name
+     * @param workflowName Filename without extension (e.g. "nightly-deploy")
+     * @param yamlContent  Full YAML content of the workflow file
+     * @param commitMsg    Commit message for this file change
+     * @return Map containing file path, sha, and html_url of the resulting commit
+     */
+    public Map<String, Object> createWorkflowFile(
+            String owner, String repoName,
+            String workflowName, String yamlContent, String commitMsg) throws IOException {
+
+        String filePath = ".github/workflows/" + workflowName + ".yml";
+
+        if (mockMode) {
+            String key = owner + "/" + repoName + "/" + filePath;
+            mockWorkflowFiles.put(key, yamlContent);
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put("path", filePath);
+            result.put("sha", "mock-sha-" + workflowName);
+            result.put("htmlUrl", "https://github.com/" + owner + "/" + repoName + "/blob/main/" + filePath);
+            result.put("message", commitMsg);
+            result.put("mock", true);
+            return result;
+        }
+
+        GHRepository repo = gitHub.getRepository(owner + "/" + repoName);
+        byte[] contentBytes = yamlContent.getBytes(StandardCharsets.UTF_8);
+
+        // Check if file already exists — update it if so, create otherwise
+        GHContentUpdateResponse response;
+        try {
+            GHContent existing = repo.getFileContent(filePath);
+            response = existing.update(contentBytes, commitMsg);
+        } catch (GHFileNotFoundException e) {
+            response = repo.createContent()
+                    .path(filePath)
+                    .content(contentBytes)
+                    .message(commitMsg)
+                    .commit();
+        }
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("path", filePath);
+        result.put("sha", response.getContent() != null ? response.getContent().getSha() : null);
+        result.put("htmlUrl", response.getContent() != null && response.getContent().getHtmlUrl() != null
+                ? response.getContent().getHtmlUrl().toString() : null);
+        result.put("message", commitMsg);
+        result.put("mock", false);
+        return result;
+    }
+
+    /**
+     * Deletes an existing GitHub Actions workflow file from the repository.
+     *
+     * @param owner        Repository owner
+     * @param repoName     Repository name
+     * @param workflowName Filename without extension (e.g. "nightly-deploy")
+     * @param commitMsg    Commit message for the deletion
+     */
+    public void deleteWorkflowFile(String owner, String repoName,
+                                   String workflowName, String commitMsg) throws IOException {
+        String filePath = ".github/workflows/" + workflowName + ".yml";
+
+        if (mockMode) {
+            mockWorkflowFiles.remove(owner + "/" + repoName + "/" + filePath);
+            return;
+        }
+
+        GHRepository repo = gitHub.getRepository(owner + "/" + repoName);
+        GHContent file = repo.getFileContent(filePath);
+        file.delete(commitMsg);
+    }
+
+    /** Returns stored mock workflow files (test utility). */
+    public Map<String, String> getMockWorkflowFiles() {
+        return Collections.unmodifiableMap(mockWorkflowFiles);
     }
 }
