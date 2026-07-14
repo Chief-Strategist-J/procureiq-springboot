@@ -1,4 +1,4 @@
-package com.procureiq.springboot_app.shared.types;
+package com.procureiq.springboot_app.shared.types.error;
 
 public class ApiError {
     private String message = "";

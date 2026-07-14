@@ -1,4 +1,6 @@
-package com.procureiq.springboot_app.shared.types;
+package com.procureiq.springboot_app.shared.types.single;
+
+import com.procureiq.springboot_app.shared.types.error.ApiError;
 
 public class ApiSingleResponse<T> {
     private String status = "success";

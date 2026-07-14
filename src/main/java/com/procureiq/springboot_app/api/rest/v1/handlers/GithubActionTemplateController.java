@@ -2,8 +2,8 @@ package com.procureiq.springboot_app.api.rest.v1.handlers;
 
 import com.procureiq.springboot_app.features.githubactions.dto.response.GithubActionTemplateResponse;
 import com.procureiq.springboot_app.features.githubactions.service.GithubActionTemplateService;
-import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
-import com.procureiq.springboot_app.shared.types.ApiListResponse;
+import com.procureiq.springboot_app.shared.types.single.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.list.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;

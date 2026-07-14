@@ -1,4 +1,6 @@
-package com.procureiq.springboot_app.shared.types;
+package com.procureiq.springboot_app.shared.types.list;
+
+import com.procureiq.springboot_app.shared.types.error.ApiError;
 
 import java.util.List;
 

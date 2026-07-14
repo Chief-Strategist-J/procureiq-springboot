@@ -7,7 +7,7 @@ import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.single.ApiSingleResponse;
 import java.util.concurrent.Callable;
 
 public final class TracingHelper {
