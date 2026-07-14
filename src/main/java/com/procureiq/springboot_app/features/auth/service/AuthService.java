@@ -96,12 +96,12 @@ public class AuthService {
             User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> {
                     span.addEvent("login_failed_user_not_found");
-                    return new IllegalArgumentException("Invalid username or password");
+                    return new com.procureiq.springboot_app.shared.exceptions.UnauthorizedException("Invalid username or password");
                 });
 
             if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                 span.addEvent("login_failed_incorrect_password");
-                throw new IllegalArgumentException("Invalid username or password");
+                throw new com.procureiq.springboot_app.shared.exceptions.UnauthorizedException("Invalid username or password");
             }
 
             String token = JWT.create()
@@ -175,12 +175,12 @@ public class AuthService {
             User user = userRepository.findByResetToken(request.getToken())
                     .orElseThrow(() -> {
                         span.addEvent("reset_password_failed_invalid_token");
-                        return new IllegalArgumentException("Invalid or expired reset token");
+                        return new com.procureiq.springboot_app.shared.exceptions.UnauthorizedException("Invalid or expired reset token");
                     });
 
             if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
                 span.addEvent("reset_password_failed_token_expired");
-                throw new IllegalArgumentException("Invalid or expired reset token");
+                throw new com.procureiq.springboot_app.shared.exceptions.UnauthorizedException("Invalid or expired reset token");
             }
 
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));

@@ -36,9 +36,21 @@ public final class TracingHelper {
             span.recordException(e);
             span.setStatus(StatusCode.ERROR, e.getMessage());
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-            if (e instanceof IllegalArgumentException || e instanceof IllegalStateException) {
-                status = HttpStatus.BAD_REQUEST;
+
+            if (e instanceof com.procureiq.springboot_app.shared.exceptions.ResourceNotFoundException) {
+                status = HttpStatus.NOT_FOUND;
+            } else if (e instanceof com.procureiq.springboot_app.shared.exceptions.UnauthorizedException) {
+                status = HttpStatus.UNAUTHORIZED;
+            } else if (e instanceof com.procureiq.springboot_app.shared.exceptions.ForbiddenException) {
+                status = HttpStatus.FORBIDDEN;
+            } else if (e instanceof IllegalArgumentException || e instanceof IllegalStateException) {
+                if (e.getMessage() != null && e.getMessage().toLowerCase().contains("not found")) {
+                    status = HttpStatus.NOT_FOUND;
+                } else {
+                    status = HttpStatus.BAD_REQUEST;
+                }
             }
+
             return ResponseEntity.status(status)
                     .body(ApiResponse.error(status.value(), e.getMessage()));
         } finally {
