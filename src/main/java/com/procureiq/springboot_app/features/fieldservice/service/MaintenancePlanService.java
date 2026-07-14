@@ -37,8 +37,7 @@ public class MaintenancePlanService {
 
     @Transactional
     public MaintenancePlanResponse createMaintenancePlan(MaintenancePlanRequest request) {
-        Span span = tracer.spanBuilder("MaintenancePlanService.createMaintenancePlan").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Account account = accountRepository.findById(request.accountId())
                     .orElseThrow(() -> new IllegalArgumentException("Account not found: " + request.accountId()));
 
@@ -65,27 +64,21 @@ public class MaintenancePlanService {
             mp = maintenancePlanRepository.save(mp);
 
             return mapToResponse(mp);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public MaintenancePlanResponse getMaintenancePlan(Long id) {
-        Span span = tracer.spanBuilder("MaintenancePlanService.getMaintenancePlan").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             MaintenancePlan mp = maintenancePlanRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("MaintenancePlan not found: " + id));
             return mapToResponse(mp);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public MaintenancePlanResponse updateMaintenancePlan(Long id, MaintenancePlanRequest request) {
-        Span span = tracer.spanBuilder("MaintenancePlanService.updateMaintenancePlan").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             MaintenancePlan mp = maintenancePlanRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("MaintenancePlan not found: " + id));
 
@@ -114,19 +107,14 @@ public class MaintenancePlanService {
             mp = maintenancePlanRepository.save(mp);
 
             return mapToResponse(mp);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteMaintenancePlan(Long id) {
-        Span span = tracer.spanBuilder("MaintenancePlanService.deleteMaintenancePlan").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             maintenancePlanRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private MaintenancePlanResponse mapToResponse(MaintenancePlan mp) {

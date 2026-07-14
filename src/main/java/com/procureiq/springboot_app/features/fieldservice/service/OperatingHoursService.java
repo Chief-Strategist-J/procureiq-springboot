@@ -22,64 +22,49 @@ public class OperatingHoursService {
 
     @Transactional(readOnly = true)
     public java.util.List<OperatingHoursResponse> getAllOperatingHours() {
-        Span span = tracer.spanBuilder("OperatingHoursService.getAllOperatingHours").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return operatingHoursRepository.findAll().stream()
                     .map(oh -> new OperatingHoursResponse(oh.getId(), oh.getName(), oh.getTimezone()))
                     .collect(java.util.stream.Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public OperatingHoursResponse createOperatingHours(OperatingHoursRequest request) {
-        Span span = tracer.spanBuilder("OperatingHoursService.createOperatingHours").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             OperatingHours oh = new OperatingHours();
             oh.setName(request.name());
             oh.setTimezone(request.timezone() != null ? request.timezone() : "UTC");
             oh = operatingHoursRepository.save(oh);
             return new OperatingHoursResponse(oh.getId(), oh.getName(), oh.getTimezone());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public OperatingHoursResponse getOperatingHours(Long id) {
-        Span span = tracer.spanBuilder("OperatingHoursService.getOperatingHours").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             OperatingHours oh = operatingHoursRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("OperatingHours not found: " + id));
             return new OperatingHoursResponse(oh.getId(), oh.getName(), oh.getTimezone());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public OperatingHoursResponse updateOperatingHours(Long id, OperatingHoursRequest request) {
-        Span span = tracer.spanBuilder("OperatingHoursService.updateOperatingHours").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             OperatingHours oh = operatingHoursRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("OperatingHours not found: " + id));
             oh.setName(request.name());
             oh.setTimezone(request.timezone());
             oh = operatingHoursRepository.save(oh);
             return new OperatingHoursResponse(oh.getId(), oh.getName(), oh.getTimezone());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteOperatingHours(Long id) {
-        Span span = tracer.spanBuilder("OperatingHoursService.deleteOperatingHours").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             operatingHoursRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 }

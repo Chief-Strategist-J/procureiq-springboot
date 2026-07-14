@@ -43,8 +43,7 @@ public class WorkOrderService {
 
     @Transactional(readOnly = true)
     public List<WorkOrderResponse> getAllWorkOrders() {
-        Span span = tracer.spanBuilder("WorkOrderService.getAllWorkOrders").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return workOrderRepository.findAll().stream()
                     .map(wo -> new WorkOrderResponse(
                             wo.getId(),
@@ -61,15 +60,12 @@ public class WorkOrderService {
                             wo.getCreatedAt()
                     ))
                     .toList();
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public WorkOrderResponse createWorkOrder(WorkOrderRequest request) {
-        Span span = tracer.spanBuilder("WorkOrderService.createWorkOrder").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             WorkOrder wo = new WorkOrder();
             if (request.parentWorkOrderId() != null) {
                 wo.setParentWorkOrder(workOrderRepository.findById(request.parentWorkOrderId()).orElse(null));
@@ -140,15 +136,12 @@ public class WorkOrderService {
                     wo.getPriority(),
                     wo.getCreatedAt()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public WorkOrderResponse getWorkOrder(Long id) {
-        Span span = tracer.spanBuilder("WorkOrderService.getWorkOrder").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             WorkOrder wo = workOrderRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("WorkOrder not found: " + id));
             return new WorkOrderResponse(
@@ -165,15 +158,12 @@ public class WorkOrderService {
                     wo.getPriority(),
                     wo.getCreatedAt()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public WorkOrderResponse updateWorkOrder(Long id, WorkOrderRequest request) {
-        Span span = tracer.spanBuilder("WorkOrderService.updateWorkOrder").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             WorkOrder wo = workOrderRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("WorkOrder not found: " + id));
             if (request.parentWorkOrderId() != null) {
@@ -235,18 +225,13 @@ public class WorkOrderService {
                     wo.getPriority(),
                     wo.getCreatedAt()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteWorkOrder(Long id) {
-        Span span = tracer.spanBuilder("WorkOrderService.deleteWorkOrder").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             workOrderRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 }

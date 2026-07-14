@@ -15,6 +15,16 @@ public final class TracingHelper {
 
     private TracingHelper() {}
 
+    @FunctionalInterface
+    public interface ServiceBlock<T> {
+        T execute() throws Exception;
+    }
+
+    @FunctionalInterface
+    public interface ServiceVoidBlock {
+        void execute() throws Exception;
+    }
+
     public static ResponseEntity<?> executeWithTracing(final Callable<ResponseEntity<?>> block) {
         String spanName = "REST.Controller";
         try {
@@ -66,5 +76,42 @@ public final class TracingHelper {
         } finally {
             span.end();
         }
+    }
+
+    public static <T> T executeServiceWithTracing(final ServiceBlock<T> block) {
+        String spanName = "Service.Execution";
+        try {
+            final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            if (stackTrace.length > 2) {
+                final StackTraceElement caller = stackTrace[2];
+                final String className = caller.getClassName();
+                final String simpleName = className.substring(className.lastIndexOf('.') + 1);
+                spanName = "Service." + simpleName + "." + caller.getMethodName();
+            }
+        } catch (final Exception ignored) {}
+
+        final Span span = tracer.spanBuilder(spanName).startSpan();
+        try (final Scope scope = span.makeCurrent()) {
+            final T result = block.execute();
+            span.setStatus(StatusCode.OK);
+            return result;
+        } catch (final RuntimeException e) {
+            span.recordException(e);
+            span.setStatus(StatusCode.ERROR, e.getMessage());
+            throw e;
+        } catch (final Exception e) {
+            span.recordException(e);
+            span.setStatus(StatusCode.ERROR, e.getMessage());
+            throw new RuntimeException(e);
+        } finally {
+            span.end();
+        }
+    }
+
+    public static void executeServiceVoidWithTracing(final ServiceVoidBlock block) {
+        executeServiceWithTracing(() -> {
+            block.execute();
+            return null;
+        });
     }
 }

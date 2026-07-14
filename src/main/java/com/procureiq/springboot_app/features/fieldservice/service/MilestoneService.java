@@ -27,8 +27,7 @@ public class MilestoneService {
 
     @Transactional
     public MilestoneResponse createMilestone(MilestoneRequest request) {
-        Span span = tracer.spanBuilder("MilestoneService.createMilestone").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             EntitlementProcess ep = entitlementProcessRepository.findById(request.entitlementProcessId())
                     .orElseThrow(() -> new IllegalArgumentException("EntitlementProcess not found: " + request.entitlementProcessId()));
 
@@ -40,27 +39,21 @@ public class MilestoneService {
             m = milestoneRepository.save(m);
 
             return mapToResponse(m);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public MilestoneResponse getMilestone(Long id) {
-        Span span = tracer.spanBuilder("MilestoneService.getMilestone").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Milestone m = milestoneRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Milestone not found: " + id));
             return mapToResponse(m);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public MilestoneResponse updateMilestone(Long id, MilestoneRequest request) {
-        Span span = tracer.spanBuilder("MilestoneService.updateMilestone").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Milestone m = milestoneRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Milestone not found: " + id));
 
@@ -74,19 +67,14 @@ public class MilestoneService {
             m = milestoneRepository.save(m);
 
             return mapToResponse(m);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteMilestone(Long id) {
-        Span span = tracer.spanBuilder("MilestoneService.deleteMilestone").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             milestoneRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private MilestoneResponse mapToResponse(Milestone m) {

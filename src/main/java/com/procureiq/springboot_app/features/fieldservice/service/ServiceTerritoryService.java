@@ -27,8 +27,7 @@ public class ServiceTerritoryService {
 
     @Transactional(readOnly = true)
     public java.util.List<ServiceTerritoryResponse> getAllServiceTerritories() {
-        Span span = tracer.spanBuilder("ServiceTerritoryService.getAllServiceTerritories").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return serviceTerritoryRepository.findAll().stream()
                     .map(st -> new ServiceTerritoryResponse(
                             st.getId(),
@@ -38,15 +37,12 @@ public class ServiceTerritoryService {
                             st.getIsActive()
                     ))
                     .collect(java.util.stream.Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceTerritoryResponse createServiceTerritory(ServiceTerritoryRequest request) {
-        Span span = tracer.spanBuilder("ServiceTerritoryService.createServiceTerritory").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceTerritory st = new ServiceTerritory();
             st.setName(request.name());
             if (request.operatingHoursId() != null) {
@@ -66,15 +62,12 @@ public class ServiceTerritoryService {
                     st.getOperatingHours() != null ? st.getOperatingHours().getId() : null,
                     st.getIsActive()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ServiceTerritoryResponse getServiceTerritory(Long id) {
-        Span span = tracer.spanBuilder("ServiceTerritoryService.getServiceTerritory").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceTerritory st = serviceTerritoryRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceTerritory not found: " + id));
             return new ServiceTerritoryResponse(
@@ -84,15 +77,12 @@ public class ServiceTerritoryService {
                     st.getOperatingHours() != null ? st.getOperatingHours().getId() : null,
                     st.getIsActive()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceTerritoryResponse updateServiceTerritory(Long id, ServiceTerritoryRequest request) {
-        Span span = tracer.spanBuilder("ServiceTerritoryService.updateServiceTerritory").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceTerritory st = serviceTerritoryRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceTerritory not found: " + id));
             st.setName(request.name());
@@ -117,18 +107,13 @@ public class ServiceTerritoryService {
                     st.getOperatingHours() != null ? st.getOperatingHours().getId() : null,
                     st.getIsActive()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteServiceTerritory(Long id) {
-        Span span = tracer.spanBuilder("ServiceTerritoryService.deleteServiceTerritory").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             serviceTerritoryRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 }

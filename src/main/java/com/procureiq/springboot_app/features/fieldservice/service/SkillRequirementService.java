@@ -26,8 +26,7 @@ public class SkillRequirementService {
 
     @Transactional
     public SkillRequirementResponse createSkillRequirement(SkillRequirementRequest request) {
-        Span span = tracer.spanBuilder("SkillRequirementService.createSkillRequirement").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Skill skill = skillRepository.findById(request.skillId())
                     .orElseThrow(() -> new IllegalArgumentException("Skill not found: " + request.skillId()));
 
@@ -39,27 +38,21 @@ public class SkillRequirementService {
             sr = skillRequirementRepository.save(sr);
 
             return mapToResponse(sr);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public SkillRequirementResponse getSkillRequirement(Long id) {
-        Span span = tracer.spanBuilder("SkillRequirementService.getSkillRequirement").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             SkillRequirement sr = skillRequirementRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("SkillRequirement not found: " + id));
             return mapToResponse(sr);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public SkillRequirementResponse updateSkillRequirement(Long id, SkillRequirementRequest request) {
-        Span span = tracer.spanBuilder("SkillRequirementService.updateSkillRequirement").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             SkillRequirement sr = skillRequirementRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("SkillRequirement not found: " + id));
 
@@ -73,19 +66,14 @@ public class SkillRequirementService {
             sr = skillRequirementRepository.save(sr);
 
             return mapToResponse(sr);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteSkillRequirement(Long id) {
-        Span span = tracer.spanBuilder("SkillRequirementService.deleteSkillRequirement").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             skillRequirementRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private SkillRequirementResponse mapToResponse(SkillRequirement sr) {

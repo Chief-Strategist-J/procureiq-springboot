@@ -27,8 +27,7 @@ public class ResourceAbsenceService {
 
     @Transactional
     public ResourceAbsenceResponse createResourceAbsence(ResourceAbsenceRequest request) {
-        Span span = tracer.spanBuilder("ResourceAbsenceService.createResourceAbsence").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResource sr = serviceResourceRepository.findById(request.serviceResourceId())
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + request.serviceResourceId()));
 
@@ -41,27 +40,21 @@ public class ResourceAbsenceService {
             ra = resourceAbsenceRepository.save(ra);
 
             return mapToResponse(ra);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ResourceAbsenceResponse getResourceAbsence(Long id) {
-        Span span = tracer.spanBuilder("ResourceAbsenceService.getResourceAbsence").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ResourceAbsence ra = resourceAbsenceRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ResourceAbsence not found: " + id));
             return mapToResponse(ra);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ResourceAbsenceResponse updateResourceAbsence(Long id, ResourceAbsenceRequest request) {
-        Span span = tracer.spanBuilder("ResourceAbsenceService.updateResourceAbsence").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ResourceAbsence ra = resourceAbsenceRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ResourceAbsence not found: " + id));
 
@@ -76,19 +69,14 @@ public class ResourceAbsenceService {
             ra = resourceAbsenceRepository.save(ra);
 
             return mapToResponse(ra);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteResourceAbsence(Long id) {
-        Span span = tracer.spanBuilder("ResourceAbsenceService.deleteResourceAbsence").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             resourceAbsenceRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private ResourceAbsenceResponse mapToResponse(ResourceAbsence ra) {

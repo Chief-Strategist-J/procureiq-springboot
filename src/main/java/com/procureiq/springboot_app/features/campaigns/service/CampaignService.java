@@ -59,8 +59,7 @@ public class CampaignService {
 
     @Transactional(readOnly = true)
     public List<CampaignResponse> getAllCampaigns() {
-        Span span = tracer.spanBuilder("CampaignService.getAllCampaigns").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return campaignRepository.findAll().stream()
                     .map(c -> new CampaignResponse(
                             c.getId(),
@@ -70,15 +69,12 @@ public class CampaignService {
                             c.getCreatedAt(),
                             c.getUpdatedAt()))
                     .collect(Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public CampaignResponse createCampaign(CampaignRequest request) {
-        Span span = tracer.spanBuilder("CampaignService.createCampaign").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Organization org = getOrCreateOrganization(request.orgId());
             Campaign c = new Campaign();
             c.setOrganization(org);
@@ -92,15 +88,12 @@ public class CampaignService {
                     c.getStatus(),
                     c.getCreatedAt(),
                     c.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public CampaignResponse getCampaign(Long id) {
-        Span span = tracer.spanBuilder("CampaignService.getCampaign").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Campaign c = campaignRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Campaign not found: " + id));
             return new CampaignResponse(
@@ -110,15 +103,12 @@ public class CampaignService {
                     c.getStatus(),
                     c.getCreatedAt(),
                     c.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public CampaignResponse updateCampaign(Long id, CampaignRequest request) {
-        Span span = tracer.spanBuilder("CampaignService.updateCampaign").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Campaign c = campaignRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Campaign not found: " + id));
             if (request.orgId() != null) {
@@ -137,27 +127,21 @@ public class CampaignService {
                     c.getStatus(),
                     c.getCreatedAt(),
                     c.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteCampaign(Long id) {
-        Span span = tracer.spanBuilder("CampaignService.deleteCampaign").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             campaignRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     
 
     @Transactional(readOnly = true)
     public List<ScheduledEmailResponse> getAllScheduledEmails() {
-        Span span = tracer.spanBuilder("CampaignService.getAllScheduledEmails").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return scheduledEmailRepository.findAll().stream()
                     .map(se -> new ScheduledEmailResponse(
                             se.getId(),
@@ -170,15 +154,12 @@ public class CampaignService {
                             se.getCreatedAt(),
                             se.getUpdatedAt()))
                     .collect(Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ScheduledEmailResponse createScheduledEmail(ScheduledEmailRequest request) {
-        Span span = tracer.spanBuilder("CampaignService.createScheduledEmail").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Organization org = getOrCreateOrganization(request.orgId());
             Contact contact = contactRepository.findById(request.contactId())
                     .orElseThrow(() -> new IllegalArgumentException("Contact not found: " + request.contactId()));
@@ -207,15 +188,12 @@ public class CampaignService {
                     se.getStatus(),
                     se.getCreatedAt(),
                     se.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ScheduledEmailResponse getScheduledEmail(Long id) {
-        Span span = tracer.spanBuilder("CampaignService.getScheduledEmail").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ScheduledEmail se = scheduledEmailRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Scheduled email not found: " + id));
             return new ScheduledEmailResponse(
@@ -228,15 +206,12 @@ public class CampaignService {
                     se.getStatus(),
                     se.getCreatedAt(),
                     se.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ScheduledEmailResponse updateScheduledEmail(Long id, ScheduledEmailRequest request) {
-        Span span = tracer.spanBuilder("CampaignService.updateScheduledEmail").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ScheduledEmail se = scheduledEmailRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Scheduled email not found: " + id));
             if (request.orgId() != null) {
@@ -274,27 +249,21 @@ public class CampaignService {
                     se.getStatus(),
                     se.getCreatedAt(),
                     se.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteScheduledEmail(Long id) {
-        Span span = tracer.spanBuilder("CampaignService.deleteScheduledEmail").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             scheduledEmailRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     
 
     @Transactional(readOnly = true)
     public List<RecipientResponse> getAllRecipients() {
-        Span span = tracer.spanBuilder("CampaignService.getAllRecipients").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return contactRepository.findAll().stream()
                     .map(c -> new RecipientResponse(
                             c.getId(),
@@ -303,15 +272,12 @@ public class CampaignService {
                             c.getEmail(),
                             c.getPhone()))
                     .collect(Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public RecipientResponse createRecipient(RecipientRequest request) {
-        Span span = tracer.spanBuilder("CampaignService.createRecipient").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Account account = accountRepository.findById(request.accountId()).orElseGet(() -> {
                 Account acc = new Account();
                 acc.setId(request.accountId());
@@ -332,15 +298,12 @@ public class CampaignService {
                     contact.getName(),
                     contact.getEmail(),
                     contact.getPhone());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public RecipientResponse getRecipient(Long id) {
-        Span span = tracer.spanBuilder("CampaignService.getRecipient").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Contact contact = contactRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Recipient not found: " + id));
             return new RecipientResponse(
@@ -349,15 +312,12 @@ public class CampaignService {
                     contact.getName(),
                     contact.getEmail(),
                     contact.getPhone());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public RecipientResponse updateRecipient(Long id, RecipientRequest request) {
-        Span span = tracer.spanBuilder("CampaignService.updateRecipient").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Contact contact = contactRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Recipient not found: " + id));
             if (request.accountId() != null) {
@@ -380,18 +340,13 @@ public class CampaignService {
                     contact.getName(),
                     contact.getEmail(),
                     contact.getPhone());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteRecipient(Long id) {
-        Span span = tracer.spanBuilder("CampaignService.deleteRecipient").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             contactRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 }

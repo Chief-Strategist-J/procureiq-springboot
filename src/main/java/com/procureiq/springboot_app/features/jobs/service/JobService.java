@@ -52,8 +52,7 @@ public class JobService {
 
     @Transactional(readOnly = true)
     public List<JobResponse> getAllJobs() {
-        Span span = tracer.spanBuilder("JobService.getAllJobs").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return jobRepository.findAll().stream()
                     .map(j -> new JobResponse(
                             j.getId(),
@@ -65,15 +64,12 @@ public class JobService {
                             j.getCreatedAt(),
                             j.getUpdatedAt()))
                     .collect(Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public JobResponse createJob(JobRequest request) {
-        Span span = tracer.spanBuilder("JobService.createJob").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Organization org = getOrCreateOrganization(request.orgId());
             Job j = new Job();
             j.setOrganization(org);
@@ -93,15 +89,12 @@ public class JobService {
                     j.getConfig(),
                     j.getCreatedAt(),
                     j.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public JobResponse getJob(Long id) {
-        Span span = tracer.spanBuilder("JobService.getJob").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Job j = jobRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Job not found: " + id));
             return new JobResponse(
@@ -113,15 +106,12 @@ public class JobService {
                     j.getConfig(),
                     j.getCreatedAt(),
                     j.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public JobResponse updateJob(Long id, JobRequest request) {
-        Span span = tracer.spanBuilder("JobService.updateJob").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Job j = jobRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Job not found: " + id));
             j.setName(request.name());
@@ -142,29 +132,23 @@ public class JobService {
                     j.getConfig(),
                     j.getCreatedAt(),
                     j.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteJob(Long id) {
-        Span span = tracer.spanBuilder("JobService.deleteJob").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             Job j = jobRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Job not found: " + id));
             jobRepository.delete(j);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     
 
     @Transactional
     public JobRunResponse triggerJobRun(Long jobId) {
-        Span span = tracer.spanBuilder("JobService.triggerJobRun").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Job j = jobRepository.findById(jobId)
                     .orElseThrow(() -> new IllegalArgumentException("Job not found: " + jobId));
             JobRun run = new JobRun();
@@ -179,15 +163,12 @@ public class JobService {
                     run.getStartedAt(),
                     run.getCompletedAt(),
                     run.getCreatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public List<JobRunResponse> getJobRuns(Long jobId) {
-        Span span = tracer.spanBuilder("JobService.getJobRuns").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return jobRunRepository.findByJobId(jobId).stream()
                     .map(run -> new JobRunResponse(
                             run.getId(),
@@ -197,15 +178,12 @@ public class JobService {
                             run.getCompletedAt(),
                             run.getCreatedAt()))
                     .collect(Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public JobRunResponse getJobRun(Long runId) {
-        Span span = tracer.spanBuilder("JobService.getJobRun").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             JobRun run = jobRunRepository.findByRawId(runId)
                     .orElseThrow(() -> new IllegalArgumentException("Job run not found: " + runId));
             return new JobRunResponse(
@@ -215,17 +193,14 @@ public class JobService {
                     run.getStartedAt(),
                     run.getCompletedAt(),
                     run.getCreatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     
 
     @Transactional(readOnly = true)
     public List<WorkflowResponse> getAllWorkflows() {
-        Span span = tracer.spanBuilder("JobService.getAllWorkflows").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return workflowRepository.findAll().stream()
                     .map(w -> new WorkflowResponse(
                             w.getId(),
@@ -235,15 +210,12 @@ public class JobService {
                             w.getCreatedAt(),
                             w.getUpdatedAt()))
                     .collect(Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public WorkflowResponse createWorkflow(WorkflowRequest request) {
-        Span span = tracer.spanBuilder("JobService.createWorkflow").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Organization org = getOrCreateOrganization(request.orgId());
             Workflow w = new Workflow();
             w.setOrganization(org);
@@ -257,15 +229,12 @@ public class JobService {
                     w.getStatus(),
                     w.getCreatedAt(),
                     w.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public WorkflowResponse getWorkflow(Long id) {
-        Span span = tracer.spanBuilder("JobService.getWorkflow").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Workflow w = workflowRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Workflow not found: " + id));
             return new WorkflowResponse(
@@ -275,15 +244,12 @@ public class JobService {
                     w.getStatus(),
                     w.getCreatedAt(),
                     w.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public WorkflowResponse updateWorkflow(Long id, WorkflowRequest request) {
-        Span span = tracer.spanBuilder("JobService.updateWorkflow").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Workflow w = workflowRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Workflow not found: " + id));
             w.setName(request.name());
@@ -298,29 +264,23 @@ public class JobService {
                     w.getStatus(),
                     w.getCreatedAt(),
                     w.getUpdatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteWorkflow(Long id) {
-        Span span = tracer.spanBuilder("JobService.deleteWorkflow").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             Workflow w = workflowRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Workflow not found: " + id));
             workflowRepository.delete(w);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     
 
     @Transactional
     public WorkflowRunResponse triggerWorkflowRun(Long workflowId) {
-        Span span = tracer.spanBuilder("JobService.triggerWorkflowRun").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Workflow w = workflowRepository.findById(workflowId)
                     .orElseThrow(() -> new IllegalArgumentException("Workflow not found: " + workflowId));
             WorkflowRun run = new WorkflowRun();
@@ -335,15 +295,12 @@ public class JobService {
                     run.getStartedAt(),
                     run.getCompletedAt(),
                     run.getCreatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public List<WorkflowRunResponse> getWorkflowRuns(Long workflowId) {
-        Span span = tracer.spanBuilder("JobService.getWorkflowRuns").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return workflowRunRepository.findByWorkflowId(workflowId).stream()
                     .map(run -> new WorkflowRunResponse(
                             run.getId(),
@@ -353,15 +310,12 @@ public class JobService {
                             run.getCompletedAt(),
                             run.getCreatedAt()))
                     .collect(Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public WorkflowRunResponse getWorkflowRun(Long runId) {
-        Span span = tracer.spanBuilder("JobService.getWorkflowRun").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             WorkflowRun run = workflowRunRepository.findByRawId(runId)
                     .orElseThrow(() -> new IllegalArgumentException("Workflow run not found: " + runId));
             return new WorkflowRunResponse(
@@ -371,8 +325,6 @@ public class JobService {
                     run.getStartedAt(),
                     run.getCompletedAt(),
                     run.getCreatedAt());
-        } finally {
-            span.end();
-        }
+        });
     }
 }

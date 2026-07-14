@@ -32,8 +32,7 @@ public class ShiftService {
 
     @Transactional
     public ShiftResponse createShift(ShiftRequest request) {
-        Span span = tracer.spanBuilder("ShiftService.createShift").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResource sr = serviceResourceRepository.findById(request.serviceResourceId())
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + request.serviceResourceId()));
             ServiceTerritory st = serviceTerritoryRepository.findById(request.serviceTerritoryId())
@@ -48,27 +47,21 @@ public class ShiftService {
             shift = shiftRepository.save(shift);
 
             return mapToResponse(shift);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ShiftResponse getShift(Long id) {
-        Span span = tracer.spanBuilder("ShiftService.getShift").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Shift shift = shiftRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Shift not found: " + id));
             return mapToResponse(shift);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ShiftResponse updateShift(Long id, ShiftRequest request) {
-        Span span = tracer.spanBuilder("ShiftService.updateShift").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Shift shift = shiftRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Shift not found: " + id));
 
@@ -85,19 +78,14 @@ public class ShiftService {
             shift = shiftRepository.save(shift);
 
             return mapToResponse(shift);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteShift(Long id) {
-        Span span = tracer.spanBuilder("ShiftService.deleteShift").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             shiftRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private ShiftResponse mapToResponse(Shift shift) {

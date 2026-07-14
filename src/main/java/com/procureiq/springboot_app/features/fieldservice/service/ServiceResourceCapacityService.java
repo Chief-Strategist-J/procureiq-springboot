@@ -27,8 +27,7 @@ public class ServiceResourceCapacityService {
 
     @Transactional
     public ServiceResourceCapacityResponse createServiceResourceCapacity(ServiceResourceCapacityRequest request) {
-        Span span = tracer.spanBuilder("ServiceResourceCapacityService.createServiceResourceCapacity").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResource sr = serviceResourceRepository.findById(request.serviceResourceId())
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + request.serviceResourceId()));
 
@@ -41,27 +40,21 @@ public class ServiceResourceCapacityService {
             src = serviceResourceCapacityRepository.save(src);
 
             return mapToResponse(src);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ServiceResourceCapacityResponse getServiceResourceCapacity(Long id) {
-        Span span = tracer.spanBuilder("ServiceResourceCapacityService.getServiceResourceCapacity").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResourceCapacity src = serviceResourceCapacityRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResourceCapacity not found: " + id));
             return mapToResponse(src);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceResourceCapacityResponse updateServiceResourceCapacity(Long id, ServiceResourceCapacityRequest request) {
-        Span span = tracer.spanBuilder("ServiceResourceCapacityService.updateServiceResourceCapacity").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResourceCapacity src = serviceResourceCapacityRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResourceCapacity not found: " + id));
 
@@ -76,19 +69,14 @@ public class ServiceResourceCapacityService {
             src = serviceResourceCapacityRepository.save(src);
 
             return mapToResponse(src);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteServiceResourceCapacity(Long id) {
-        Span span = tracer.spanBuilder("ServiceResourceCapacityService.deleteServiceResourceCapacity").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             serviceResourceCapacityRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private ServiceResourceCapacityResponse mapToResponse(ServiceResourceCapacity src) {

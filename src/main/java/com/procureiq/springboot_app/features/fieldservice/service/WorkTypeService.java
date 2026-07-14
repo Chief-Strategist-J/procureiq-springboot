@@ -22,35 +22,28 @@ public class WorkTypeService {
 
     @Transactional
     public WorkTypeResponse createWorkType(WorkTypeRequest request) {
-        Span span = tracer.spanBuilder("WorkTypeService.createWorkType").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             WorkType wt = new WorkType();
             wt.setName(request.name());
             wt.setDefaultDurationMinutes(request.defaultDurationMinutes() != null ? request.defaultDurationMinutes() : 60);
             wt.setEstimatedTravelMinutes(request.estimatedTravelMinutes() != null ? request.estimatedTravelMinutes() : 0);
             wt = workTypeRepository.save(wt);
             return new WorkTypeResponse(wt.getId(), wt.getName(), wt.getDefaultDurationMinutes(), wt.getEstimatedTravelMinutes());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public WorkTypeResponse getWorkType(Long id) {
-        Span span = tracer.spanBuilder("WorkTypeService.getWorkType").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             WorkType wt = workTypeRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("WorkType not found: " + id));
             return new WorkTypeResponse(wt.getId(), wt.getName(), wt.getDefaultDurationMinutes(), wt.getEstimatedTravelMinutes());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public WorkTypeResponse updateWorkType(Long id, WorkTypeRequest request) {
-        Span span = tracer.spanBuilder("WorkTypeService.updateWorkType").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             WorkType wt = workTypeRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("WorkType not found: " + id));
             wt.setName(request.name());
@@ -58,18 +51,13 @@ public class WorkTypeService {
             wt.setEstimatedTravelMinutes(request.estimatedTravelMinutes() != null ? request.estimatedTravelMinutes() : 0);
             wt = workTypeRepository.save(wt);
             return new WorkTypeResponse(wt.getId(), wt.getName(), wt.getDefaultDurationMinutes(), wt.getEstimatedTravelMinutes());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteWorkType(Long id) {
-        Span span = tracer.spanBuilder("WorkTypeService.deleteWorkType").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             workTypeRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 }

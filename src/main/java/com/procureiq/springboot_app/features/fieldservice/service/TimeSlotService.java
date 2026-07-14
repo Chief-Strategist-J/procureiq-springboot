@@ -26,8 +26,7 @@ public class TimeSlotService {
 
     @Transactional
     public TimeSlotResponse createTimeSlot(TimeSlotRequest request) {
-        Span span = tracer.spanBuilder("TimeSlotService.createTimeSlot").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             OperatingHours oh = operatingHoursRepository.findById(request.operatingHoursId())
                     .orElseThrow(() -> new IllegalArgumentException("OperatingHours not found: " + request.operatingHoursId()));
 
@@ -39,27 +38,21 @@ public class TimeSlotService {
             ts = timeSlotRepository.save(ts);
 
             return mapToResponse(ts);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public TimeSlotResponse getTimeSlot(Long id) {
-        Span span = tracer.spanBuilder("TimeSlotService.getTimeSlot").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             TimeSlot ts = timeSlotRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("TimeSlot not found: " + id));
             return mapToResponse(ts);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public TimeSlotResponse updateTimeSlot(Long id, TimeSlotRequest request) {
-        Span span = tracer.spanBuilder("TimeSlotService.updateTimeSlot").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             TimeSlot ts = timeSlotRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("TimeSlot not found: " + id));
 
@@ -73,19 +66,14 @@ public class TimeSlotService {
             ts = timeSlotRepository.save(ts);
 
             return mapToResponse(ts);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteTimeSlot(Long id) {
-        Span span = tracer.spanBuilder("TimeSlotService.deleteTimeSlot").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             timeSlotRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private TimeSlotResponse mapToResponse(TimeSlot ts) {

@@ -33,8 +33,7 @@ public class ServiceResourceService {
 
     @Transactional(readOnly = true)
     public List<ServiceResourceResponse> getAllServiceResources() {
-        Span span = tracer.spanBuilder("ServiceResourceService.getAllServiceResources").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return serviceResourceRepository.findAll().stream()
                     .map(sr -> new ServiceResourceResponse(
                             sr.getId(),
@@ -45,15 +44,12 @@ public class ServiceResourceService {
                             sr.getIsActive()
                     ))
                     .collect(Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceResourceResponse createServiceResource(ServiceResourceRequest request) {
-        Span span = tracer.spanBuilder("ServiceResourceService.createServiceResource").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResource sr = new ServiceResource();
             sr.setName(request.name());
             if (request.userId() != null) {
@@ -77,15 +73,12 @@ public class ServiceResourceService {
                     sr.getResourceType(),
                     sr.getIsActive()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ServiceResourceResponse getServiceResource(Long id) {
-        Span span = tracer.spanBuilder("ServiceResourceService.getServiceResource").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResource sr = serviceResourceRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + id));
             return new ServiceResourceResponse(
@@ -96,15 +89,12 @@ public class ServiceResourceService {
                     sr.getResourceType(),
                     sr.getIsActive()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceResourceResponse updateServiceResource(Long id, ServiceResourceRequest request) {
-        Span span = tracer.spanBuilder("ServiceResourceService.updateServiceResource").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResource sr = serviceResourceRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + id));
             sr.setName(request.name());
@@ -133,25 +123,19 @@ public class ServiceResourceService {
                     sr.getResourceType(),
                     sr.getIsActive()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteServiceResource(Long id) {
-        Span span = tracer.spanBuilder("ServiceResourceService.deleteServiceResource").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             serviceResourceRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public List<ServiceResourceResponse> getCandidatesForAppointment(Long appointmentId) {
-        Span span = tracer.spanBuilder("ServiceResourceService.getCandidatesForAppointment").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             List<ServiceResource> candidates = serviceResourceRepository.findCandidatesForAppointment(appointmentId);
             if (candidates == null) {
                 return java.util.Collections.emptyList();
@@ -166,8 +150,6 @@ public class ServiceResourceService {
                             sr.getIsActive()
                     ))
                     .collect(Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 }

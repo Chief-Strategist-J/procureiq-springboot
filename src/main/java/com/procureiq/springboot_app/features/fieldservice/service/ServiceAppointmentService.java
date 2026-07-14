@@ -38,8 +38,7 @@ public class ServiceAppointmentService {
 
     @Transactional(readOnly = true)
     public java.util.List<ServiceAppointmentResponse> getAllServiceAppointments() {
-        Span span = tracer.spanBuilder("ServiceAppointmentService.getAllServiceAppointments").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return serviceAppointmentRepository.findAll().stream()
                     .map(sa -> new ServiceAppointmentResponse(
                             sa.getId(),
@@ -59,15 +58,12 @@ public class ServiceAppointmentService {
                             sa.getCreatedAt()
                     ))
                     .collect(java.util.stream.Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceAppointmentResponse createServiceAppointment(ServiceAppointmentRequest request) {
-        Span span = tracer.spanBuilder("ServiceAppointmentService.createServiceAppointment").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceAppointment sa = new ServiceAppointment();
             sa.setParentRecordType(request.parentRecordType() != null ? request.parentRecordType() : "work_order");
             sa.setParentRecordId(request.parentRecordId());
@@ -111,15 +107,12 @@ public class ServiceAppointmentService {
                     sa.getAddress(),
                     sa.getCreatedAt()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ServiceAppointmentResponse getServiceAppointment(Long id) {
-        Span span = tracer.spanBuilder("ServiceAppointmentService.getServiceAppointment").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceAppointment sa = serviceAppointmentRepository.findFirstById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceAppointment not found: " + id));
             return new ServiceAppointmentResponse(
@@ -139,15 +132,12 @@ public class ServiceAppointmentService {
                     sa.getAddress(),
                     sa.getCreatedAt()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceAppointmentResponse updateServiceAppointment(Long id, ServiceAppointmentRequest request) {
-        Span span = tracer.spanBuilder("ServiceAppointmentService.updateServiceAppointment").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceAppointment sa = serviceAppointmentRepository.findFirstById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceAppointment not found: " + id));
             if (request.parentRecordType() != null) {
@@ -195,27 +185,21 @@ public class ServiceAppointmentService {
                     sa.getAddress(),
                     sa.getCreatedAt()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteServiceAppointment(Long id) {
-        Span span = tracer.spanBuilder("ServiceAppointmentService.deleteServiceAppointment").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             ServiceAppointment sa = serviceAppointmentRepository.findFirstById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceAppointment not found: " + id));
             serviceAppointmentRepository.delete(sa);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public AssignedResourceResponse assignResource(Long appointmentId, AssignResourceRequest request) {
-        Span span = tracer.spanBuilder("ServiceAppointmentService.assignResource").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceAppointment sa = serviceAppointmentRepository.findFirstById(appointmentId)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceAppointment not found: " + appointmentId));
 
@@ -246,18 +230,13 @@ public class ServiceAppointmentService {
                     ar.getAssignedAt(),
                     ar.getStatus()
             );
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteAssignedResource(Long id) {
-        Span span = tracer.spanBuilder("ServiceAppointmentService.deleteAssignedResource").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             assignedResourceRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 }

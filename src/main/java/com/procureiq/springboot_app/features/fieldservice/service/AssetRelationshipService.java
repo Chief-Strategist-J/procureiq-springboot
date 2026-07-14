@@ -26,8 +26,7 @@ public class AssetRelationshipService {
 
     @Transactional
     public AssetRelationshipResponse createAssetRelationship(AssetRelationshipRequest request) {
-        Span span = tracer.spanBuilder("AssetRelationshipService.createAssetRelationship").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Asset asset = assetRepository.findById(request.assetId())
                     .orElseThrow(() -> new IllegalArgumentException("Asset not found: " + request.assetId()));
             Asset relatedAsset = assetRepository.findById(request.relatedAssetId())
@@ -40,27 +39,21 @@ public class AssetRelationshipService {
             ar = assetRelationshipRepository.save(ar);
 
             return mapToResponse(ar);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public AssetRelationshipResponse getAssetRelationship(Long id) {
-        Span span = tracer.spanBuilder("AssetRelationshipService.getAssetRelationship").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             AssetRelationship ar = assetRelationshipRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("AssetRelationship not found: " + id));
             return mapToResponse(ar);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public AssetRelationshipResponse updateAssetRelationship(Long id, AssetRelationshipRequest request) {
-        Span span = tracer.spanBuilder("AssetRelationshipService.updateAssetRelationship").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             AssetRelationship ar = assetRelationshipRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("AssetRelationship not found: " + id));
 
@@ -75,19 +68,14 @@ public class AssetRelationshipService {
             ar = assetRelationshipRepository.save(ar);
 
             return mapToResponse(ar);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteAssetRelationship(Long id) {
-        Span span = tracer.spanBuilder("AssetRelationshipService.deleteAssetRelationship").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             assetRelationshipRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private AssetRelationshipResponse mapToResponse(AssetRelationship ar) {

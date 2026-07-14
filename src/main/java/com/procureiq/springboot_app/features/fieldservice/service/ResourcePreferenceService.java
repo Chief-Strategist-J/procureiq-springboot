@@ -27,8 +27,7 @@ public class ResourcePreferenceService {
 
     @Transactional
     public ResourcePreferenceResponse createResourcePreference(ResourcePreferenceRequest request) {
-        Span span = tracer.spanBuilder("ResourcePreferenceService.createResourcePreference").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResource sr = serviceResourceRepository.findById(request.serviceResourceId())
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + request.serviceResourceId()));
 
@@ -40,27 +39,21 @@ public class ResourcePreferenceService {
             rp = resourcePreferenceRepository.save(rp);
 
             return mapToResponse(rp);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ResourcePreferenceResponse getResourcePreference(Long id) {
-        Span span = tracer.spanBuilder("ResourcePreferenceService.getResourcePreference").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ResourcePreference rp = resourcePreferenceRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ResourcePreference not found: " + id));
             return mapToResponse(rp);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ResourcePreferenceResponse updateResourcePreference(Long id, ResourcePreferenceRequest request) {
-        Span span = tracer.spanBuilder("ResourcePreferenceService.updateResourcePreference").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ResourcePreference rp = resourcePreferenceRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ResourcePreference not found: " + id));
 
@@ -74,19 +67,14 @@ public class ResourcePreferenceService {
             rp = resourcePreferenceRepository.save(rp);
 
             return mapToResponse(rp);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteResourcePreference(Long id) {
-        Span span = tracer.spanBuilder("ResourcePreferenceService.deleteResourcePreference").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             resourcePreferenceRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private ResourcePreferenceResponse mapToResponse(ResourcePreference rp) {

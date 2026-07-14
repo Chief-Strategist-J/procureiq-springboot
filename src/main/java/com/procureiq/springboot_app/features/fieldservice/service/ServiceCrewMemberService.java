@@ -32,8 +32,7 @@ public class ServiceCrewMemberService {
 
     @Transactional
     public ServiceCrewMemberResponse createServiceCrewMember(ServiceCrewMemberRequest request) {
-        Span span = tracer.spanBuilder("ServiceCrewMemberService.createServiceCrewMember").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceCrew sc = serviceCrewRepository.findById(request.serviceCrewId())
                     .orElseThrow(() -> new IllegalArgumentException("ServiceCrew not found: " + request.serviceCrewId()));
             ServiceResource sr = serviceResourceRepository.findById(request.serviceResourceId())
@@ -48,27 +47,21 @@ public class ServiceCrewMemberService {
             scm = serviceCrewMemberRepository.save(scm);
 
             return mapToResponse(scm);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ServiceCrewMemberResponse getServiceCrewMember(Long id) {
-        Span span = tracer.spanBuilder("ServiceCrewMemberService.getServiceCrewMember").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceCrewMember scm = serviceCrewMemberRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceCrewMember not found: " + id));
             return mapToResponse(scm);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceCrewMemberResponse updateServiceCrewMember(Long id, ServiceCrewMemberRequest request) {
-        Span span = tracer.spanBuilder("ServiceCrewMemberService.updateServiceCrewMember").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceCrewMember scm = serviceCrewMemberRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceCrewMember not found: " + id));
 
@@ -85,19 +78,14 @@ public class ServiceCrewMemberService {
             scm = serviceCrewMemberRepository.save(scm);
 
             return mapToResponse(scm);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteServiceCrewMember(Long id) {
-        Span span = tracer.spanBuilder("ServiceCrewMemberService.deleteServiceCrewMember").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             serviceCrewMemberRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private ServiceCrewMemberResponse mapToResponse(ServiceCrewMember scm) {

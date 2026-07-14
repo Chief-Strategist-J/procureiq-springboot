@@ -32,8 +32,7 @@ public class CaseMilestoneService {
 
     @Transactional
     public CaseMilestoneResponse createCaseMilestone(CaseMilestoneRequest request) {
-        Span span = tracer.spanBuilder("CaseMilestoneService.createCaseMilestone").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Case caseEntity = caseRepository.findById(request.caseId())
                     .orElseThrow(() -> new IllegalArgumentException("Case not found: " + request.caseId()));
             Milestone milestone = milestoneRepository.findById(request.milestoneId())
@@ -48,27 +47,21 @@ public class CaseMilestoneService {
             cm = caseMilestoneRepository.save(cm);
 
             return mapToResponse(cm);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public CaseMilestoneResponse getCaseMilestone(Long id) {
-        Span span = tracer.spanBuilder("CaseMilestoneService.getCaseMilestone").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             CaseMilestone cm = caseMilestoneRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("CaseMilestone not found: " + id));
             return mapToResponse(cm);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public CaseMilestoneResponse updateCaseMilestone(Long id, CaseMilestoneRequest request) {
-        Span span = tracer.spanBuilder("CaseMilestoneService.updateCaseMilestone").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             CaseMilestone cm = caseMilestoneRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("CaseMilestone not found: " + id));
 
@@ -85,19 +78,14 @@ public class CaseMilestoneService {
             cm = caseMilestoneRepository.save(cm);
 
             return mapToResponse(cm);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteCaseMilestone(Long id) {
-        Span span = tracer.spanBuilder("CaseMilestoneService.deleteCaseMilestone").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             caseMilestoneRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private CaseMilestoneResponse mapToResponse(CaseMilestone cm) {

@@ -37,25 +37,19 @@ public class GithubActionTemplateService {
 
     @Transactional(readOnly = true)
     public List<GithubActionTemplateResponse> getAllTemplates() {
-        Span span = tracer.spanBuilder("GithubActionTemplateService.getAllTemplates").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return githubActionTemplateRepository.findAll().stream()
                     .map(this::toResponse)
                     .collect(Collectors.toList());
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public GithubActionTemplateResponse getTemplate(Long id) {
-        Span span = tracer.spanBuilder("GithubActionTemplateService.getTemplate").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             GithubActionTemplate t = githubActionTemplateRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("GithubActionTemplate not found: " + id));
             return toResponse(t);
-        } finally {
-            span.end();
-        }
+        });
     }
 }

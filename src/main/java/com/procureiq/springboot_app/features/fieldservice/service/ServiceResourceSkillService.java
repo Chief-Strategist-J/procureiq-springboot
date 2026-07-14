@@ -32,8 +32,7 @@ public class ServiceResourceSkillService {
 
     @Transactional
     public ServiceResourceSkillResponse createServiceResourceSkill(ServiceResourceSkillRequest request) {
-        Span span = tracer.spanBuilder("ServiceResourceSkillService.createServiceResourceSkill").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResource sr = serviceResourceRepository.findById(request.serviceResourceId())
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + request.serviceResourceId()));
             Skill skill = skillRepository.findById(request.skillId())
@@ -48,27 +47,21 @@ public class ServiceResourceSkillService {
             srs = serviceResourceSkillRepository.save(srs);
 
             return mapToResponse(srs);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ServiceResourceSkillResponse getServiceResourceSkill(Long id) {
-        Span span = tracer.spanBuilder("ServiceResourceSkillService.getServiceResourceSkill").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResourceSkill srs = serviceResourceSkillRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResourceSkill not found: " + id));
             return mapToResponse(srs);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceResourceSkillResponse updateServiceResourceSkill(Long id, ServiceResourceSkillRequest request) {
-        Span span = tracer.spanBuilder("ServiceResourceSkillService.updateServiceResourceSkill").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResourceSkill srs = serviceResourceSkillRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResourceSkill not found: " + id));
 
@@ -85,19 +78,14 @@ public class ServiceResourceSkillService {
             srs = serviceResourceSkillRepository.save(srs);
 
             return mapToResponse(srs);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteServiceResourceSkill(Long id) {
-        Span span = tracer.spanBuilder("ServiceResourceSkillService.deleteServiceResourceSkill").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             serviceResourceSkillRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private ServiceResourceSkillResponse mapToResponse(ServiceResourceSkill srs) {

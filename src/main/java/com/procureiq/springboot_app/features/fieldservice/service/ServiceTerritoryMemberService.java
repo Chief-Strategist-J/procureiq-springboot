@@ -37,8 +37,7 @@ public class ServiceTerritoryMemberService {
 
     @Transactional
     public ServiceTerritoryMemberResponse createServiceTerritoryMember(ServiceTerritoryMemberRequest request) {
-        Span span = tracer.spanBuilder("ServiceTerritoryMemberService.createServiceTerritoryMember").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceTerritory st = serviceTerritoryRepository.findById(request.serviceTerritoryId())
                     .orElseThrow(() -> new IllegalArgumentException("ServiceTerritory not found: " + request.serviceTerritoryId()));
             ServiceResource sr = serviceResourceRepository.findById(request.serviceResourceId())
@@ -59,27 +58,21 @@ public class ServiceTerritoryMemberService {
             stm = serviceTerritoryMemberRepository.save(stm);
 
             return mapToResponse(stm);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ServiceTerritoryMemberResponse getServiceTerritoryMember(Long id) {
-        Span span = tracer.spanBuilder("ServiceTerritoryMemberService.getServiceTerritoryMember").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceTerritoryMember stm = serviceTerritoryMemberRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceTerritoryMember not found: " + id));
             return mapToResponse(stm);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceTerritoryMemberResponse updateServiceTerritoryMember(Long id, ServiceTerritoryMemberRequest request) {
-        Span span = tracer.spanBuilder("ServiceTerritoryMemberService.updateServiceTerritoryMember").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceTerritoryMember stm = serviceTerritoryMemberRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceTerritoryMember not found: " + id));
 
@@ -102,19 +95,14 @@ public class ServiceTerritoryMemberService {
             stm = serviceTerritoryMemberRepository.save(stm);
 
             return mapToResponse(stm);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteServiceTerritoryMember(Long id) {
-        Span span = tracer.spanBuilder("ServiceTerritoryMemberService.deleteServiceTerritoryMember").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             serviceTerritoryMemberRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private ServiceTerritoryMemberResponse mapToResponse(ServiceTerritoryMember stm) {

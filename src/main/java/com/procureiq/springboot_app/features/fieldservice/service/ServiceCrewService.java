@@ -22,51 +22,39 @@ public class ServiceCrewService {
 
     @Transactional
     public ServiceCrewResponse createServiceCrew(ServiceCrewRequest request) {
-        Span span = tracer.spanBuilder("ServiceCrewService.createServiceCrew").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceCrew sc = new ServiceCrew();
             sc.setName(request.name());
             sc = serviceCrewRepository.save(sc);
             return mapToResponse(sc);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional(readOnly = true)
     public ServiceCrewResponse getServiceCrew(Long id) {
-        Span span = tracer.spanBuilder("ServiceCrewService.getServiceCrew").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceCrew sc = serviceCrewRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceCrew not found: " + id));
             return mapToResponse(sc);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public ServiceCrewResponse updateServiceCrew(Long id, ServiceCrewRequest request) {
-        Span span = tracer.spanBuilder("ServiceCrewService.updateServiceCrew").startSpan();
-        try {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceCrew sc = serviceCrewRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceCrew not found: " + id));
             sc.setName(request.name());
             sc = serviceCrewRepository.save(sc);
             return mapToResponse(sc);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @Transactional
     public void deleteServiceCrew(Long id) {
-        Span span = tracer.spanBuilder("ServiceCrewService.deleteServiceCrew").startSpan();
-        try {
+        com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceVoidWithTracing(() -> {
             serviceCrewRepository.deleteById(id);
-        } finally {
-            span.end();
-        }
+        });
     }
 
     private ServiceCrewResponse mapToResponse(ServiceCrew sc) {
