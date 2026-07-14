@@ -15,31 +15,31 @@ public final class TracingHelper {
 
     private TracingHelper() {}
 
-    public static ResponseEntity<?> executeWithTracing(Callable<ResponseEntity<?>> block) {
+    public static ResponseEntity<?> executeWithTracing(final Callable<ResponseEntity<?>> block) {
         String spanName = "REST.Controller";
         try {
-            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            final StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
             if (stackTrace.length > 2) {
-                StackTraceElement caller = stackTrace[2];
-                String className = caller.getClassName();
-                String simpleName = className.substring(className.lastIndexOf('.') + 1);
+                final StackTraceElement caller = stackTrace[2];
+                final String className = caller.getClassName();
+                final String simpleName = className.substring(className.lastIndexOf('.') + 1);
                 spanName = "REST." + simpleName + "." + caller.getMethodName();
             }
-        } catch (Exception ignored) {}
+        } catch (final Exception ignored) {}
 
-        Span span = tracer.spanBuilder(spanName).startSpan();
-        try (Scope scope = span.makeCurrent()) {
-            ResponseEntity<?> response = block.call();
+        final Span span = tracer.spanBuilder(spanName).startSpan();
+        try (final Scope scope = span.makeCurrent()) {
+            final ResponseEntity<?> response = block.call();
             span.setStatus(StatusCode.OK);
             return response;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             span.recordException(e);
             span.setStatus(StatusCode.ERROR, e.getMessage());
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
             if (e instanceof org.springframework.web.bind.MethodArgumentNotValidException) {
                 status = HttpStatus.BAD_REQUEST;
-                String validationMsg = ((org.springframework.web.bind.MethodArgumentNotValidException) e)
+                final String validationMsg = ((org.springframework.web.bind.MethodArgumentNotValidException) e)
                         .getBindingResult().getFieldErrors().stream()
                         .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                         .collect(java.util.stream.Collectors.joining(", "));

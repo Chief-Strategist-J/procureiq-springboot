@@ -1,19 +1,17 @@
 package com.procureiq.springboot_app.shared.types.error;
 
 public class ApiError {
-    private String message = "";
+    private final String message;
 
-    public ApiError() {}
+    public ApiError() {
+        this.message = "";
+    }
 
-    public ApiError(String message) {
+    public ApiError(final String message) {
         this.message = message != null ? message : "";
     }
 
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }
