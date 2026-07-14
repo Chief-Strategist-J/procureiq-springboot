@@ -12,8 +12,8 @@ import java.util.*;
 @Service
 public class GitHubApiService {
 
-    @Value("${github.token:}")
-    private String githubToken;
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.procureiq.springboot_app.infra.config.AppProperties appProperties;
 
     private GitHub gitHub;
     private boolean mockMode = false;
@@ -29,7 +29,7 @@ public class GitHubApiService {
         try {
             String token = System.getenv("GITHUB_TOKEN");
             if (token == null || token.trim().isEmpty()) {
-                token = githubToken;
+                token = appProperties.getGithubToken();
             }
             if (token == null || token.trim().isEmpty()) {
                 mockMode = true;

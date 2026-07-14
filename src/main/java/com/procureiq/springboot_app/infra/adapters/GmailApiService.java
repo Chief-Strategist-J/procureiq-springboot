@@ -12,12 +12,10 @@ import com.google.api.services.gmail.model.Label;
 import com.google.auth.http.HttpCredentialsAdapter;
 import com.google.auth.oauth2.GoogleCredentials;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.ArrayList;
@@ -30,11 +28,8 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 public class GmailApiService {
 
-    @Value("${gmail.credentials.json.path:}")
-    private String credentialsJsonPath;
-
-    @Value("${gmail.user:me}")
-    private String gmailUser;
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.procureiq.springboot_app.infra.config.AppProperties appProperties;
 
     private Gmail gmailService;
     private boolean isMockMode = false;
@@ -49,8 +44,11 @@ public class GmailApiService {
             String credentialsEnv = System.getenv("GMAIL_CREDENTIALS_JSON");
             if (credentialsEnv != null && !credentialsEnv.trim().isEmpty()) {
                 in = new java.io.ByteArrayInputStream(credentialsEnv.getBytes());
-            } else if (credentialsJsonPath != null && !credentialsJsonPath.trim().isEmpty()) {
-                in = new FileInputStream(credentialsJsonPath);
+            } else {
+                String path = appProperties.getGmailCredentialsJsonPath();
+                if (path != null && !path.trim().isEmpty()) {
+                    in = new FileInputStream(path);
+                }
             }
 
             if (in == null) {
@@ -65,7 +63,7 @@ public class GmailApiService {
                             "https://www.googleapis.com/auth/gmail.compose",
                             "https://www.googleapis.com/auth/gmail.readonly",
                             "https://www.googleapis.com/auth/gmail.send"
-                    ));
+                     ));
             gmailService = new Gmail.Builder(httpTransport, jsonFactory, new HttpCredentialsAdapter(credentials))
                     .setApplicationName("procureiq-springboot")
                     .build();
@@ -87,7 +85,8 @@ public class GmailApiService {
             return message;
         }
 
-        MimeMessage emailContent = createEmail(to, gmailUser.equals("me") ? "sender@example.com" : gmailUser, subject, bodyText);
+        String user = appProperties.getGmailUser();
+        MimeMessage emailContent = createEmail(to, user.equals("me") ? "sender@example.com" : user, subject, bodyText);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         emailContent.writeTo(buffer);
         byte[] bytes = buffer.toByteArray();
@@ -95,7 +94,7 @@ public class GmailApiService {
         Message message = new Message();
         message.setRaw(encodedEmail);
 
-        return gmailService.users().messages().send(gmailUser, message).execute();
+        return gmailService.users().messages().send(user, message).execute();
     }
 
     public Draft createDraft(String to, String subject, String bodyText) throws Exception {
@@ -107,7 +106,8 @@ public class GmailApiService {
             return draft;
         }
 
-        MimeMessage emailContent = createEmail(to, gmailUser.equals("me") ? "sender@example.com" : gmailUser, subject, bodyText);
+        String user = appProperties.getGmailUser();
+        MimeMessage emailContent = createEmail(to, user.equals("me") ? "sender@example.com" : user, subject, bodyText);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         emailContent.writeTo(buffer);
         byte[] bytes = buffer.toByteArray();
@@ -118,7 +118,7 @@ public class GmailApiService {
         Draft draft = new Draft();
         draft.setMessage(message);
 
-        return gmailService.users().drafts().create(gmailUser, draft).execute();
+        return gmailService.users().drafts().create(user, draft).execute();
     }
 
     public List<Message> listMessages() throws Exception {
@@ -126,7 +126,8 @@ public class GmailApiService {
             return mockMessages;
         }
 
-        ListMessagesResponse response = gmailService.users().messages().list(gmailUser).execute();
+        String user = appProperties.getGmailUser();
+        ListMessagesResponse response = gmailService.users().messages().list(user).execute();
         List<Message> messages = new ArrayList<>();
         if (response.getMessages() != null) {
             messages.addAll(response.getMessages());
@@ -139,7 +140,8 @@ public class GmailApiService {
             return mockDrafts;
         }
         List<Draft> drafts = new ArrayList<>();
-        var response = gmailService.users().drafts().list(gmailUser).execute();
+        String user = appProperties.getGmailUser();
+        var response = gmailService.users().drafts().list(user).execute();
         if (response.getDrafts() != null) {
             drafts.addAll(response.getDrafts());
         }
@@ -154,7 +156,8 @@ public class GmailApiService {
                     .setMessagesTotal(10)
                     .setMessagesUnread(2);
         }
-        return gmailService.users().labels().get(gmailUser, labelId).execute();
+        String user = appProperties.getGmailUser();
+        return gmailService.users().labels().get(user, labelId).execute();
     }
 
     private MimeMessage createEmail(String to, String from, String subject, String bodyText) throws Exception {

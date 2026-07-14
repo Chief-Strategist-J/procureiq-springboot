@@ -30,12 +30,11 @@ public class AuthService {
     public AuthService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            @Value("${jwt.secret}") String jwtSecret,
-            @Value("${jwt.expiration}") long jwtExpirationMs) {
+            com.procureiq.springboot_app.infra.config.AppProperties appProperties) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtAlgorithm = Algorithm.HMAC256(jwtSecret);
-        this.jwtExpirationMs = jwtExpirationMs;
+        this.jwtAlgorithm = Algorithm.HMAC256(appProperties.getJwtSecret());
+        this.jwtExpirationMs = appProperties.getJwtExpirationMs();
     }
 
     public UserResponse signup(SignupRequest request) {
