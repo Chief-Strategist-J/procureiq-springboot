@@ -154,7 +154,7 @@ public class AuthService {
         } catch (Exception e) {
             span.recordException(e);
             span.setStatus(StatusCode.ERROR, e.getMessage());
-            // Safe message to prevent user enumeration
+            
             System.out.println("Forgot password request completed.");
         } finally {
             span.end();

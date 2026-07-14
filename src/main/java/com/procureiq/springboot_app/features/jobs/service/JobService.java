@@ -48,7 +48,7 @@ public class JobService {
         });
     }
 
-    // --- Job CRUD ---
+    
 
     @Transactional(readOnly = true)
     public List<JobResponse> getAllJobs() {
@@ -159,7 +159,7 @@ public class JobService {
         }
     }
 
-    // --- Job Runs ---
+    
 
     @Transactional
     public JobRunResponse triggerJobRun(Long jobId) {
@@ -220,7 +220,7 @@ public class JobService {
         }
     }
 
-    // --- Workflow CRUD ---
+    
 
     @Transactional(readOnly = true)
     public List<WorkflowResponse> getAllWorkflows() {
@@ -315,7 +315,7 @@ public class JobService {
         }
     }
 
-    // --- Workflow Runs ---
+    
 
     @Transactional
     public WorkflowRunResponse triggerWorkflowRun(Long workflowId) {

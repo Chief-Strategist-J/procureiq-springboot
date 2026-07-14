@@ -8,15 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-/**
- * VoiceCallProviderConfig — reads the VOICE_PROVIDER environment variable at startup
- * and exposes the correct VoiceCallPort implementation as a Spring bean.
- *
- * Supported values for VOICE_PROVIDER:
- *   twilio  → TwilioVoiceAdapter
- *   vapi    → VapiVoiceAdapter
- *   mock    → MockVoiceAdapter (default when not set or unrecognised)
- */
+
 @Configuration
 public class VoiceCallProviderConfig {
 

@@ -20,7 +20,7 @@ public class MockNotificationSender implements NotificationSender {
         span.setAttribute("provider", provider);
 
         try (Scope scope = span.makeCurrent()) {
-            // Simulate networking delays
+            
             Thread.sleep(50);
             
             System.out.println(String.format(

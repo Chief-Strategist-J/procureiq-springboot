@@ -17,14 +17,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
-/**
- * VoiceCallController — REST handler for scheduled voice call management.
- *
- * Endpoints:
- *   POST   /api/v1/voice/schedule   — schedule a new voice call
- *   GET    /api/v1/voice/scheduled  — list all scheduled calls
- *   DELETE /api/v1/voice/{id}       — cancel / delete a scheduled call
- */
+
 @RestController
 @RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.VOICE)
 @CrossOrigin(origins = "*")
@@ -37,16 +30,7 @@ public class VoiceCallController {
         this.scheduledCallRepository = scheduledCallRepository;
     }
 
-    /**
-     * POST /api/v1/voice/schedule
-     * Schedule a new outbound voice call.
-     *
-     * Request body (JSON):
-     *   phoneNumber   – E.164 destination number   (required)
-     *   instructions  – spoken text for the call   (required)
-     *   scheduledAt   – ISO-8601 timestamp          (required)
-     *   provider      – "mock" | "twilio" | "vapi"  (optional, defaults to "mock")
-     */
+    
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULE)
     public ResponseEntity<?> scheduleCall(@jakarta.validation.Valid @RequestBody Map<String, Object> body) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
@@ -93,10 +77,7 @@ public class VoiceCallController {
         });
     }
 
-    /**
-     * GET /api/v1/voice/scheduled
-     * List all scheduled voice calls regardless of status.
-     */
+    
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULED)
     public ResponseEntity<?> listScheduledCalls() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
@@ -105,10 +86,7 @@ public class VoiceCallController {
         });
     }
 
-    /**
-     * DELETE /api/v1/voice/{id}
-     * Delete / cancel a scheduled voice call by ID.
-     */
+    
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteScheduledCall(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {

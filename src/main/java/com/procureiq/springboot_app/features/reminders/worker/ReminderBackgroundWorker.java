@@ -24,14 +24,14 @@ public class ReminderBackgroundWorker {
     @Scheduled(fixedDelay = 5000)
     @Transactional
     public void processReminders() {
-        // Find pending reminders that are due
+        
         List<Reminder> dueReminders = reminderRepository.findByStatusAndDueAtBefore("PENDING", Instant.now());
 
         for (Reminder reminder : dueReminders) {
             String preference = reminder.getContactPreference();
             if ("EMAIL".equalsIgnoreCase(preference) || "GMAIL".equalsIgnoreCase(preference)) {
                 try {
-                    // Send notification email using GmailApiService
+                    
                     gmailApiService.sendEmail(
                         reminder.getAssigneeContact(),
                         "Reminder: " + reminder.getTitle(),
@@ -42,7 +42,7 @@ public class ReminderBackgroundWorker {
                     reminder.setStatus("FAILED");
                 }
             } else {
-                // For other preferences, just complete it
+                
                 reminder.setStatus("COMPLETED");
             }
             reminderRepository.save(reminder);

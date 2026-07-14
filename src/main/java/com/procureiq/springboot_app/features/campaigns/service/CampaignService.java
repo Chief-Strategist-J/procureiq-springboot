@@ -45,7 +45,7 @@ public class CampaignService {
         this.accountRepository = accountRepository;
     }
 
-    // --- Organization Helper ---
+    
     private Organization getOrCreateOrganization(Long orgId) {
         return organizationRepository.findById(orgId).orElseGet(() -> {
             Organization org = new Organization();
@@ -55,7 +55,7 @@ public class CampaignService {
         });
     }
 
-    // --- Campaign CRUD ---
+    
 
     @Transactional(readOnly = true)
     public List<CampaignResponse> getAllCampaigns() {
@@ -152,7 +152,7 @@ public class CampaignService {
         }
     }
 
-    // --- Scheduled Email CRUD ---
+    
 
     @Transactional(readOnly = true)
     public List<ScheduledEmailResponse> getAllScheduledEmails() {
@@ -289,7 +289,7 @@ public class CampaignService {
         }
     }
 
-    // --- Recipient CRUD ---
+    
 
     @Transactional(readOnly = true)
     public List<RecipientResponse> getAllRecipients() {

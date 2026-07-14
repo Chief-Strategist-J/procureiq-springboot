@@ -10,11 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.List;
 
-/**
- * VoiceCallBackgroundWorker — polls the scheduled_calls table every 5 seconds
- * for PENDING calls whose scheduledAt time has passed, then routes each call
- * through the active VoiceCallPort adapter (mock/twilio/vapi).
- */
+
 @Component
 public class VoiceCallBackgroundWorker {
 

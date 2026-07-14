@@ -113,7 +113,7 @@ public class WorkOrderService {
 
             wo = workOrderRepository.save(wo);
 
-            // Auto-create service appointment
+            
             if (wo.getWorkType() != null) {
                 ServiceAppointment sa = new ServiceAppointment();
                 sa.setParentRecordType("work_order");

@@ -3,10 +3,7 @@ package com.procureiq.springboot_app.features.voice.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 
-/**
- * ScheduledCall — JPA entity mapping the scheduled_calls table.
- * Represents a voice call that should be placed at or after scheduledAt.
- */
+
 @Entity
 @Table(name = "scheduled_calls")
 public class ScheduledCall {
@@ -35,9 +32,9 @@ public class ScheduledCall {
 
     public ScheduledCall() {}
 
-    // -------------------------------------------------------------------------
-    // Getters and setters
-    // -------------------------------------------------------------------------
+    
+    
+    
 
     public Long getId() {
         return id;

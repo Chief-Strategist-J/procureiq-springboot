@@ -36,7 +36,7 @@ public final class ApiEndpoints {
     public static final String SERVICE_CREWS = FIELD_SERVICE + "/service-crews";
     public static final String SHIFTS = FIELD_SERVICE + "/shifts";
 
-    // Method sub-paths
+    
     public static final String PATH_ID = "/{id}";
     public static final String UNREAD_COUNT = "/unread-count";
     public static final String DEVICES = "/devices";

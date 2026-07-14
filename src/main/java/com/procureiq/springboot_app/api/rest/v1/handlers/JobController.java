@@ -27,7 +27,7 @@ public class JobController {
         this.jobService = jobService;
     }
 
-    // --- Job Endpoints ---
+    
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.JOBS)
     public ResponseEntity<?> getAllJobs() {
@@ -69,7 +69,7 @@ public class JobController {
         });
     }
 
-    // --- Job Run Endpoints ---
+    
 
     @GetMapping("/jobs/{id}/runs")
     public ResponseEntity<?> getJobRuns(@PathVariable Long id) {
@@ -95,7 +95,7 @@ public class JobController {
         });
     }
 
-    // --- Workflow Endpoints ---
+    
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORKFLOWS)
     public ResponseEntity<?> getAllWorkflows() {
@@ -137,7 +137,7 @@ public class JobController {
         });
     }
 
-    // --- Workflow Run Endpoints ---
+    
 
     @GetMapping("/workflows/{id}/runs")
     public ResponseEntity<?> getWorkflowRuns(@PathVariable Long id) {

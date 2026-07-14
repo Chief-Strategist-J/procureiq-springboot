@@ -27,7 +27,7 @@ public class CampaignController {
         this.campaignService = campaignService;
     }
 
-    // --- Campaign Endpoints ---
+    
 
     @GetMapping
     public ResponseEntity<?> getAllCampaigns() {
@@ -69,7 +69,7 @@ public class CampaignController {
         });
     }
 
-    // --- Scheduled Email Endpoints ---
+    
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES)
     public ResponseEntity<?> getAllScheduledEmails() {
@@ -111,7 +111,7 @@ public class CampaignController {
         });
     }
 
-    // --- Recipient Endpoints ---
+    
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS)
     public ResponseEntity<?> getAllRecipients() {

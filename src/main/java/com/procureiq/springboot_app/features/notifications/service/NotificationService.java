@@ -26,7 +26,7 @@ public class NotificationService {
     private final DeviceRepository deviceRepository;
     private final ChannelDeliveryRepository deliveryRepository;
 
-    // In-memory generator fallback if sequence is not autowired for IDs
+    
     private static final AtomicLong idGenerator = new AtomicLong(System.currentTimeMillis());
 
     public NotificationService(
@@ -56,7 +56,7 @@ public class NotificationService {
         List<NotificationResponse> mergedList = new ArrayList<>();
         long totalElements = 0;
 
-        // 1. Fetch targeted recipient rows
+        
         Page<NotificationRecipient> recipientPage;
         if ("all".equalsIgnoreCase(status) || status == null || status.isBlank()) {
             recipientPage = recipientRepository.findByUserIdAndDeletedAtIsNull(userId, pageable);
@@ -78,7 +78,7 @@ public class NotificationService {
             }
         }
 
-        // 2. Fetch broadcast notifications if loading unread or all
+        
         if ("all".equalsIgnoreCase(status) || "pending".equalsIgnoreCase(status)) {
             long lastReadSeq = getOrCreateReadCursor(userId).getLastReadSeq();
             List<Notification> broadcasts = notificationRepository
@@ -93,7 +93,7 @@ public class NotificationService {
             totalElements += broadcasts.size();
         }
 
-        // Sort combined list descending
+        
         mergedList.sort((a, b) -> b.createdAt().compareTo(a.createdAt()));
 
         return new NotificationListResponse(mergedList, page, size, totalElements);
@@ -105,10 +105,10 @@ public class NotificationService {
             return new UnreadCountResponse(0);
         }
 
-        // Count unread targeted notifications
+        
         long targetedCount = recipientRepository.countUnreadTargetedActive(userId, "pending", Instant.now());
 
-        // Count unread broadcast notifications
+        
         long lastReadSeq = getOrCreateReadCursor(userId).getLastReadSeq();
         List<Notification> broadcasts = notificationRepository
             .findByTargetScopeAndGlobalSeqGreaterThanOrderByGlobalSeqDesc("broadcast", lastReadSeq);
@@ -125,7 +125,7 @@ public class NotificationService {
             return;
         }
 
-        // Look up targeted recipient row
+        
         Optional<NotificationRecipient> recOpt = recipientRepository.findByUserIdAndNotificationId(userId, notificationId);
         if (recOpt.isPresent()) {
             NotificationRecipient rec = recOpt.get();
@@ -138,14 +138,14 @@ public class NotificationService {
             }
             recipientRepository.save(rec);
         } else {
-            // Check if it's a broadcast notification to advance read cursor
-            // We search across partition timeframes (for ease, look up by ID using JPA fallback or sequential check)
-            // In a real database, we would look up by global_seq on the notifications.
-            // If found, update user's read cursor to this notification's global_seq
-            // To simplify: we find the notification from notifications repository
-            // For now, we will query all partitions or lookup the seq.
-            // Since ID contains createdAt, we find it if we know the creation time or search.
-            // Alternatively, advance the cursor to the highest globalSeq of broadcast notifications.
+            
+            
+            
+            
+            
+            
+            
+            
             advanceReadCursorToMax(userId);
         }
     }
@@ -188,15 +188,15 @@ public class NotificationService {
         NotificationType type = typeRepository.findByCode(request.typeCode())
             .orElseThrow(() -> new IllegalArgumentException("Unknown notification type: " + request.typeCode()));
 
-        // Deduplication check
+        
         if (request.dedupKey() != null && !request.dedupKey().isBlank()) {
             if (notificationRepository.existsByTypeIdAndDedupKey(type.getId(), request.dedupKey())) {
-                // Duplicate detected, return silently
+                
                 return;
             }
         }
 
-        // Create new Notification
+        
         Notification notif = new Notification();
         notif.setId(idGenerator.incrementAndGet());
         notif.setCreatedAt(Instant.now());
@@ -210,13 +210,13 @@ public class NotificationService {
         notif.setTargetId(request.targetId());
         notif.setScheduledFor(request.scheduledFor());
         
-        // Generate monotonic sequence number
+        
         notif.setGlobalSeq(idGenerator.incrementAndGet());
         notif.setUpdatedAt(Instant.now());
 
         notificationRepository.save(notif);
 
-        // Fan-out writes
+        
         if ("user".equalsIgnoreCase(request.targetScope()) && request.targetId() != null) {
             NotificationRecipient rec = new NotificationRecipient();
             rec.setUserId(request.targetId());
@@ -227,7 +227,7 @@ public class NotificationService {
             rec.setUpdatedAt(Instant.now());
             recipientRepository.save(rec);
 
-            // Auto-queue channel deliveries
+            
             if (type.getDefaultChannels() != null) {
                 for (String ch : type.getDefaultChannels()) {
                     ChannelDelivery delivery = new ChannelDelivery();
@@ -260,7 +260,7 @@ public class NotificationService {
 
     private void advanceReadCursorToMax(Long userId) {
         UserReadCursor cursor = getOrCreateReadCursor(userId);
-        // Find highest global_seq of broadcast notifications
+        
         List<Notification> latestBroadcasts = notificationRepository
             .findByTargetScopeAndGlobalSeqGreaterThanOrderByGlobalSeqDesc("broadcast", cursor.getLastReadSeq());
         if (!latestBroadcasts.isEmpty()) {

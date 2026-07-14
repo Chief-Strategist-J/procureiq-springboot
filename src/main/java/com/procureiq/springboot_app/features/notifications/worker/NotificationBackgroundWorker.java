@@ -36,7 +36,7 @@ public class NotificationBackgroundWorker {
     @Scheduled(fixedDelay = 5000)
     @Transactional
     public void processDeliveries() {
-        // Find deliveries waiting to be processed/retried
+        
         List<ChannelDelivery> pendingDeliveries = deliveryRepository
             .findByStatusAndNextRetryAtBefore("queued", Instant.now());
 
@@ -45,7 +45,7 @@ public class NotificationBackgroundWorker {
             delivery.setUpdatedAt(Instant.now());
 
             try {
-                // Execute transport via port/adapter interface
+                
                 notificationSender.send(
                     delivery.getChannel(),
                     delivery.getProvider(),
@@ -54,18 +54,18 @@ public class NotificationBackgroundWorker {
                     "A critical update has occurred on the system."
                 );
 
-                // Success
+                
                 delivery.setStatus("delivered");
                 delivery.setSentAt(Instant.now());
                 delivery.setDeliveredAt(Instant.now());
             } catch (Exception e) {
-                // Failure path
+                
                 if (delivery.getAttemptCount() >= delivery.getMaxAttempts()) {
                     delivery.setStatus("failed");
                     delivery.setErrorCode("MAX_ATTEMPTS_EXCEEDED");
                     delivery.setErrorDetail(e.getMessage());
                 } else {
-                    // Exponential backoff retry logic (e.g. 2^attempt * 5 seconds)
+                    
                     long backoffSeconds = (long) Math.pow(2, delivery.getAttemptCount()) * 5;
                     delivery.setNextRetryAt(Instant.now().plus(backoffSeconds, ChronoUnit.SECONDS));
                     delivery.setErrorCode("DELIVERY_FAILED");
@@ -79,7 +79,7 @@ public class NotificationBackgroundWorker {
     @Scheduled(fixedDelay = 10000)
     @Transactional
     public void processEscalations() {
-        // Find active escalation runs
+        
         List<EscalationRun> activeRuns = escalationRunRepository.findByStatus("active");
 
         for (EscalationRun run : activeRuns) {
@@ -97,7 +97,7 @@ public class NotificationBackgroundWorker {
 
             EscalationPolicy policy = policyOpt.get();
             try {
-                // Parse steps: [{"wait_minutes":0,"channel":"push"},{"wait_minutes":5,"channel":"sms"}]
+                
                 List<Map<String, Object>> steps = objectMapper.readValue(
                     policy.getSteps(),
                     new TypeReference<List<Map<String, Object>>>() {}
@@ -105,7 +105,7 @@ public class NotificationBackgroundWorker {
 
                 int nextStepIdx = run.getCurrentStep() + 1;
                 if (nextStepIdx >= steps.size()) {
-                    // Out of steps, exhaust the policy run
+                    
                     run.setStatus("exhausted");
                     run.setUpdatedAt(Instant.now());
                     escalationRunRepository.save(run);
@@ -118,7 +118,7 @@ public class NotificationBackgroundWorker {
 
                 Instant triggerTime = run.getCreatedAt().plus(waitMinutes, ChronoUnit.MINUTES);
                 if (Instant.now().isAfter(triggerTime)) {
-                    // Trigger the channel delivery for this step
+                    
                     ChannelDelivery delivery = new ChannelDelivery();
                     delivery.setId(System.currentTimeMillis() + new Random().nextInt(1000));
                     delivery.setNotificationId(run.getNotificationId());
@@ -132,13 +132,13 @@ public class NotificationBackgroundWorker {
                     delivery.setUpdatedAt(Instant.now());
                     deliveryRepository.save(delivery);
 
-                    // Advance escalation run step
+                    
                     run.setCurrentStep((short) nextStepIdx);
                     run.setUpdatedAt(Instant.now());
                     escalationRunRepository.save(run);
                 }
             } catch (Exception e) {
-                // Invalid JSON steps or parsing failure, fail silently for testing
+                
                 run.setStatus("failed");
                 run.setUpdatedAt(Instant.now());
                 escalationRunRepository.save(run);

@@ -8,10 +8,7 @@ import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.Scope;
 import org.springframework.stereotype.Component;
 
-/**
- * MockVoiceAdapter — no-op voice adapter used when VOICE_PROVIDER=mock (default).
- * Logs the call details to stdout and returns immediately without hitting any API.
- */
+
 @Component("mockVoiceAdapter")
 public class MockVoiceAdapter implements VoiceCallPort {
 

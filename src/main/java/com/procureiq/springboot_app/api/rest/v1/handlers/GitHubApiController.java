@@ -81,12 +81,7 @@ public class GitHubApiController {
         String commitMessage
     ) {}
 
-    /**
-     * Creates or updates a GitHub Actions workflow file at
-     * .github/workflows/{workflowName}.yml inside the target repository.
-     * In mock mode (no GITHUB_TOKEN), the file is stored in-memory and
-     * a mock response is returned — no real GitHub call is made.
-     */
+    
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.CREATE_WORKFLOW)
     public ResponseEntity<?> createWorkflow(@jakarta.validation.Valid @RequestBody CreateWorkflowRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
@@ -115,7 +110,7 @@ public class GitHubApiController {
         String owner, String repo, String workflowName, String commitMessage
     ) {}
 
-    /** Deletes an existing .github/workflows/{workflowName}.yml from the repository. */
+    
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.DELETE_WORKFLOW)
     public ResponseEntity<?> deleteWorkflow(@jakarta.validation.Valid @RequestBody DeleteWorkflowRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
