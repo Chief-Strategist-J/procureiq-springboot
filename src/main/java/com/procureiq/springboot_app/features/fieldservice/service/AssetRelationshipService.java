@@ -64,7 +64,9 @@ public class AssetRelationshipService {
 
             ar.setAsset(asset);
             ar.setRelatedAsset(relatedAsset);
-            ar.setRelationshipType(request.relationshipType());
+            if (request.relationshipType() != null) {
+                ar.setRelationshipType(request.relationshipType());
+            }
             ar = assetRelationshipRepository.save(ar);
 
             return mapToResponse(ar);

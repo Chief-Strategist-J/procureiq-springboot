@@ -62,10 +62,18 @@ public class ServiceResourceCapacityService {
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + request.serviceResourceId()));
 
             src.setServiceResource(sr);
-            src.setCapacityType(request.capacityType());
-            src.setCapacityValue(request.capacityValue());
-            src.setStartDate(request.startDate());
-            src.setEndDate(request.endDate());
+            if (request.capacityType() != null) {
+                src.setCapacityType(request.capacityType());
+            }
+            if (request.capacityValue() != null) {
+                src.setCapacityValue(request.capacityValue());
+            }
+            if (request.startDate() != null) {
+                src.setStartDate(request.startDate());
+            }
+            if (request.endDate() != null) {
+                src.setEndDate(request.endDate());
+            }
             src = serviceResourceCapacityRepository.save(src);
 
             return mapToResponse(src);

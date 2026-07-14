@@ -76,7 +76,9 @@ public class ServiceResourceService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResource sr = serviceResourceRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + id));
-            sr.setName(request.name());
+            if (request.name() != null) {
+                sr.setName(request.name());
+            }
             if (request.userId() != null) {
                 sr.setUser(appUserRepository.findById(request.userId()).orElse(null));
             } else {

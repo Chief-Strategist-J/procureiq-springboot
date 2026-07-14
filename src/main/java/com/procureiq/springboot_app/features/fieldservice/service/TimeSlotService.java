@@ -60,9 +60,15 @@ public class TimeSlotService {
                     .orElseThrow(() -> new IllegalArgumentException("OperatingHours not found: " + request.operatingHoursId()));
 
             ts.setOperatingHours(oh);
-            ts.setDayOfWeek(request.dayOfWeek());
-            ts.setStartTime(request.startTime());
-            ts.setEndTime(request.endTime());
+            if (request.dayOfWeek() != null) {
+                ts.setDayOfWeek(request.dayOfWeek());
+            }
+            if (request.startTime() != null) {
+                ts.setStartTime(request.startTime());
+            }
+            if (request.endTime() != null) {
+                ts.setEndTime(request.endTime());
+            }
             ts = timeSlotRepository.save(ts);
 
             return mapToResponse(ts);

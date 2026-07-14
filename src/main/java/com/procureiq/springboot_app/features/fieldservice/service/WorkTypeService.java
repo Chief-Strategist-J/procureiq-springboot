@@ -46,7 +46,9 @@ public class WorkTypeService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             WorkType wt = workTypeRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("WorkType not found: " + id));
-            wt.setName(request.name());
+            if (request.name() != null) {
+                wt.setName(request.name());
+            }
             wt.setDefaultDurationMinutes(request.defaultDurationMinutes() != null ? request.defaultDurationMinutes() : 60);
             wt.setEstimatedTravelMinutes(request.estimatedTravelMinutes() != null ? request.estimatedTravelMinutes() : 0);
             wt = workTypeRepository.save(wt);

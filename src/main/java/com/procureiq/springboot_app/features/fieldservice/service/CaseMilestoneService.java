@@ -72,9 +72,15 @@ public class CaseMilestoneService {
 
             cm.setCaseEntity(caseEntity);
             cm.setMilestone(milestone);
-            cm.setStartedAt(request.startedAt());
-            cm.setCompletedAt(request.completedAt());
-            cm.setIsBreached(request.isBreached());
+            if (request.startedAt() != null) {
+                cm.setStartedAt(request.startedAt());
+            }
+            if (request.completedAt() != null) {
+                cm.setCompletedAt(request.completedAt());
+            }
+            if (request.isBreached() != null) {
+                cm.setIsBreached(request.isBreached());
+            }
             cm = caseMilestoneRepository.save(cm);
 
             return mapToResponse(cm);

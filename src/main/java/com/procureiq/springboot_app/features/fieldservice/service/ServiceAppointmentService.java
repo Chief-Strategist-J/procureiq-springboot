@@ -113,12 +113,24 @@ public class ServiceAppointmentService {
             if (request.status() != null) {
                 sa.setStatus(request.status());
             }
-            sa.setScheduledStart(request.scheduledStart());
-            sa.setScheduledEnd(request.scheduledEnd());
-            sa.setArrivalWindowStart(request.arrivalWindowStart());
-            sa.setArrivalWindowEnd(request.arrivalWindowEnd());
-            sa.setDurationMinutes(request.durationMinutes());
-            sa.setAddress(request.address());
+            if (request.scheduledStart() != null) {
+                sa.setScheduledStart(request.scheduledStart());
+            }
+            if (request.scheduledEnd() != null) {
+                sa.setScheduledEnd(request.scheduledEnd());
+            }
+            if (request.arrivalWindowStart() != null) {
+                sa.setArrivalWindowStart(request.arrivalWindowStart());
+            }
+            if (request.arrivalWindowEnd() != null) {
+                sa.setArrivalWindowEnd(request.arrivalWindowEnd());
+            }
+            if (request.durationMinutes() != null) {
+                sa.setDurationMinutes(request.durationMinutes());
+            }
+            if (request.address() != null) {
+                sa.setAddress(request.address());
+            }
             sa = serviceAppointmentRepository.save(sa);
             return ServiceAppointmentResponse.fromEntity(sa);
         });

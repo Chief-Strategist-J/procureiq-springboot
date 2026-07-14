@@ -44,7 +44,9 @@ public class ServiceCrewService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceCrew sc = serviceCrewRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceCrew not found: " + id));
-            sc.setName(request.name());
+            if (request.name() != null) {
+                sc.setName(request.name());
+            }
             sc = serviceCrewRepository.save(sc);
             return mapToResponse(sc);
         });

@@ -72,9 +72,15 @@ public class ServiceResourceSkillService {
 
             srs.setServiceResource(sr);
             srs.setSkill(skill);
-            srs.setSkillLevel(request.skillLevel());
-            srs.setValidFrom(request.validFrom());
-            srs.setValidTo(request.validTo());
+            if (request.skillLevel() != null) {
+                srs.setSkillLevel(request.skillLevel());
+            }
+            if (request.validFrom() != null) {
+                srs.setValidFrom(request.validFrom());
+            }
+            if (request.validTo() != null) {
+                srs.setValidTo(request.validTo());
+            }
             srs = serviceResourceSkillRepository.save(srs);
 
             return mapToResponse(srs);

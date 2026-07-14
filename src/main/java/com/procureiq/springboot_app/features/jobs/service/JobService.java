@@ -90,14 +90,18 @@ public class JobService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Job j = jobRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Job not found: " + id));
-            j.setName(request.name());
+            if (request.name() != null) {
+                j.setName(request.name());
+            }
             if (request.status() != null) {
                 j.setStatus(request.status());
             }
             if (request.config() != null) {
                 j.setConfig(request.config());
             }
-            j.setCategoryId(request.categoryId());
+            if (request.categoryId() != null) {
+                j.setCategoryId(request.categoryId());
+            }
             j = jobRepository.save(j);
             return JobResponse.fromEntity(j);
         });
@@ -184,7 +188,9 @@ public class JobService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Workflow w = workflowRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Workflow not found: " + id));
-            w.setName(request.name());
+            if (request.name() != null) {
+                w.setName(request.name());
+            }
             if (request.status() != null) {
                 w.setStatus(request.status());
             }

@@ -67,7 +67,9 @@ public class ServiceTerritoryService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceTerritory st = serviceTerritoryRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceTerritory not found: " + id));
-            st.setName(request.name());
+            if (request.name() != null) {
+                st.setName(request.name());
+            }
             if (request.operatingHoursId() != null) {
                 st.setOperatingHours(operatingHoursRepository.findById(request.operatingHoursId()).orElse(null));
             } else {

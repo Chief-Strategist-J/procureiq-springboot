@@ -61,9 +61,15 @@ public class ResourcePreferenceService {
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + request.serviceResourceId()));
 
             rp.setServiceResource(sr);
-            rp.setRelatedRecordType(request.relatedRecordType());
-            rp.setRelatedRecordId(request.relatedRecordId());
-            rp.setPreferenceType(request.preferenceType());
+            if (request.relatedRecordType() != null) {
+                rp.setRelatedRecordType(request.relatedRecordType());
+            }
+            if (request.relatedRecordId() != null) {
+                rp.setRelatedRecordId(request.relatedRecordId());
+            }
+            if (request.preferenceType() != null) {
+                rp.setPreferenceType(request.preferenceType());
+            }
             rp = resourcePreferenceRepository.save(rp);
 
             return mapToResponse(rp);

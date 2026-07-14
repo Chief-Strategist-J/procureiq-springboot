@@ -72,9 +72,15 @@ public class ServiceCrewMemberService {
 
             scm.setServiceCrew(sc);
             scm.setServiceResource(sr);
-            scm.setMemberRole(request.memberRole());
-            scm.setStartDate(request.startDate());
-            scm.setEndDate(request.endDate());
+            if (request.memberRole() != null) {
+                scm.setMemberRole(request.memberRole());
+            }
+            if (request.startDate() != null) {
+                scm.setStartDate(request.startDate());
+            }
+            if (request.endDate() != null) {
+                scm.setEndDate(request.endDate());
+            }
             scm = serviceCrewMemberRepository.save(scm);
 
             return mapToResponse(scm);

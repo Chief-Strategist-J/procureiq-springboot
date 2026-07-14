@@ -72,9 +72,15 @@ public class ShiftService {
 
             shift.setServiceResource(sr);
             shift.setServiceTerritory(st);
-            shift.setStartTime(request.startTime());
-            shift.setEndTime(request.endTime());
-            shift.setShiftType(request.shiftType());
+            if (request.startTime() != null) {
+                shift.setStartTime(request.startTime());
+            }
+            if (request.endTime() != null) {
+                shift.setEndTime(request.endTime());
+            }
+            if (request.shiftType() != null) {
+                shift.setShiftType(request.shiftType());
+            }
             shift = shiftRepository.save(shift);
 
             return mapToResponse(shift);

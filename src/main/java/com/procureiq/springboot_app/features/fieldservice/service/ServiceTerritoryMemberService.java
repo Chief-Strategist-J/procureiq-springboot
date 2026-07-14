@@ -90,8 +90,12 @@ public class ServiceTerritoryMemberService {
             stm.setServiceTerritory(st);
             stm.setServiceResource(sr);
             stm.setOperatingHours(oh);
-            stm.setTerritoryType(request.territoryType());
-            stm.setTravelMode(request.travelMode());
+            if (request.territoryType() != null) {
+                stm.setTerritoryType(request.territoryType());
+            }
+            if (request.travelMode() != null) {
+                stm.setTravelMode(request.travelMode());
+            }
             stm = serviceTerritoryMemberRepository.save(stm);
 
             return mapToResponse(stm);

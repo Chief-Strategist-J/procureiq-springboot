@@ -54,8 +54,12 @@ public class OperatingHoursService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             OperatingHours oh = operatingHoursRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("OperatingHours not found: " + id));
-            oh.setName(request.name());
-            oh.setTimezone(request.timezone());
+            if (request.name() != null) {
+                oh.setName(request.name());
+            }
+            if (request.timezone() != null) {
+                oh.setTimezone(request.timezone());
+            }
             oh = operatingHoursRepository.save(oh);
             return OperatingHoursResponse.fromEntity(oh);
         });

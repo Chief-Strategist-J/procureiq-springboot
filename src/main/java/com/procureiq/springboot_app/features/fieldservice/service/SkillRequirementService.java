@@ -60,9 +60,15 @@ public class SkillRequirementService {
                     .orElseThrow(() -> new IllegalArgumentException("Skill not found: " + request.skillId()));
 
             sr.setSkill(skill);
-            sr.setRequiredForType(request.requiredForType());
-            sr.setRequiredForId(request.requiredForId());
-            sr.setMinSkillLevel(request.minSkillLevel());
+            if (request.requiredForType() != null) {
+                sr.setRequiredForType(request.requiredForType());
+            }
+            if (request.requiredForId() != null) {
+                sr.setRequiredForId(request.requiredForId());
+            }
+            if (request.minSkillLevel() != null) {
+                sr.setMinSkillLevel(request.minSkillLevel());
+            }
             sr = skillRequirementRepository.save(sr);
 
             return mapToResponse(sr);

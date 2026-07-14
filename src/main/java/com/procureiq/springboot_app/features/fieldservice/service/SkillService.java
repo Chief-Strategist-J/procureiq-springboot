@@ -45,8 +45,12 @@ public class SkillService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Skill skill = skillRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Skill not found: " + id));
-            skill.setName(request.name());
-            skill.setDescription(request.description());
+            if (request.name() != null) {
+                skill.setName(request.name());
+            }
+            if (request.description() != null) {
+                skill.setDescription(request.description());
+            }
             skill = skillRepository.save(skill);
             return mapToResponse(skill);
         });

@@ -62,10 +62,18 @@ public class ResourceAbsenceService {
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + request.serviceResourceId()));
 
             ra.setServiceResource(sr);
-            ra.setAbsenceType(request.absenceType());
-            ra.setStartTime(request.startTime());
-            ra.setEndTime(request.endTime());
-            ra.setStatus(request.status());
+            if (request.absenceType() != null) {
+                ra.setAbsenceType(request.absenceType());
+            }
+            if (request.startTime() != null) {
+                ra.setStartTime(request.startTime());
+            }
+            if (request.endTime() != null) {
+                ra.setEndTime(request.endTime());
+            }
+            if (request.status() != null) {
+                ra.setStatus(request.status());
+            }
             ra = resourceAbsenceRepository.save(ra);
 
             return mapToResponse(ra);

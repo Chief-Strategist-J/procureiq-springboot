@@ -61,9 +61,15 @@ public class MilestoneService {
                     .orElseThrow(() -> new IllegalArgumentException("EntitlementProcess not found: " + request.entitlementProcessId()));
 
             m.setEntitlementProcess(ep);
-            m.setName(request.name());
-            m.setTargetMinutes(request.targetMinutes());
-            m.setSequence(request.sequence());
+            if (request.name() != null) {
+                m.setName(request.name());
+            }
+            if (request.targetMinutes() != null) {
+                m.setTargetMinutes(request.targetMinutes());
+            }
+            if (request.sequence() != null) {
+                m.setSequence(request.sequence());
+            }
             m = milestoneRepository.save(m);
 
             return mapToResponse(m);

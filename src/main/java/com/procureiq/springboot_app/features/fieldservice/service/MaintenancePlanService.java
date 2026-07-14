@@ -100,10 +100,18 @@ public class MaintenancePlanService {
             mp.setAccount(account);
             mp.setAsset(asset);
             mp.setWorkType(wt);
-            mp.setFrequency(request.frequency());
-            mp.setGenerationLeadDays(request.generationLeadDays());
-            mp.setNextGenerationDate(request.nextGenerationDate());
-            mp.setIsActive(request.isActive());
+            if (request.frequency() != null) {
+                mp.setFrequency(request.frequency());
+            }
+            if (request.generationLeadDays() != null) {
+                mp.setGenerationLeadDays(request.generationLeadDays());
+            }
+            if (request.nextGenerationDate() != null) {
+                mp.setNextGenerationDate(request.nextGenerationDate());
+            }
+            if (request.isActive() != null) {
+                mp.setIsActive(request.isActive());
+            }
             mp = maintenancePlanRepository.save(mp);
 
             return mapToResponse(mp);

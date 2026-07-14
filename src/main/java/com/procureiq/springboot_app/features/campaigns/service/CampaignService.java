@@ -96,7 +96,9 @@ public class CampaignService {
             if (request.orgId() != null) {
                 c.setOrganization(getOrCreateOrganization(request.orgId()));
             }
-            c.setName(request.name());
+            if (request.name() != null) {
+                c.setName(request.name());
+            }
             if (request.status() != null) {
                 c.setStatus(request.status());
             }
@@ -205,7 +207,9 @@ public class CampaignService {
             } else {
                 se.setCampaign(null);
             }
-            se.setTemplateId(request.templateId());
+            if (request.templateId() != null) {
+                se.setTemplateId(request.templateId());
+            }
             if (request.scheduledAt() != null) {
                 se.setScheduledAt(request.scheduledAt());
             }
@@ -299,15 +303,23 @@ public class CampaignService {
             if (request.accountId() != null) {
                 Account account = accountRepository.findById(request.accountId()).orElseGet(() -> {
                     Account acc = new Account();
-                    acc.setId(request.accountId());
+                    if (request.accountId() != null) {
+                        acc.setId(request.accountId());
+                    }
                     acc.setName("Account " + request.accountId());
                     return accountRepository.save(acc);
                 });
                 contact.setAccount(account);
             }
-            contact.setName(request.name());
-            contact.setEmail(request.email());
-            contact.setPhone(request.phone());
+            if (request.name() != null) {
+                contact.setName(request.name());
+            }
+            if (request.email() != null) {
+                contact.setEmail(request.email());
+            }
+            if (request.phone() != null) {
+                contact.setPhone(request.phone());
+            }
             contact = contactRepository.save(contact);
 
             return new RecipientResponse(
