@@ -77,12 +77,6 @@ public class TimeSlotService {
     }
 
     private TimeSlotResponse mapToResponse(TimeSlot ts) {
-        return new TimeSlotResponse(
-            ts.getId(),
-            ts.getOperatingHours().getId(),
-            ts.getDayOfWeek(),
-            ts.getStartTime(),
-            ts.getEndTime()
-        );
+        return TimeSlotResponse.fromEntity(ts);
     }
 }

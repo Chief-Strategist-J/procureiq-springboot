@@ -9,4 +9,15 @@ public record JobRunResponse(
     Instant startedAt,
     Instant completedAt,
     Instant createdAt
-) {}
+) {
+    public static JobRunResponse fromEntity(final com.procureiq.springboot_app.features.jobs.entity.JobRun entity) {
+        return new JobRunResponse(
+            entity.getId(),
+                    entity.getJobId(),
+                    entity.getStatus(),
+                    entity.getStartedAt(),
+                    entity.getCompletedAt(),
+                    entity.getCreatedAt()
+        );
+    }
+}

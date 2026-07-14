@@ -24,7 +24,7 @@ public class OperatingHoursService {
     public java.util.List<OperatingHoursResponse> getAllOperatingHours() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return operatingHoursRepository.findAll().stream()
-                    .map(oh -> new OperatingHoursResponse(oh.getId(), oh.getName(), oh.getTimezone()))
+                    .map(OperatingHoursResponse::fromEntity)
                     .collect(java.util.stream.Collectors.toList());
         });
     }
@@ -36,7 +36,7 @@ public class OperatingHoursService {
             oh.setName(request.name());
             oh.setTimezone(request.timezone() != null ? request.timezone() : "UTC");
             oh = operatingHoursRepository.save(oh);
-            return new OperatingHoursResponse(oh.getId(), oh.getName(), oh.getTimezone());
+            return OperatingHoursResponse.fromEntity(oh);
         });
     }
 
@@ -45,7 +45,7 @@ public class OperatingHoursService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             OperatingHours oh = operatingHoursRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("OperatingHours not found: " + id));
-            return new OperatingHoursResponse(oh.getId(), oh.getName(), oh.getTimezone());
+            return OperatingHoursResponse.fromEntity(oh);
         });
     }
 
@@ -57,7 +57,7 @@ public class OperatingHoursService {
             oh.setName(request.name());
             oh.setTimezone(request.timezone());
             oh = operatingHoursRepository.save(oh);
-            return new OperatingHoursResponse(oh.getId(), oh.getName(), oh.getTimezone());
+            return OperatingHoursResponse.fromEntity(oh);
         });
     }
 

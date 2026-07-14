@@ -45,20 +45,7 @@ public class WorkOrderService {
     public List<WorkOrderResponse> getAllWorkOrders() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return workOrderRepository.findAll().stream()
-                    .map(wo -> new WorkOrderResponse(
-                            wo.getId(),
-                            wo.getParentWorkOrder() != null ? wo.getParentWorkOrder().getId() : null,
-                            wo.getCaseEntity() != null ? wo.getCaseEntity().getId() : null,
-                            wo.getAccount().getId(),
-                            wo.getEntitlement() != null ? wo.getEntitlement().getId() : null,
-                            wo.getContact() != null ? wo.getContact().getId() : null,
-                            wo.getAsset() != null ? wo.getAsset().getId() : null,
-                            wo.getWorkType() != null ? wo.getWorkType().getId() : null,
-                            wo.getPriceBook() != null ? wo.getPriceBook().getId() : null,
-                            wo.getStatus(),
-                            wo.getPriority(),
-                            wo.getCreatedAt()
-                    ))
+                    .map(WorkOrderResponse::fromEntity)
                     .toList();
         });
     }
@@ -122,20 +109,7 @@ public class WorkOrderService {
                 serviceAppointmentRepository.save(sa);
             }
 
-            return new WorkOrderResponse(
-                    wo.getId(),
-                    wo.getParentWorkOrder() != null ? wo.getParentWorkOrder().getId() : null,
-                    wo.getCaseEntity() != null ? wo.getCaseEntity().getId() : null,
-                    wo.getAccount().getId(),
-                    wo.getEntitlement() != null ? wo.getEntitlement().getId() : null,
-                    wo.getContact() != null ? wo.getContact().getId() : null,
-                    wo.getAsset() != null ? wo.getAsset().getId() : null,
-                    wo.getWorkType() != null ? wo.getWorkType().getId() : null,
-                    wo.getPriceBook() != null ? wo.getPriceBook().getId() : null,
-                    wo.getStatus(),
-                    wo.getPriority(),
-                    wo.getCreatedAt()
-            );
+            return WorkOrderResponse.fromEntity(wo);
         });
     }
 
@@ -144,20 +118,7 @@ public class WorkOrderService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             WorkOrder wo = workOrderRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("WorkOrder not found: " + id));
-            return new WorkOrderResponse(
-                    wo.getId(),
-                    wo.getParentWorkOrder() != null ? wo.getParentWorkOrder().getId() : null,
-                    wo.getCaseEntity() != null ? wo.getCaseEntity().getId() : null,
-                    wo.getAccount().getId(),
-                    wo.getEntitlement() != null ? wo.getEntitlement().getId() : null,
-                    wo.getContact() != null ? wo.getContact().getId() : null,
-                    wo.getAsset() != null ? wo.getAsset().getId() : null,
-                    wo.getWorkType() != null ? wo.getWorkType().getId() : null,
-                    wo.getPriceBook() != null ? wo.getPriceBook().getId() : null,
-                    wo.getStatus(),
-                    wo.getPriority(),
-                    wo.getCreatedAt()
-            );
+            return WorkOrderResponse.fromEntity(wo);
         });
     }
 
@@ -211,20 +172,7 @@ public class WorkOrderService {
                 wo.setPriority(request.priority());
             }
             wo = workOrderRepository.save(wo);
-            return new WorkOrderResponse(
-                    wo.getId(),
-                    wo.getParentWorkOrder() != null ? wo.getParentWorkOrder().getId() : null,
-                    wo.getCaseEntity() != null ? wo.getCaseEntity().getId() : null,
-                    wo.getAccount().getId(),
-                    wo.getEntitlement() != null ? wo.getEntitlement().getId() : null,
-                    wo.getContact() != null ? wo.getContact().getId() : null,
-                    wo.getAsset() != null ? wo.getAsset().getId() : null,
-                    wo.getWorkType() != null ? wo.getWorkType().getId() : null,
-                    wo.getPriceBook() != null ? wo.getPriceBook().getId() : null,
-                    wo.getStatus(),
-                    wo.getPriority(),
-                    wo.getCreatedAt()
-            );
+            return WorkOrderResponse.fromEntity(wo);
         });
     }
 

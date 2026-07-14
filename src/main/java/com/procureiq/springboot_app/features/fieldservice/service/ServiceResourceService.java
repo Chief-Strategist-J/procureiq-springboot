@@ -35,14 +35,7 @@ public class ServiceResourceService {
     public List<ServiceResourceResponse> getAllServiceResources() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return serviceResourceRepository.findAll().stream()
-                    .map(sr -> new ServiceResourceResponse(
-                            sr.getId(),
-                            sr.getName(),
-                            sr.getUser() != null ? sr.getUser().getId() : null,
-                            sr.getServiceCrew() != null ? sr.getServiceCrew().getId() : null,
-                            sr.getResourceType(),
-                            sr.getIsActive()
-                    ))
+                    .map(ServiceResourceResponse::fromEntity)
                     .collect(Collectors.toList());
         });
     }
@@ -65,14 +58,7 @@ public class ServiceResourceService {
                 sr.setIsActive(request.isActive());
             }
             sr = serviceResourceRepository.save(sr);
-            return new ServiceResourceResponse(
-                    sr.getId(),
-                    sr.getName(),
-                    sr.getUser() != null ? sr.getUser().getId() : null,
-                    sr.getServiceCrew() != null ? sr.getServiceCrew().getId() : null,
-                    sr.getResourceType(),
-                    sr.getIsActive()
-            );
+            return ServiceResourceResponse.fromEntity(sr);
         });
     }
 
@@ -81,14 +67,7 @@ public class ServiceResourceService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceResource sr = serviceResourceRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceResource not found: " + id));
-            return new ServiceResourceResponse(
-                    sr.getId(),
-                    sr.getName(),
-                    sr.getUser() != null ? sr.getUser().getId() : null,
-                    sr.getServiceCrew() != null ? sr.getServiceCrew().getId() : null,
-                    sr.getResourceType(),
-                    sr.getIsActive()
-            );
+            return ServiceResourceResponse.fromEntity(sr);
         });
     }
 
@@ -115,14 +94,7 @@ public class ServiceResourceService {
                 sr.setIsActive(request.isActive());
             }
             sr = serviceResourceRepository.save(sr);
-            return new ServiceResourceResponse(
-                    sr.getId(),
-                    sr.getName(),
-                    sr.getUser() != null ? sr.getUser().getId() : null,
-                    sr.getServiceCrew() != null ? sr.getServiceCrew().getId() : null,
-                    sr.getResourceType(),
-                    sr.getIsActive()
-            );
+            return ServiceResourceResponse.fromEntity(sr);
         });
     }
 
@@ -141,14 +113,7 @@ public class ServiceResourceService {
                 return java.util.Collections.emptyList();
             }
             return candidates.stream()
-                    .map(sr -> new ServiceResourceResponse(
-                            sr.getId(),
-                            sr.getName(),
-                            sr.getUser() != null ? sr.getUser().getId() : null,
-                            sr.getServiceCrew() != null ? sr.getServiceCrew().getId() : null,
-                            sr.getResourceType(),
-                            sr.getIsActive()
-                    ))
+                    .map(ServiceResourceResponse::fromEntity)
                     .collect(Collectors.toList());
         });
     }

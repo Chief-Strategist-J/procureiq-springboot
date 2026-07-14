@@ -29,13 +29,7 @@ public class ServiceTerritoryService {
     public java.util.List<ServiceTerritoryResponse> getAllServiceTerritories() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return serviceTerritoryRepository.findAll().stream()
-                    .map(st -> new ServiceTerritoryResponse(
-                            st.getId(),
-                            st.getName(),
-                            st.getParentTerritory() != null ? st.getParentTerritory().getId() : null,
-                            st.getOperatingHours() != null ? st.getOperatingHours().getId() : null,
-                            st.getIsActive()
-                    ))
+                    .map(ServiceTerritoryResponse::fromEntity)
                     .collect(java.util.stream.Collectors.toList());
         });
     }
@@ -55,13 +49,7 @@ public class ServiceTerritoryService {
                 st.setIsActive(request.isActive());
             }
             st = serviceTerritoryRepository.save(st);
-            return new ServiceTerritoryResponse(
-                    st.getId(),
-                    st.getName(),
-                    st.getParentTerritory() != null ? st.getParentTerritory().getId() : null,
-                    st.getOperatingHours() != null ? st.getOperatingHours().getId() : null,
-                    st.getIsActive()
-            );
+            return ServiceTerritoryResponse.fromEntity(st);
         });
     }
 
@@ -70,13 +58,7 @@ public class ServiceTerritoryService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceTerritory st = serviceTerritoryRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceTerritory not found: " + id));
-            return new ServiceTerritoryResponse(
-                    st.getId(),
-                    st.getName(),
-                    st.getParentTerritory() != null ? st.getParentTerritory().getId() : null,
-                    st.getOperatingHours() != null ? st.getOperatingHours().getId() : null,
-                    st.getIsActive()
-            );
+            return ServiceTerritoryResponse.fromEntity(st);
         });
     }
 
@@ -100,13 +82,7 @@ public class ServiceTerritoryService {
                 st.setIsActive(request.isActive());
             }
             st = serviceTerritoryRepository.save(st);
-            return new ServiceTerritoryResponse(
-                    st.getId(),
-                    st.getName(),
-                    st.getParentTerritory() != null ? st.getParentTerritory().getId() : null,
-                    st.getOperatingHours() != null ? st.getOperatingHours().getId() : null,
-                    st.getIsActive()
-            );
+            return ServiceTerritoryResponse.fromEntity(st);
         });
     }
 

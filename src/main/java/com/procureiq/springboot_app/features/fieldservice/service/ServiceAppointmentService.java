@@ -40,23 +40,7 @@ public class ServiceAppointmentService {
     public java.util.List<ServiceAppointmentResponse> getAllServiceAppointments() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return serviceAppointmentRepository.findAll().stream()
-                    .map(sa -> new ServiceAppointmentResponse(
-                            sa.getId(),
-                            sa.getParentRecordType(),
-                            sa.getParentRecordId(),
-                            sa.getAccount() != null ? sa.getAccount().getId() : null,
-                            sa.getContact() != null ? sa.getContact().getId() : null,
-                            sa.getServiceTerritory() != null ? sa.getServiceTerritory().getId() : null,
-                            sa.getWorkType() != null ? sa.getWorkType().getId() : null,
-                            sa.getStatus(),
-                            sa.getScheduledStart(),
-                            sa.getScheduledEnd(),
-                            sa.getArrivalWindowStart(),
-                            sa.getArrivalWindowEnd(),
-                            sa.getDurationMinutes(),
-                            sa.getAddress(),
-                            sa.getCreatedAt()
-                    ))
+                    .map(ServiceAppointmentResponse::fromEntity)
                     .collect(java.util.stream.Collectors.toList());
         });
     }
@@ -90,23 +74,7 @@ public class ServiceAppointmentService {
             sa.setAddress(request.address());
 
             sa = serviceAppointmentRepository.save(sa);
-            return new ServiceAppointmentResponse(
-                    sa.getId(),
-                    sa.getParentRecordType(),
-                    sa.getParentRecordId(),
-                    sa.getAccount() != null ? sa.getAccount().getId() : null,
-                    sa.getContact() != null ? sa.getContact().getId() : null,
-                    sa.getServiceTerritory() != null ? sa.getServiceTerritory().getId() : null,
-                    sa.getWorkType() != null ? sa.getWorkType().getId() : null,
-                    sa.getStatus(),
-                    sa.getScheduledStart(),
-                    sa.getScheduledEnd(),
-                    sa.getArrivalWindowStart(),
-                    sa.getArrivalWindowEnd(),
-                    sa.getDurationMinutes(),
-                    sa.getAddress(),
-                    sa.getCreatedAt()
-            );
+            return ServiceAppointmentResponse.fromEntity(sa);
         });
     }
 
@@ -115,23 +83,7 @@ public class ServiceAppointmentService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             ServiceAppointment sa = serviceAppointmentRepository.findFirstById(id)
                     .orElseThrow(() -> new IllegalArgumentException("ServiceAppointment not found: " + id));
-            return new ServiceAppointmentResponse(
-                    sa.getId(),
-                    sa.getParentRecordType(),
-                    sa.getParentRecordId(),
-                    sa.getAccount() != null ? sa.getAccount().getId() : null,
-                    sa.getContact() != null ? sa.getContact().getId() : null,
-                    sa.getServiceTerritory() != null ? sa.getServiceTerritory().getId() : null,
-                    sa.getWorkType() != null ? sa.getWorkType().getId() : null,
-                    sa.getStatus(),
-                    sa.getScheduledStart(),
-                    sa.getScheduledEnd(),
-                    sa.getArrivalWindowStart(),
-                    sa.getArrivalWindowEnd(),
-                    sa.getDurationMinutes(),
-                    sa.getAddress(),
-                    sa.getCreatedAt()
-            );
+            return ServiceAppointmentResponse.fromEntity(sa);
         });
     }
 
@@ -168,23 +120,7 @@ public class ServiceAppointmentService {
             sa.setDurationMinutes(request.durationMinutes());
             sa.setAddress(request.address());
             sa = serviceAppointmentRepository.save(sa);
-            return new ServiceAppointmentResponse(
-                    sa.getId(),
-                    sa.getParentRecordType(),
-                    sa.getParentRecordId(),
-                    sa.getAccount() != null ? sa.getAccount().getId() : null,
-                    sa.getContact() != null ? sa.getContact().getId() : null,
-                    sa.getServiceTerritory() != null ? sa.getServiceTerritory().getId() : null,
-                    sa.getWorkType() != null ? sa.getWorkType().getId() : null,
-                    sa.getStatus(),
-                    sa.getScheduledStart(),
-                    sa.getScheduledEnd(),
-                    sa.getArrivalWindowStart(),
-                    sa.getArrivalWindowEnd(),
-                    sa.getDurationMinutes(),
-                    sa.getAddress(),
-                    sa.getCreatedAt()
-            );
+            return ServiceAppointmentResponse.fromEntity(sa);
         });
     }
 

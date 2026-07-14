@@ -8,4 +8,14 @@ public record TimeSlotResponse(
     Integer dayOfWeek,
     LocalTime startTime,
     LocalTime endTime
-) {}
+) {
+    public static TimeSlotResponse fromEntity(final com.procureiq.springboot_app.features.fieldservice.entity.TimeSlot entity) {
+        return new TimeSlotResponse(
+            entity.getId(),
+            entity.getOperatingHours().getId(),
+            entity.getDayOfWeek(),
+            entity.getStartTime(),
+            entity.getEndTime()
+        );
+    }
+}
