@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.WorkTypeRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.WorkTypeResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.WorkTypeRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.WorkTypeResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.WorkType;
 import com.procureiq.springboot_app.features.fieldservice.repository.WorkTypeRepository;
 import io.opentelemetry.api.GlobalOpenTelemetry;

@@ -1,8 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.jobs.dto.*;
+import com.procureiq.springboot_app.features.jobs.dto.request.*;
+import com.procureiq.springboot_app.features.jobs.dto.response.*;
 import com.procureiq.springboot_app.features.jobs.service.JobService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -31,7 +33,7 @@ public class JobController {
     public ResponseEntity<?> getAllJobs() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<JobResponse> response = jobService.getAllJobs();
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -39,7 +41,7 @@ public class JobController {
     public ResponseEntity<?> createJob(@jakarta.validation.Valid @RequestBody JobRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             JobResponse response = jobService.createJob(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -47,7 +49,7 @@ public class JobController {
     public ResponseEntity<?> getJob(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             JobResponse response = jobService.getJob(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -55,7 +57,7 @@ public class JobController {
     public ResponseEntity<?> updateJob(@PathVariable Long id, @jakarta.validation.Valid @RequestBody JobRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             JobResponse response = jobService.updateJob(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -63,7 +65,7 @@ public class JobController {
     public ResponseEntity<?> deleteJob(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             jobService.deleteJob(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted job successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted job successfully"));
         });
     }
 
@@ -73,7 +75,7 @@ public class JobController {
     public ResponseEntity<?> getJobRuns(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<JobRunResponse> response = jobService.getJobRuns(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -81,7 +83,7 @@ public class JobController {
     public ResponseEntity<?> triggerJobRun(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             JobRunResponse response = jobService.triggerJobRun(id);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -89,7 +91,7 @@ public class JobController {
     public ResponseEntity<?> getJobRun(@PathVariable Long runId) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             JobRunResponse response = jobService.getJobRun(runId);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -99,7 +101,7 @@ public class JobController {
     public ResponseEntity<?> getAllWorkflows() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<WorkflowResponse> response = jobService.getAllWorkflows();
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -107,7 +109,7 @@ public class JobController {
     public ResponseEntity<?> createWorkflow(@jakarta.validation.Valid @RequestBody WorkflowRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkflowResponse response = jobService.createWorkflow(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -115,7 +117,7 @@ public class JobController {
     public ResponseEntity<?> getWorkflow(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkflowResponse response = jobService.getWorkflow(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -123,7 +125,7 @@ public class JobController {
     public ResponseEntity<?> updateWorkflow(@PathVariable Long id, @jakarta.validation.Valid @RequestBody WorkflowRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkflowResponse response = jobService.updateWorkflow(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -131,7 +133,7 @@ public class JobController {
     public ResponseEntity<?> deleteWorkflow(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             jobService.deleteWorkflow(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted workflow successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted workflow successfully"));
         });
     }
 
@@ -141,7 +143,7 @@ public class JobController {
     public ResponseEntity<?> getWorkflowRuns(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<WorkflowRunResponse> response = jobService.getWorkflowRuns(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -149,7 +151,7 @@ public class JobController {
     public ResponseEntity<?> triggerWorkflowRun(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkflowRunResponse response = jobService.triggerWorkflowRun(id);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -157,7 +159,7 @@ public class JobController {
     public ResponseEntity<?> getWorkflowRun(@PathVariable Long runId) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkflowRunResponse response = jobService.getWorkflowRun(runId);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 }

@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceTerritoryMemberRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceTerritoryMemberResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ServiceTerritoryMemberRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ServiceTerritoryMemberResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.OperatingHours;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceResource;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceTerritory;

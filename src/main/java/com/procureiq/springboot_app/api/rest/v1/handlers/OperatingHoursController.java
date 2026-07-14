@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.OperatingHoursRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.OperatingHoursResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.OperatingHoursRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.OperatingHoursResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.OperatingHoursService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -27,7 +28,7 @@ public class OperatingHoursController {
     public ResponseEntity<?> getAllOperatingHours() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             java.util.List<OperatingHoursResponse> response = operatingHoursService.getAllOperatingHours();
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -35,7 +36,7 @@ public class OperatingHoursController {
     public ResponseEntity<?> createOperatingHours(@jakarta.validation.Valid @RequestBody OperatingHoursRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             OperatingHoursResponse response = operatingHoursService.createOperatingHours(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -43,7 +44,7 @@ public class OperatingHoursController {
     public ResponseEntity<?> getOperatingHours(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             OperatingHoursResponse response = operatingHoursService.getOperatingHours(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -51,7 +52,7 @@ public class OperatingHoursController {
     public ResponseEntity<?> updateOperatingHours(@PathVariable Long id, @jakarta.validation.Valid @RequestBody OperatingHoursRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             OperatingHoursResponse response = operatingHoursService.updateOperatingHours(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -59,7 +60,7 @@ public class OperatingHoursController {
     public ResponseEntity<?> deleteOperatingHours(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             operatingHoursService.deleteOperatingHours(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted operating hours successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted operating hours successfully"));
         });
     }
 }

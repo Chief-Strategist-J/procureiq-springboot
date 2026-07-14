@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ResourcePreferenceRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ResourcePreferenceResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ResourcePreferenceRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ResourcePreferenceResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.ResourcePreference;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceResource;
 import com.procureiq.springboot_app.features.fieldservice.repository.ResourcePreferenceRepository;

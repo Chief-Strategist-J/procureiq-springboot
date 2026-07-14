@@ -7,7 +7,7 @@ import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
 import java.util.concurrent.Callable;
 
 public final class TracingHelper {
@@ -44,7 +44,7 @@ public final class TracingHelper {
                         .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
                         .collect(java.util.stream.Collectors.joining(", "));
                 return ResponseEntity.status(status)
-                        .body(ApiResponse.error(status.value(), "Validation failed: " + validationMsg));
+                        .body(ApiSingleResponse.error(status.value(), "Validation failed: " + validationMsg));
             }
 
             if (e instanceof com.procureiq.springboot_app.shared.exceptions.ResourceNotFoundException) {
@@ -62,7 +62,7 @@ public final class TracingHelper {
             }
 
             return ResponseEntity.status(status)
-                    .body(ApiResponse.error(status.value(), e.getMessage()));
+                    .body(ApiSingleResponse.error(status.value(), e.getMessage()));
         } finally {
             span.end();
         }

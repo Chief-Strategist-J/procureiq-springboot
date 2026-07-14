@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.CaseMilestoneRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.CaseMilestoneResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.CaseMilestoneRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.CaseMilestoneResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.Case;
 import com.procureiq.springboot_app.features.fieldservice.entity.CaseMilestone;
 import com.procureiq.springboot_app.features.fieldservice.entity.Milestone;

@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ShiftRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ShiftResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ShiftRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ShiftResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceResource;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceTerritory;
 import com.procureiq.springboot_app.features.fieldservice.entity.Shift;

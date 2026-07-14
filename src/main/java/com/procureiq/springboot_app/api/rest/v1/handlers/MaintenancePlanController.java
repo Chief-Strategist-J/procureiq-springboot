@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.MaintenancePlanRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.MaintenancePlanResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.MaintenancePlanRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.MaintenancePlanResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.MaintenancePlanService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class MaintenancePlanController {
     public ResponseEntity<?> createMaintenancePlan(@jakarta.validation.Valid @RequestBody MaintenancePlanRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             MaintenancePlanResponse response = maintenancePlanService.createMaintenancePlan(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class MaintenancePlanController {
     public ResponseEntity<?> getMaintenancePlan(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             MaintenancePlanResponse response = maintenancePlanService.getMaintenancePlan(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -45,7 +46,7 @@ public class MaintenancePlanController {
     public ResponseEntity<?> updateMaintenancePlan(@PathVariable Long id, @jakarta.validation.Valid @RequestBody MaintenancePlanRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             MaintenancePlanResponse response = maintenancePlanService.updateMaintenancePlan(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -53,7 +54,7 @@ public class MaintenancePlanController {
     public ResponseEntity<?> deleteMaintenancePlan(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             maintenancePlanService.deleteMaintenancePlan(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted maintenance plan successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted maintenance plan successfully"));
         });
     }
 }

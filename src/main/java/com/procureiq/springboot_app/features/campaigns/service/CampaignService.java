@@ -1,6 +1,7 @@
 package com.procureiq.springboot_app.features.campaigns.service;
 
-import com.procureiq.springboot_app.features.campaigns.dto.*;
+import com.procureiq.springboot_app.features.campaigns.dto.request.*;
+import com.procureiq.springboot_app.features.campaigns.dto.response.*;
 import com.procureiq.springboot_app.features.campaigns.entity.Campaign;
 import com.procureiq.springboot_app.features.campaigns.entity.Organization;
 import com.procureiq.springboot_app.features.campaigns.entity.ScheduledEmail;

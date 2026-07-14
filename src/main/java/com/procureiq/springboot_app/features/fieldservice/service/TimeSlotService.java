@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.TimeSlotRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.TimeSlotResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.TimeSlotRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.TimeSlotResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.OperatingHours;
 import com.procureiq.springboot_app.features.fieldservice.entity.TimeSlot;
 import com.procureiq.springboot_app.features.fieldservice.repository.OperatingHoursRepository;

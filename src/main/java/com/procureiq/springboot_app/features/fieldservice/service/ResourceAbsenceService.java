@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ResourceAbsenceRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ResourceAbsenceResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ResourceAbsenceRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ResourceAbsenceResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.ResourceAbsence;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceResource;
 import com.procureiq.springboot_app.features.fieldservice.repository.ResourceAbsenceRepository;

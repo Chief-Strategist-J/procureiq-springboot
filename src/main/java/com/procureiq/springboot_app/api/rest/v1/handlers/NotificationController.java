@@ -1,8 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.notifications.dto.*;
+import com.procureiq.springboot_app.features.notifications.dto.request.*;
+import com.procureiq.springboot_app.features.notifications.dto.response.*;
 import com.procureiq.springboot_app.features.notifications.service.NotificationService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -32,7 +34,7 @@ public class NotificationController {
             @RequestParam(defaultValue = "all") String status) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             NotificationListResponse response = notificationService.getNotifications(userId, status, page, size);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -40,7 +42,7 @@ public class NotificationController {
     public ResponseEntity<?> sendNotification(@jakarta.validation.Valid @RequestBody SendNotificationRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             notificationService.sendNotification(request);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.success(202, "Notification accepted for delivery"));
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiSingleResponse.success(202, "Notification accepted for delivery"));
         });
     }
 
@@ -51,7 +53,7 @@ public class NotificationController {
             @jakarta.validation.Valid @RequestBody UpdateNotificationStatusRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             notificationService.updateStatus(userId, id, request.status());
-            return ResponseEntity.ok(ApiResponse.success(200, "Status updated successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Status updated successfully"));
         });
     }
 
@@ -60,7 +62,7 @@ public class NotificationController {
             @RequestHeader(name = "X-User-Id", defaultValue = "1") Long userId) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             UnreadCountResponse response = notificationService.getUnreadCount(userId);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -70,7 +72,7 @@ public class NotificationController {
             @jakarta.validation.Valid @RequestBody RegisterDeviceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             notificationService.registerDevice(userId, request);
-            return ResponseEntity.ok(ApiResponse.success(200, "Device registered successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Device registered successfully"));
         });
     }
 }

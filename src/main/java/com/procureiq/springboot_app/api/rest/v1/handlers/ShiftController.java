@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ShiftRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ShiftResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ShiftRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ShiftResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.ShiftService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class ShiftController {
     public ResponseEntity<?> createShift(@jakarta.validation.Valid @RequestBody ShiftRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ShiftResponse response = shiftService.createShift(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class ShiftController {
     public ResponseEntity<?> getShift(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ShiftResponse response = shiftService.getShift(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -45,7 +46,7 @@ public class ShiftController {
     public ResponseEntity<?> updateShift(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ShiftRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ShiftResponse response = shiftService.updateShift(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -53,7 +54,7 @@ public class ShiftController {
     public ResponseEntity<?> deleteShift(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             shiftService.deleteShift(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted shift successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted shift successfully"));
         });
     }
 }

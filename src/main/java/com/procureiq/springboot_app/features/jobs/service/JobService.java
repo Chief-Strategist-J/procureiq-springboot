@@ -2,7 +2,8 @@ package com.procureiq.springboot_app.features.jobs.service;
 
 import com.procureiq.springboot_app.features.campaigns.entity.Organization;
 import com.procureiq.springboot_app.features.campaigns.repository.OrganizationRepository;
-import com.procureiq.springboot_app.features.jobs.dto.*;
+import com.procureiq.springboot_app.features.jobs.dto.request.*;
+import com.procureiq.springboot_app.features.jobs.dto.response.*;
 import com.procureiq.springboot_app.features.jobs.entity.*;
 import com.procureiq.springboot_app.features.jobs.repository.*;
 import io.opentelemetry.api.GlobalOpenTelemetry;

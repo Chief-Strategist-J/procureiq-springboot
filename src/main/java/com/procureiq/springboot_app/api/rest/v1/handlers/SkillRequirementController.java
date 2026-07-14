@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.SkillRequirementRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.SkillRequirementResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.SkillRequirementRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.SkillRequirementResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.SkillRequirementService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class SkillRequirementController {
     public ResponseEntity<?> createSkillRequirement(@jakarta.validation.Valid @RequestBody SkillRequirementRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             SkillRequirementResponse response = skillRequirementService.createSkillRequirement(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class SkillRequirementController {
     public ResponseEntity<?> getSkillRequirement(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             SkillRequirementResponse response = skillRequirementService.getSkillRequirement(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -45,7 +46,7 @@ public class SkillRequirementController {
     public ResponseEntity<?> updateSkillRequirement(@PathVariable Long id, @jakarta.validation.Valid @RequestBody SkillRequirementRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             SkillRequirementResponse response = skillRequirementService.updateSkillRequirement(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -53,7 +54,7 @@ public class SkillRequirementController {
     public ResponseEntity<?> deleteSkillRequirement(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             skillRequirementService.deleteSkillRequirement(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted skill requirement successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted skill requirement successfully"));
         });
     }
 }

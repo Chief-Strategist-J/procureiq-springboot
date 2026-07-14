@@ -2,7 +2,8 @@ package com.procureiq.springboot_app.api.rest.v1.handlers;
 
 import com.google.api.services.gmail.model.Message;
 import com.procureiq.springboot_app.infra.adapters.GmailApiService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -34,7 +35,7 @@ public class GmailApiController {
                 throw new IllegalArgumentException("Recipient 'to' address is required");
             }
             Message message = gmailApiService.sendEmail(request.to(), request.subject(), request.body());
-            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(200, message));
+            return ResponseEntity.status(HttpStatus.OK).body(ApiSingleResponse.success(200, message));
         });
     }
 
@@ -42,7 +43,7 @@ public class GmailApiController {
     public ResponseEntity<?> listMessages() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<Message> messages = gmailApiService.listMessages();
-            return ResponseEntity.ok(ApiResponse.success(200, messages));
+            return ResponseEntity.ok(ApiListResponse.success(200, messages));
         });
     }
 }

@@ -2,7 +2,8 @@ package com.procureiq.springboot_app.api.rest.v1.handlers;
 
 import com.procureiq.springboot_app.features.voice.entity.ScheduledCall;
 import com.procureiq.springboot_app.features.voice.repository.ScheduledCallRepository;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -58,15 +59,15 @@ public class VoiceCallController {
 
             if (phoneNumber == null || phoneNumber.isBlank()) {
                 return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(400, "phoneNumber is required"));
+                    .body(ApiSingleResponse.error(400, "phoneNumber is required"));
             }
             if (instructions == null || instructions.isBlank()) {
                 return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(400, "instructions is required"));
+                    .body(ApiSingleResponse.error(400, "instructions is required"));
             }
             if (scheduledAtRaw == null || scheduledAtRaw.isBlank()) {
                 return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(400, "scheduledAt is required"));
+                    .body(ApiSingleResponse.error(400, "scheduledAt is required"));
             }
 
             Instant scheduledAt;
@@ -74,7 +75,7 @@ public class VoiceCallController {
                 scheduledAt = Instant.parse(scheduledAtRaw);
             } catch (Exception e) {
                 return ResponseEntity.badRequest()
-                    .body(ApiResponse.error(400, "scheduledAt must be a valid ISO-8601 timestamp"));
+                    .body(ApiSingleResponse.error(400, "scheduledAt must be a valid ISO-8601 timestamp"));
             }
 
             ScheduledCall call = new ScheduledCall();
@@ -88,7 +89,7 @@ public class VoiceCallController {
             ScheduledCall saved = scheduledCallRepository.save(call);
 
             return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(201, saved));
+                .body(ApiSingleResponse.success(201, saved));
         });
     }
 
@@ -100,7 +101,7 @@ public class VoiceCallController {
     public ResponseEntity<?> listScheduledCalls() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<ScheduledCall> calls = scheduledCallRepository.findAll();
-            return ResponseEntity.ok(ApiResponse.success(200, calls));
+            return ResponseEntity.ok(ApiListResponse.success(200, calls));
         });
     }
 
@@ -113,10 +114,10 @@ public class VoiceCallController {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (!scheduledCallRepository.existsById(id)) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponse.error(404, "Scheduled call not found with ID: " + id));
+                    .body(ApiSingleResponse.error(404, "Scheduled call not found with ID: " + id));
             }
             scheduledCallRepository.deleteById(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Scheduled call deleted successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Scheduled call deleted successfully"));
         });
     }
 }

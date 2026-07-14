@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.OperatingHoursRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.OperatingHoursResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.OperatingHoursRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.OperatingHoursResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.OperatingHours;
 import com.procureiq.springboot_app.features.fieldservice.repository.OperatingHoursRepository;
 import io.opentelemetry.api.GlobalOpenTelemetry;

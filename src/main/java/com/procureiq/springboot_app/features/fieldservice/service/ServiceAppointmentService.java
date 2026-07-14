@@ -1,6 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.*;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.*;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.*;
 import com.procureiq.springboot_app.features.fieldservice.entity.AssignedResource;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceAppointment;
 import com.procureiq.springboot_app.features.fieldservice.repository.*;

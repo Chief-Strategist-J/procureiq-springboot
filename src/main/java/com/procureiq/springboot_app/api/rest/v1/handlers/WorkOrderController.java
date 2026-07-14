@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.WorkOrderRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.WorkOrderResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.WorkOrderRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.WorkOrderResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.WorkOrderService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -30,7 +31,7 @@ public class WorkOrderController {
     public ResponseEntity<?> getAllWorkOrders() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<WorkOrderResponse> response = workOrderService.getAllWorkOrders();
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -38,7 +39,7 @@ public class WorkOrderController {
     public ResponseEntity<?> createWorkOrder(@jakarta.validation.Valid @RequestBody WorkOrderRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkOrderResponse response = workOrderService.createWorkOrder(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -46,7 +47,7 @@ public class WorkOrderController {
     public ResponseEntity<?> getWorkOrder(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkOrderResponse response = workOrderService.getWorkOrder(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -54,7 +55,7 @@ public class WorkOrderController {
     public ResponseEntity<?> updateWorkOrder(@PathVariable Long id, @jakarta.validation.Valid @RequestBody WorkOrderRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkOrderResponse response = workOrderService.updateWorkOrder(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -62,7 +63,7 @@ public class WorkOrderController {
     public ResponseEntity<?> deleteWorkOrder(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             workOrderService.deleteWorkOrder(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted work order successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted work order successfully"));
         });
     }
 }

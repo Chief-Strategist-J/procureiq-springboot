@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceResourceCapacityRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceResourceCapacityResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ServiceResourceCapacityRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ServiceResourceCapacityResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceResource;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceResourceCapacity;
 import com.procureiq.springboot_app.features.fieldservice.repository.ServiceResourceCapacityRepository;

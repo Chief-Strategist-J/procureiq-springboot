@@ -1,8 +1,9 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.githubactions.dto.GithubActionTemplateResponse;
+import com.procureiq.springboot_app.features.githubactions.dto.response.GithubActionTemplateResponse;
 import com.procureiq.springboot_app.features.githubactions.service.GithubActionTemplateService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class GithubActionTemplateController {
     public ResponseEntity<?> getAllTemplates() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<GithubActionTemplateResponse> response = githubActionTemplateService.getAllTemplates();
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class GithubActionTemplateController {
     public ResponseEntity<?> getTemplate(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             GithubActionTemplateResponse response = githubActionTemplateService.getTemplate(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 }

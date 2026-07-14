@@ -1,6 +1,7 @@
 package com.procureiq.springboot_app.features.notifications.service;
 
-import com.procureiq.springboot_app.features.notifications.dto.*;
+import com.procureiq.springboot_app.features.notifications.dto.request.*;
+import com.procureiq.springboot_app.features.notifications.dto.response.*;
 import com.procureiq.springboot_app.features.notifications.entity.*;
 import com.procureiq.springboot_app.features.notifications.repository.*;
 import org.springframework.data.domain.Page;

@@ -1,8 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.campaigns.dto.*;
+import com.procureiq.springboot_app.features.campaigns.dto.request.*;
+import com.procureiq.springboot_app.features.campaigns.dto.response.*;
 import com.procureiq.springboot_app.features.campaigns.service.CampaignService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -31,7 +33,7 @@ public class CampaignController {
     public ResponseEntity<?> getAllCampaigns() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<CampaignResponse> response = campaignService.getAllCampaigns();
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -39,7 +41,7 @@ public class CampaignController {
     public ResponseEntity<?> createCampaign(@jakarta.validation.Valid @RequestBody CampaignRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CampaignResponse response = campaignService.createCampaign(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -47,7 +49,7 @@ public class CampaignController {
     public ResponseEntity<?> getCampaign(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CampaignResponse response = campaignService.getCampaign(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -55,7 +57,7 @@ public class CampaignController {
     public ResponseEntity<?> updateCampaign(@PathVariable Long id, @jakarta.validation.Valid @RequestBody CampaignRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CampaignResponse response = campaignService.updateCampaign(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -63,7 +65,7 @@ public class CampaignController {
     public ResponseEntity<?> deleteCampaign(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             campaignService.deleteCampaign(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted campaign successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted campaign successfully"));
         });
     }
 
@@ -73,7 +75,7 @@ public class CampaignController {
     public ResponseEntity<?> getAllScheduledEmails() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<ScheduledEmailResponse> response = campaignService.getAllScheduledEmails();
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -81,7 +83,7 @@ public class CampaignController {
     public ResponseEntity<?> createScheduledEmail(@jakarta.validation.Valid @RequestBody ScheduledEmailRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ScheduledEmailResponse response = campaignService.createScheduledEmail(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -89,7 +91,7 @@ public class CampaignController {
     public ResponseEntity<?> getScheduledEmail(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ScheduledEmailResponse response = campaignService.getScheduledEmail(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -97,7 +99,7 @@ public class CampaignController {
     public ResponseEntity<?> updateScheduledEmail(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ScheduledEmailRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ScheduledEmailResponse response = campaignService.updateScheduledEmail(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -105,7 +107,7 @@ public class CampaignController {
     public ResponseEntity<?> deleteScheduledEmail(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             campaignService.deleteScheduledEmail(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted scheduled email successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted scheduled email successfully"));
         });
     }
 
@@ -115,7 +117,7 @@ public class CampaignController {
     public ResponseEntity<?> getAllRecipients() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<RecipientResponse> response = campaignService.getAllRecipients();
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -123,7 +125,7 @@ public class CampaignController {
     public ResponseEntity<?> createRecipient(@jakarta.validation.Valid @RequestBody RecipientRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             RecipientResponse response = campaignService.createRecipient(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -131,7 +133,7 @@ public class CampaignController {
     public ResponseEntity<?> getRecipient(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             RecipientResponse response = campaignService.getRecipient(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -139,7 +141,7 @@ public class CampaignController {
     public ResponseEntity<?> updateRecipient(@PathVariable Long id, @jakarta.validation.Valid @RequestBody RecipientRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             RecipientResponse response = campaignService.updateRecipient(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -147,7 +149,7 @@ public class CampaignController {
     public ResponseEntity<?> deleteRecipient(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             campaignService.deleteRecipient(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted recipient successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted recipient successfully"));
         });
     }
 }

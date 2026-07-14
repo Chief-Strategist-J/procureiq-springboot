@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.MilestoneRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.MilestoneResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.MilestoneRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.MilestoneResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.EntitlementProcess;
 import com.procureiq.springboot_app.features.fieldservice.entity.Milestone;
 import com.procureiq.springboot_app.features.fieldservice.repository.EntitlementProcessRepository;

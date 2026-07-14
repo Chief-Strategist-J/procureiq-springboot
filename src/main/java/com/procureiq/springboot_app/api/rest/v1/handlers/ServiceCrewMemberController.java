@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceCrewMemberRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceCrewMemberResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ServiceCrewMemberRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ServiceCrewMemberResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.ServiceCrewMemberService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class ServiceCrewMemberController {
     public ResponseEntity<?> createServiceCrewMember(@jakarta.validation.Valid @RequestBody ServiceCrewMemberRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceCrewMemberResponse response = serviceCrewMemberService.createServiceCrewMember(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class ServiceCrewMemberController {
     public ResponseEntity<?> getServiceCrewMember(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceCrewMemberResponse response = serviceCrewMemberService.getServiceCrewMember(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -45,7 +46,7 @@ public class ServiceCrewMemberController {
     public ResponseEntity<?> updateServiceCrewMember(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ServiceCrewMemberRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceCrewMemberResponse response = serviceCrewMemberService.updateServiceCrewMember(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -53,7 +54,7 @@ public class ServiceCrewMemberController {
     public ResponseEntity<?> deleteServiceCrewMember(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             serviceCrewMemberService.deleteServiceCrewMember(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted service crew member successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted service crew member successfully"));
         });
     }
 }

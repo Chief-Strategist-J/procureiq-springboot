@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.MaintenancePlanRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.MaintenancePlanResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.MaintenancePlanRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.MaintenancePlanResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.Account;
 import com.procureiq.springboot_app.features.fieldservice.entity.Asset;
 import com.procureiq.springboot_app.features.fieldservice.entity.MaintenancePlan;

@@ -2,7 +2,8 @@ package com.procureiq.springboot_app.api.rest.v1.handlers;
 
 import com.procureiq.springboot_app.features.reminders.entity.Reminder;
 import com.procureiq.springboot_app.features.reminders.repository.ReminderRepository;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -31,7 +32,7 @@ public class ReminderController {
     public ResponseEntity<?> getAllReminders() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<Reminder> reminders = reminderRepository.findAll();
-            return ResponseEntity.ok(ApiResponse.success(200, reminders));
+            return ResponseEntity.ok(ApiListResponse.success(200, reminders));
         });
     }
 
@@ -45,7 +46,7 @@ public class ReminderController {
                 reminder.setStatus("PENDING");
             }
             Reminder saved = reminderRepository.save(reminder);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, saved));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, saved));
         });
     }
 
@@ -67,7 +68,7 @@ public class ReminderController {
             if (details.getSnoozeCount() != null) existing.setSnoozeCount(details.getSnoozeCount());
             
             Reminder saved = reminderRepository.save(existing);
-            return ResponseEntity.ok(ApiResponse.success(200, saved));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, saved));
         });
     }
 
@@ -75,7 +76,7 @@ public class ReminderController {
     public ResponseEntity<?> deleteReminder(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             reminderRepository.deleteById(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Reminder deleted successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Reminder deleted successfully"));
         });
     }
 }

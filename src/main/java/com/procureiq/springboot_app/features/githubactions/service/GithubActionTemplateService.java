@@ -1,6 +1,6 @@
 package com.procureiq.springboot_app.features.githubactions.service;
 
-import com.procureiq.springboot_app.features.githubactions.dto.GithubActionTemplateResponse;
+import com.procureiq.springboot_app.features.githubactions.dto.response.GithubActionTemplateResponse;
 import com.procureiq.springboot_app.features.githubactions.entity.GithubActionTemplate;
 import com.procureiq.springboot_app.features.githubactions.repository.GithubActionTemplateRepository;
 import io.opentelemetry.api.GlobalOpenTelemetry;

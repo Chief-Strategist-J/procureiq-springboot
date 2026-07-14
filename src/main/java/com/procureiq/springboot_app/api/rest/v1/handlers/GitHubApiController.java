@@ -1,7 +1,8 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
 import com.procureiq.springboot_app.infra.adapters.GitHubApiService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -40,7 +41,7 @@ public class GitHubApiController {
                 throw new IllegalArgumentException("Event type is required");
             }
             gitHubApiService.triggerRepositoryDispatch(request.owner(), request.repo(), request.eventType(), request.clientPayload());
-            return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(200, "Repository dispatch triggered successfully"));
+            return ResponseEntity.status(HttpStatus.OK).body(ApiSingleResponse.success(200, "Repository dispatch triggered successfully"));
         });
     }
 
@@ -54,7 +55,7 @@ public class GitHubApiController {
                 throw new IllegalArgumentException("Repository name is required");
             }
             Map<String, Object> details = gitHubApiService.getRepositoryDetails(owner, repo);
-            return ResponseEntity.ok(ApiResponse.success(200, details));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, details));
         });
     }
 
@@ -68,7 +69,7 @@ public class GitHubApiController {
                 throw new IllegalArgumentException("Repository name is required");
             }
             List<Map<String, Object>> runs = gitHubApiService.getWorkflowRuns(owner, repo);
-            return ResponseEntity.ok(ApiResponse.success(200, runs));
+            return ResponseEntity.ok(ApiListResponse.success(200, runs));
         });
     }
 
@@ -106,7 +107,7 @@ public class GitHubApiController {
                     request.owner(), request.repo(),
                     request.workflowName(), request.yamlContent(), msg);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, result));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, result));
         });
     }
 
@@ -132,7 +133,7 @@ public class GitHubApiController {
             gitHubApiService.deleteWorkflowFile(
                     request.owner(), request.repo(), request.workflowName(), msg);
 
-            return ResponseEntity.ok(ApiResponse.success(200, "Workflow deleted successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Workflow deleted successfully"));
         });
     }
 }

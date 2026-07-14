@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.CaseMilestoneRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.CaseMilestoneResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.CaseMilestoneRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.CaseMilestoneResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.CaseMilestoneService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class CaseMilestoneController {
     public ResponseEntity<?> createCaseMilestone(@jakarta.validation.Valid @RequestBody CaseMilestoneRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CaseMilestoneResponse response = caseMilestoneService.createCaseMilestone(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class CaseMilestoneController {
     public ResponseEntity<?> getCaseMilestone(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CaseMilestoneResponse response = caseMilestoneService.getCaseMilestone(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -45,7 +46,7 @@ public class CaseMilestoneController {
     public ResponseEntity<?> updateCaseMilestone(@PathVariable Long id, @jakarta.validation.Valid @RequestBody CaseMilestoneRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CaseMilestoneResponse response = caseMilestoneService.updateCaseMilestone(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -53,7 +54,7 @@ public class CaseMilestoneController {
     public ResponseEntity<?> deleteCaseMilestone(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             caseMilestoneService.deleteCaseMilestone(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted case milestone successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted case milestone successfully"));
         });
     }
 }

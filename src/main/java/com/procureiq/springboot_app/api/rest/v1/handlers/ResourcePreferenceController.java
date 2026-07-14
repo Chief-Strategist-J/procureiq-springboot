@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ResourcePreferenceRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ResourcePreferenceResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ResourcePreferenceRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ResourcePreferenceResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.ResourcePreferenceService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class ResourcePreferenceController {
     public ResponseEntity<?> createResourcePreference(@jakarta.validation.Valid @RequestBody ResourcePreferenceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ResourcePreferenceResponse response = resourcePreferenceService.createResourcePreference(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class ResourcePreferenceController {
     public ResponseEntity<?> getResourcePreference(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ResourcePreferenceResponse response = resourcePreferenceService.getResourcePreference(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -45,7 +46,7 @@ public class ResourcePreferenceController {
     public ResponseEntity<?> updateResourcePreference(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ResourcePreferenceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ResourcePreferenceResponse response = resourcePreferenceService.updateResourcePreference(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -53,7 +54,7 @@ public class ResourcePreferenceController {
     public ResponseEntity<?> deleteResourcePreference(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             resourcePreferenceService.deleteResourcePreference(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted resource preference successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted resource preference successfully"));
         });
     }
 }

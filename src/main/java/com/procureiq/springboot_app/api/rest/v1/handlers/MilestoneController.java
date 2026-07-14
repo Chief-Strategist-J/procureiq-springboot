@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.MilestoneRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.MilestoneResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.MilestoneRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.MilestoneResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.MilestoneService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class MilestoneController {
     public ResponseEntity<?> createMilestone(@jakarta.validation.Valid @RequestBody MilestoneRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             MilestoneResponse response = milestoneService.createMilestone(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class MilestoneController {
     public ResponseEntity<?> getMilestone(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             MilestoneResponse response = milestoneService.getMilestone(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -45,7 +46,7 @@ public class MilestoneController {
     public ResponseEntity<?> updateMilestone(@PathVariable Long id, @jakarta.validation.Valid @RequestBody MilestoneRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             MilestoneResponse response = milestoneService.updateMilestone(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -53,7 +54,7 @@ public class MilestoneController {
     public ResponseEntity<?> deleteMilestone(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             milestoneService.deleteMilestone(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted milestone successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted milestone successfully"));
         });
     }
 }

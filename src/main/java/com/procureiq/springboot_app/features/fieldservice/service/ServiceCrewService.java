@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceCrewRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceCrewResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ServiceCrewRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ServiceCrewResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceCrew;
 import com.procureiq.springboot_app.features.fieldservice.repository.ServiceCrewRepository;
 import io.opentelemetry.api.GlobalOpenTelemetry;

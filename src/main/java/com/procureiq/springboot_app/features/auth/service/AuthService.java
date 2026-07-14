@@ -2,7 +2,8 @@ package com.procureiq.springboot_app.features.auth.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.procureiq.springboot_app.features.auth.dto.*;
+import com.procureiq.springboot_app.features.auth.dto.request.*;
+import com.procureiq.springboot_app.features.auth.dto.response.*;
 import com.procureiq.springboot_app.features.auth.entity.User;
 import com.procureiq.springboot_app.features.auth.repository.UserRepository;
 import io.opentelemetry.api.GlobalOpenTelemetry;

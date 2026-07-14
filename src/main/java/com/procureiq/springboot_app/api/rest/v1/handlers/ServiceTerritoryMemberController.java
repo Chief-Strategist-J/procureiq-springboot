@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceTerritoryMemberRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceTerritoryMemberResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ServiceTerritoryMemberRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ServiceTerritoryMemberResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.ServiceTerritoryMemberService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class ServiceTerritoryMemberController {
     public ResponseEntity<?> createServiceTerritoryMember(@jakarta.validation.Valid @RequestBody ServiceTerritoryMemberRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryMemberResponse response = serviceTerritoryMemberService.createServiceTerritoryMember(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class ServiceTerritoryMemberController {
     public ResponseEntity<?> getServiceTerritoryMember(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryMemberResponse response = serviceTerritoryMemberService.getServiceTerritoryMember(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -45,7 +46,7 @@ public class ServiceTerritoryMemberController {
     public ResponseEntity<?> updateServiceTerritoryMember(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ServiceTerritoryMemberRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryMemberResponse response = serviceTerritoryMemberService.updateServiceTerritoryMember(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -53,7 +54,7 @@ public class ServiceTerritoryMemberController {
     public ResponseEntity<?> deleteServiceTerritoryMember(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             serviceTerritoryMemberService.deleteServiceTerritoryMember(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted service territory member successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted service territory member successfully"));
         });
     }
 }

@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.AssetRelationshipRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.AssetRelationshipResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.AssetRelationshipRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.AssetRelationshipResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.Asset;
 import com.procureiq.springboot_app.features.fieldservice.entity.AssetRelationship;
 import com.procureiq.springboot_app.features.fieldservice.repository.AssetRepository;

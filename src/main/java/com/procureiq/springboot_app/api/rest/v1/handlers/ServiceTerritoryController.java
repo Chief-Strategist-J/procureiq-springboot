@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceTerritoryRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceTerritoryResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ServiceTerritoryRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ServiceTerritoryResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.ServiceTerritoryService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class ServiceTerritoryController {
     public ResponseEntity<?> getAllServiceTerritories() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             java.util.List<ServiceTerritoryResponse> response = serviceTerritoryService.getAllServiceTerritories();
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class ServiceTerritoryController {
     public ResponseEntity<?> createServiceTerritory(@jakarta.validation.Valid @RequestBody ServiceTerritoryRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryResponse response = serviceTerritoryService.createServiceTerritory(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -45,7 +46,7 @@ public class ServiceTerritoryController {
     public ResponseEntity<?> getServiceTerritory(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryResponse response = serviceTerritoryService.getServiceTerritory(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -53,7 +54,7 @@ public class ServiceTerritoryController {
     public ResponseEntity<?> updateServiceTerritory(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ServiceTerritoryRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryResponse response = serviceTerritoryService.updateServiceTerritory(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -61,7 +62,7 @@ public class ServiceTerritoryController {
     public ResponseEntity<?> deleteServiceTerritory(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             serviceTerritoryService.deleteServiceTerritory(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted territory successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted territory successfully"));
         });
     }
 }

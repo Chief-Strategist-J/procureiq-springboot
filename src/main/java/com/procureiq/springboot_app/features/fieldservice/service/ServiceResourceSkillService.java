@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceResourceSkillRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceResourceSkillResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ServiceResourceSkillRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ServiceResourceSkillResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceResource;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceResourceSkill;
 import com.procureiq.springboot_app.features.fieldservice.entity.Skill;

@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.WorkOrderRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.WorkOrderResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.WorkOrderRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.WorkOrderResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.Account;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceAppointment;
 import com.procureiq.springboot_app.features.fieldservice.entity.WorkOrder;

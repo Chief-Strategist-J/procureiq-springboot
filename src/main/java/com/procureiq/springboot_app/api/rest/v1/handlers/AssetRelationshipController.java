@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.AssetRelationshipRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.AssetRelationshipResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.AssetRelationshipRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.AssetRelationshipResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.AssetRelationshipService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -29,7 +30,7 @@ public class AssetRelationshipController {
     public ResponseEntity<?> createAssetRelationship(@jakarta.validation.Valid @RequestBody AssetRelationshipRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             AssetRelationshipResponse response = assetRelationshipService.createAssetRelationship(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -37,7 +38,7 @@ public class AssetRelationshipController {
     public ResponseEntity<?> getAssetRelationship(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             AssetRelationshipResponse response = assetRelationshipService.getAssetRelationship(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -45,7 +46,7 @@ public class AssetRelationshipController {
     public ResponseEntity<?> updateAssetRelationship(@PathVariable Long id, @jakarta.validation.Valid @RequestBody AssetRelationshipRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             AssetRelationshipResponse response = assetRelationshipService.updateAssetRelationship(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -53,7 +54,7 @@ public class AssetRelationshipController {
     public ResponseEntity<?> deleteAssetRelationship(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             assetRelationshipService.deleteAssetRelationship(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted asset relationship successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted asset relationship successfully"));
         });
     }
 }

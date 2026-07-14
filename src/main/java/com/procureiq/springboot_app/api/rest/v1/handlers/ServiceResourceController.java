@@ -1,9 +1,10 @@
 package com.procureiq.springboot_app.api.rest.v1.handlers;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceResourceRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceResourceResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ServiceResourceRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ServiceResourceResponse;
 import com.procureiq.springboot_app.features.fieldservice.service.ServiceResourceService;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
+import com.procureiq.springboot_app.shared.types.ApiSingleResponse;
+import com.procureiq.springboot_app.shared.types.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.api.trace.StatusCode;
@@ -31,7 +32,7 @@ public class ServiceResourceController {
     public ResponseEntity<?> getAllServiceResources() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<ServiceResourceResponse> response = serviceResourceService.getAllServiceResources();
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiListResponse.success(200, response));
         });
     }
 
@@ -39,7 +40,7 @@ public class ServiceResourceController {
     public ResponseEntity<?> createServiceResource(@jakarta.validation.Valid @RequestBody ServiceResourceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceResourceResponse response = serviceResourceService.createServiceResource(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
+            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
         });
     }
 
@@ -47,7 +48,7 @@ public class ServiceResourceController {
     public ResponseEntity<?> getServiceResource(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceResourceResponse response = serviceResourceService.getServiceResource(id);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -55,7 +56,7 @@ public class ServiceResourceController {
     public ResponseEntity<?> updateServiceResource(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ServiceResourceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceResourceResponse response = serviceResourceService.updateServiceResource(id, request);
-            return ResponseEntity.ok(ApiResponse.success(200, response));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
         });
     }
 
@@ -63,7 +64,7 @@ public class ServiceResourceController {
     public ResponseEntity<?> deleteServiceResource(@PathVariable Long id) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             serviceResourceService.deleteServiceResource(id);
-            return ResponseEntity.ok(ApiResponse.success(200, "Deleted resource successfully"));
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Deleted resource successfully"));
         });
     }
 }

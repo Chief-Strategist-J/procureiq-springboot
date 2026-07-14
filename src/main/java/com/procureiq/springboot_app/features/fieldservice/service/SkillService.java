@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.SkillRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.SkillResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.SkillRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.SkillResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.Skill;
 import com.procureiq.springboot_app.features.fieldservice.repository.SkillRepository;
 import io.opentelemetry.api.GlobalOpenTelemetry;

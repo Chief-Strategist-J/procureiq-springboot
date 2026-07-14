@@ -1,7 +1,7 @@
 package com.procureiq.springboot_app.features.fieldservice.service;
 
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceCrewMemberRequest;
-import com.procureiq.springboot_app.features.fieldservice.dto.ServiceCrewMemberResponse;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.ServiceCrewMemberRequest;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.ServiceCrewMemberResponse;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceCrew;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceCrewMember;
 import com.procureiq.springboot_app.features.fieldservice.entity.ServiceResource;
