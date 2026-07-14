@@ -26,7 +26,7 @@ public class MaintenancePlanController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createMaintenancePlan(@RequestBody MaintenancePlanRequest request) {
+    public ResponseEntity<?> createMaintenancePlan(@jakarta.validation.Valid @RequestBody MaintenancePlanRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             MaintenancePlanResponse response = maintenancePlanService.createMaintenancePlan(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class MaintenancePlanController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateMaintenancePlan(@PathVariable Long id, @RequestBody MaintenancePlanRequest request) {
+    public ResponseEntity<?> updateMaintenancePlan(@PathVariable Long id, @jakarta.validation.Valid @RequestBody MaintenancePlanRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             MaintenancePlanResponse response = maintenancePlanService.updateMaintenancePlan(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

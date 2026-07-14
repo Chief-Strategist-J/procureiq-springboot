@@ -36,7 +36,7 @@ public class ServiceResourceController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createServiceResource(@RequestBody ServiceResourceRequest request) {
+    public ResponseEntity<?> createServiceResource(@jakarta.validation.Valid @RequestBody ServiceResourceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceResourceResponse response = serviceResourceService.createServiceResource(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -52,7 +52,7 @@ public class ServiceResourceController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateServiceResource(@PathVariable Long id, @RequestBody ServiceResourceRequest request) {
+    public ResponseEntity<?> updateServiceResource(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ServiceResourceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceResourceResponse response = serviceResourceService.updateServiceResource(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

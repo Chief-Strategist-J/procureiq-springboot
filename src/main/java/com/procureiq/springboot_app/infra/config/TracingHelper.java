@@ -37,6 +37,16 @@ public final class TracingHelper {
             span.setStatus(StatusCode.ERROR, e.getMessage());
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
+            if (e instanceof org.springframework.web.bind.MethodArgumentNotValidException) {
+                status = HttpStatus.BAD_REQUEST;
+                String validationMsg = ((org.springframework.web.bind.MethodArgumentNotValidException) e)
+                        .getBindingResult().getFieldErrors().stream()
+                        .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+                        .collect(java.util.stream.Collectors.joining(", "));
+                return ResponseEntity.status(status)
+                        .body(ApiResponse.error(status.value(), "Validation failed: " + validationMsg));
+            }
+
             if (e instanceof com.procureiq.springboot_app.shared.exceptions.ResourceNotFoundException) {
                 status = HttpStatus.NOT_FOUND;
             } else if (e instanceof com.procureiq.springboot_app.shared.exceptions.UnauthorizedException) {

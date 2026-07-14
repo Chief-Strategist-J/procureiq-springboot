@@ -26,7 +26,7 @@ public class ShiftController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createShift(@RequestBody ShiftRequest request) {
+    public ResponseEntity<?> createShift(@jakarta.validation.Valid @RequestBody ShiftRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ShiftResponse response = shiftService.createShift(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class ShiftController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateShift(@PathVariable Long id, @RequestBody ShiftRequest request) {
+    public ResponseEntity<?> updateShift(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ShiftRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ShiftResponse response = shiftService.updateShift(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

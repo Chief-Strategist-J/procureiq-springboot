@@ -26,7 +26,7 @@ public class ResourceAbsenceController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createResourceAbsence(@RequestBody ResourceAbsenceRequest request) {
+    public ResponseEntity<?> createResourceAbsence(@jakarta.validation.Valid @RequestBody ResourceAbsenceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ResourceAbsenceResponse response = resourceAbsenceService.createResourceAbsence(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class ResourceAbsenceController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateResourceAbsence(@PathVariable Long id, @RequestBody ResourceAbsenceRequest request) {
+    public ResponseEntity<?> updateResourceAbsence(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ResourceAbsenceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ResourceAbsenceResponse response = resourceAbsenceService.updateResourceAbsence(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

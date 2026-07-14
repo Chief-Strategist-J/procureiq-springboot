@@ -36,7 +36,7 @@ public class ReminderController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createReminder(@RequestBody Reminder reminder) {
+    public ResponseEntity<?> createReminder(@jakarta.validation.Valid @RequestBody Reminder reminder) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (reminder.getCreatedAt() == null) {
                 reminder.setCreatedAt(Instant.now());
@@ -50,7 +50,7 @@ public class ReminderController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateReminder(@PathVariable Long id, @RequestBody Reminder details) {
+    public ResponseEntity<?> updateReminder(@PathVariable Long id, @jakarta.validation.Valid @RequestBody Reminder details) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             Reminder existing = reminderRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Reminder not found with ID: " + id));

@@ -36,7 +36,7 @@ public class CampaignController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCampaign(@RequestBody CampaignRequest request) {
+    public ResponseEntity<?> createCampaign(@jakarta.validation.Valid @RequestBody CampaignRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CampaignResponse response = campaignService.createCampaign(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -52,7 +52,7 @@ public class CampaignController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateCampaign(@PathVariable Long id, @RequestBody CampaignRequest request) {
+    public ResponseEntity<?> updateCampaign(@PathVariable Long id, @jakarta.validation.Valid @RequestBody CampaignRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CampaignResponse response = campaignService.updateCampaign(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));
@@ -78,7 +78,7 @@ public class CampaignController {
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES)
-    public ResponseEntity<?> createScheduledEmail(@RequestBody ScheduledEmailRequest request) {
+    public ResponseEntity<?> createScheduledEmail(@jakarta.validation.Valid @RequestBody ScheduledEmailRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ScheduledEmailResponse response = campaignService.createScheduledEmail(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -94,7 +94,7 @@ public class CampaignController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES_ID)
-    public ResponseEntity<?> updateScheduledEmail(@PathVariable Long id, @RequestBody ScheduledEmailRequest request) {
+    public ResponseEntity<?> updateScheduledEmail(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ScheduledEmailRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ScheduledEmailResponse response = campaignService.updateScheduledEmail(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));
@@ -120,7 +120,7 @@ public class CampaignController {
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS)
-    public ResponseEntity<?> createRecipient(@RequestBody RecipientRequest request) {
+    public ResponseEntity<?> createRecipient(@jakarta.validation.Valid @RequestBody RecipientRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             RecipientResponse response = campaignService.createRecipient(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -136,7 +136,7 @@ public class CampaignController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS_ID)
-    public ResponseEntity<?> updateRecipient(@PathVariable Long id, @RequestBody RecipientRequest request) {
+    public ResponseEntity<?> updateRecipient(@PathVariable Long id, @jakarta.validation.Valid @RequestBody RecipientRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             RecipientResponse response = campaignService.updateRecipient(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

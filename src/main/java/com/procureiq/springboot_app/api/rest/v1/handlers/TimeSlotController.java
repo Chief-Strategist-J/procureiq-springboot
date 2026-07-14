@@ -26,7 +26,7 @@ public class TimeSlotController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createTimeSlot(@RequestBody TimeSlotRequest request) {
+    public ResponseEntity<?> createTimeSlot(@jakarta.validation.Valid @RequestBody TimeSlotRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             TimeSlotResponse response = timeSlotService.createTimeSlot(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class TimeSlotController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateTimeSlot(@PathVariable Long id, @RequestBody TimeSlotRequest request) {
+    public ResponseEntity<?> updateTimeSlot(@PathVariable Long id, @jakarta.validation.Valid @RequestBody TimeSlotRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             TimeSlotResponse response = timeSlotService.updateTimeSlot(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

@@ -26,7 +26,7 @@ public class SkillController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createSkill(@RequestBody SkillRequest request) {
+    public ResponseEntity<?> createSkill(@jakarta.validation.Valid @RequestBody SkillRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             SkillResponse response = skillService.createSkill(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class SkillController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateSkill(@PathVariable Long id, @RequestBody SkillRequest request) {
+    public ResponseEntity<?> updateSkill(@PathVariable Long id, @jakarta.validation.Valid @RequestBody SkillRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             SkillResponse response = skillService.updateSkill(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

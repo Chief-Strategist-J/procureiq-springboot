@@ -26,7 +26,7 @@ public class WorkTypeController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createWorkType(@RequestBody WorkTypeRequest request) {
+    public ResponseEntity<?> createWorkType(@jakarta.validation.Valid @RequestBody WorkTypeRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkTypeResponse response = workTypeService.createWorkType(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class WorkTypeController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateWorkType(@PathVariable Long id, @RequestBody WorkTypeRequest request) {
+    public ResponseEntity<?> updateWorkType(@PathVariable Long id, @jakarta.validation.Valid @RequestBody WorkTypeRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkTypeResponse response = workTypeService.updateWorkType(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

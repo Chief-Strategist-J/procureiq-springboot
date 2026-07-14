@@ -26,7 +26,7 @@ public class ServiceCrewController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createServiceCrew(@RequestBody ServiceCrewRequest request) {
+    public ResponseEntity<?> createServiceCrew(@jakarta.validation.Valid @RequestBody ServiceCrewRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceCrewResponse response = serviceCrewService.createServiceCrew(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class ServiceCrewController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateServiceCrew(@PathVariable Long id, @RequestBody ServiceCrewRequest request) {
+    public ResponseEntity<?> updateServiceCrew(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ServiceCrewRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceCrewResponse response = serviceCrewService.updateServiceCrew(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

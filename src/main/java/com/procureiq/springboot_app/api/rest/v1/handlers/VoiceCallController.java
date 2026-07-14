@@ -47,7 +47,7 @@ public class VoiceCallController {
      *   provider      – "mock" | "twilio" | "vapi"  (optional, defaults to "mock")
      */
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULE)
-    public ResponseEntity<?> scheduleCall(@RequestBody Map<String, Object> body) {
+    public ResponseEntity<?> scheduleCall(@jakarta.validation.Valid @RequestBody Map<String, Object> body) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             String phoneNumber  = (String) body.get("phoneNumber");
             String instructions = (String) body.get("instructions");

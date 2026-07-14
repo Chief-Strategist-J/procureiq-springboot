@@ -37,7 +37,7 @@ public class NotificationController {
     }
 
     @PostMapping
-    public ResponseEntity<?> sendNotification(@RequestBody SendNotificationRequest request) {
+    public ResponseEntity<?> sendNotification(@jakarta.validation.Valid @RequestBody SendNotificationRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             notificationService.sendNotification(request);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.success(202, "Notification accepted for delivery"));
@@ -48,7 +48,7 @@ public class NotificationController {
     public ResponseEntity<?> updateStatus(
             @PathVariable Long id,
             @RequestHeader(name = "X-User-Id", defaultValue = "1") Long userId,
-            @RequestBody UpdateNotificationStatusRequest request) {
+            @jakarta.validation.Valid @RequestBody UpdateNotificationStatusRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             notificationService.updateStatus(userId, id, request.status());
             return ResponseEntity.ok(ApiResponse.success(200, "Status updated successfully"));
@@ -67,7 +67,7 @@ public class NotificationController {
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.DEVICES)
     public ResponseEntity<?> registerDevice(
             @RequestHeader(name = "X-User-Id", defaultValue = "1") Long userId,
-            @RequestBody RegisterDeviceRequest request) {
+            @jakarta.validation.Valid @RequestBody RegisterDeviceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             notificationService.registerDevice(userId, request);
             return ResponseEntity.ok(ApiResponse.success(200, "Device registered successfully"));

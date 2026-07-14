@@ -26,7 +26,7 @@ public class MilestoneController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createMilestone(@RequestBody MilestoneRequest request) {
+    public ResponseEntity<?> createMilestone(@jakarta.validation.Valid @RequestBody MilestoneRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             MilestoneResponse response = milestoneService.createMilestone(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class MilestoneController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateMilestone(@PathVariable Long id, @RequestBody MilestoneRequest request) {
+    public ResponseEntity<?> updateMilestone(@PathVariable Long id, @jakarta.validation.Valid @RequestBody MilestoneRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             MilestoneResponse response = milestoneService.updateMilestone(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

@@ -28,7 +28,7 @@ public class GitHubApiController {
     public record DispatchRequest(String owner, String repo, String eventType, Map<String, Object> clientPayload) {}
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.DISPATCH)
-    public ResponseEntity<?> triggerDispatch(@RequestBody DispatchRequest request) {
+    public ResponseEntity<?> triggerDispatch(@jakarta.validation.Valid @RequestBody DispatchRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (request.owner() == null || request.owner().trim().isEmpty()) {
                 throw new IllegalArgumentException("Repository owner is required");
@@ -87,7 +87,7 @@ public class GitHubApiController {
      * a mock response is returned — no real GitHub call is made.
      */
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.CREATE_WORKFLOW)
-    public ResponseEntity<?> createWorkflow(@RequestBody CreateWorkflowRequest request) {
+    public ResponseEntity<?> createWorkflow(@jakarta.validation.Valid @RequestBody CreateWorkflowRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (request.owner() == null || request.owner().trim().isEmpty())
                 throw new IllegalArgumentException("Repository owner is required");
@@ -116,7 +116,7 @@ public class GitHubApiController {
 
     /** Deletes an existing .github/workflows/{workflowName}.yml from the repository. */
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.DELETE_WORKFLOW)
-    public ResponseEntity<?> deleteWorkflow(@RequestBody DeleteWorkflowRequest request) {
+    public ResponseEntity<?> deleteWorkflow(@jakarta.validation.Valid @RequestBody DeleteWorkflowRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (request.owner() == null || request.owner().trim().isEmpty())
                 throw new IllegalArgumentException("Repository owner is required");

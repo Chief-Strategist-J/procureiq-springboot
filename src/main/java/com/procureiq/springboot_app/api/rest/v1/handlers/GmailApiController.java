@@ -28,7 +28,7 @@ public class GmailApiController {
     public record SendEmailRequest(String to, String subject, String body) {}
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SEND)
-    public ResponseEntity<?> sendEmail(@RequestBody SendEmailRequest request) {
+    public ResponseEntity<?> sendEmail(@jakarta.validation.Valid @RequestBody SendEmailRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (request.to() == null || request.to().trim().isEmpty()) {
                 throw new IllegalArgumentException("Recipient 'to' address is required");

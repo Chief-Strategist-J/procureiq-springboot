@@ -26,7 +26,7 @@ public class CaseMilestoneController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCaseMilestone(@RequestBody CaseMilestoneRequest request) {
+    public ResponseEntity<?> createCaseMilestone(@jakarta.validation.Valid @RequestBody CaseMilestoneRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CaseMilestoneResponse response = caseMilestoneService.createCaseMilestone(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class CaseMilestoneController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateCaseMilestone(@PathVariable Long id, @RequestBody CaseMilestoneRequest request) {
+    public ResponseEntity<?> updateCaseMilestone(@PathVariable Long id, @jakarta.validation.Valid @RequestBody CaseMilestoneRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CaseMilestoneResponse response = caseMilestoneService.updateCaseMilestone(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

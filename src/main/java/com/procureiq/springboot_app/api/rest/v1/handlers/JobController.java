@@ -36,7 +36,7 @@ public class JobController {
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.JOBS)
-    public ResponseEntity<?> createJob(@RequestBody JobRequest request) {
+    public ResponseEntity<?> createJob(@jakarta.validation.Valid @RequestBody JobRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             JobResponse response = jobService.createJob(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -52,7 +52,7 @@ public class JobController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.JOBS + com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateJob(@PathVariable Long id, @RequestBody JobRequest request) {
+    public ResponseEntity<?> updateJob(@PathVariable Long id, @jakarta.validation.Valid @RequestBody JobRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             JobResponse response = jobService.updateJob(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));
@@ -104,7 +104,7 @@ public class JobController {
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORKFLOWS)
-    public ResponseEntity<?> createWorkflow(@RequestBody WorkflowRequest request) {
+    public ResponseEntity<?> createWorkflow(@jakarta.validation.Valid @RequestBody WorkflowRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkflowResponse response = jobService.createWorkflow(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -120,7 +120,7 @@ public class JobController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORKFLOWS + com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateWorkflow(@PathVariable Long id, @RequestBody WorkflowRequest request) {
+    public ResponseEntity<?> updateWorkflow(@PathVariable Long id, @jakarta.validation.Valid @RequestBody WorkflowRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkflowResponse response = jobService.updateWorkflow(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

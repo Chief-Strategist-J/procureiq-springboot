@@ -26,7 +26,7 @@ public class ServiceResourceCapacityController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createServiceResourceCapacity(@RequestBody ServiceResourceCapacityRequest request) {
+    public ResponseEntity<?> createServiceResourceCapacity(@jakarta.validation.Valid @RequestBody ServiceResourceCapacityRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceResourceCapacityResponse response = serviceResourceCapacityService.createServiceResourceCapacity(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class ServiceResourceCapacityController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateServiceResourceCapacity(@PathVariable Long id, @RequestBody ServiceResourceCapacityRequest request) {
+    public ResponseEntity<?> updateServiceResourceCapacity(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ServiceResourceCapacityRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceResourceCapacityResponse response = serviceResourceCapacityService.updateServiceResourceCapacity(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

@@ -35,7 +35,7 @@ public class WorkOrderController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createWorkOrder(@RequestBody WorkOrderRequest request) {
+    public ResponseEntity<?> createWorkOrder(@jakarta.validation.Valid @RequestBody WorkOrderRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkOrderResponse response = workOrderService.createWorkOrder(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -51,7 +51,7 @@ public class WorkOrderController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateWorkOrder(@PathVariable Long id, @RequestBody WorkOrderRequest request) {
+    public ResponseEntity<?> updateWorkOrder(@PathVariable Long id, @jakarta.validation.Valid @RequestBody WorkOrderRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             WorkOrderResponse response = workOrderService.updateWorkOrder(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

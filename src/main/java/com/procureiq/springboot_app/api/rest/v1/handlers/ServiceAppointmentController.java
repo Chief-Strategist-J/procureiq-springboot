@@ -39,7 +39,7 @@ public class ServiceAppointmentController {
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_SUB)
-    public ResponseEntity<?> createServiceAppointment(@RequestBody ServiceAppointmentRequest request) {
+    public ResponseEntity<?> createServiceAppointment(@jakarta.validation.Valid @RequestBody ServiceAppointmentRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceAppointmentResponse response = serviceAppointmentService.createServiceAppointment(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -55,7 +55,7 @@ public class ServiceAppointmentController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_ID)
-    public ResponseEntity<?> updateServiceAppointment(@PathVariable Long id, @RequestBody ServiceAppointmentRequest request) {
+    public ResponseEntity<?> updateServiceAppointment(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ServiceAppointmentRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceAppointmentResponse response = serviceAppointmentService.updateServiceAppointment(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));
@@ -73,7 +73,7 @@ public class ServiceAppointmentController {
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_ASSIGN)
     public ResponseEntity<?> assignResource(
             @PathVariable Long appointmentId,
-            @RequestBody AssignResourceRequest request) {
+            @jakarta.validation.Valid @RequestBody AssignResourceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             AssignedResourceResponse response = serviceAppointmentService.assignResource(appointmentId, request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));

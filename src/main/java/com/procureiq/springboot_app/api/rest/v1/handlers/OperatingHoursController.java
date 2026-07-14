@@ -32,7 +32,7 @@ public class OperatingHoursController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createOperatingHours(@RequestBody OperatingHoursRequest request) {
+    public ResponseEntity<?> createOperatingHours(@jakarta.validation.Valid @RequestBody OperatingHoursRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             OperatingHoursResponse response = operatingHoursService.createOperatingHours(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -48,7 +48,7 @@ public class OperatingHoursController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateOperatingHours(@PathVariable Long id, @RequestBody OperatingHoursRequest request) {
+    public ResponseEntity<?> updateOperatingHours(@PathVariable Long id, @jakarta.validation.Valid @RequestBody OperatingHoursRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             OperatingHoursResponse response = operatingHoursService.updateOperatingHours(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

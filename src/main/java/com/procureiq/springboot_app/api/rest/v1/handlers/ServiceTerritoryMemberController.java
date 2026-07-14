@@ -26,7 +26,7 @@ public class ServiceTerritoryMemberController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createServiceTerritoryMember(@RequestBody ServiceTerritoryMemberRequest request) {
+    public ResponseEntity<?> createServiceTerritoryMember(@jakarta.validation.Valid @RequestBody ServiceTerritoryMemberRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryMemberResponse response = serviceTerritoryMemberService.createServiceTerritoryMember(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class ServiceTerritoryMemberController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateServiceTerritoryMember(@PathVariable Long id, @RequestBody ServiceTerritoryMemberRequest request) {
+    public ResponseEntity<?> updateServiceTerritoryMember(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ServiceTerritoryMemberRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryMemberResponse response = serviceTerritoryMemberService.updateServiceTerritoryMember(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

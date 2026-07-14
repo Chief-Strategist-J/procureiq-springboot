@@ -26,7 +26,7 @@ public class AssetRelationshipController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createAssetRelationship(@RequestBody AssetRelationshipRequest request) {
+    public ResponseEntity<?> createAssetRelationship(@jakarta.validation.Valid @RequestBody AssetRelationshipRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             AssetRelationshipResponse response = assetRelationshipService.createAssetRelationship(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class AssetRelationshipController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateAssetRelationship(@PathVariable Long id, @RequestBody AssetRelationshipRequest request) {
+    public ResponseEntity<?> updateAssetRelationship(@PathVariable Long id, @jakarta.validation.Valid @RequestBody AssetRelationshipRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             AssetRelationshipResponse response = assetRelationshipService.updateAssetRelationship(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));

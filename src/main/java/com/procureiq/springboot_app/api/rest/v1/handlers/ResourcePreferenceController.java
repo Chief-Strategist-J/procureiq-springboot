@@ -26,7 +26,7 @@ public class ResourcePreferenceController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createResourcePreference(@RequestBody ResourcePreferenceRequest request) {
+    public ResponseEntity<?> createResourcePreference(@jakarta.validation.Valid @RequestBody ResourcePreferenceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ResourcePreferenceResponse response = resourcePreferenceService.createResourcePreference(request);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
@@ -42,7 +42,7 @@ public class ResourcePreferenceController {
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
-    public ResponseEntity<?> updateResourcePreference(@PathVariable Long id, @RequestBody ResourcePreferenceRequest request) {
+    public ResponseEntity<?> updateResourcePreference(@PathVariable Long id, @jakarta.validation.Valid @RequestBody ResourcePreferenceRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ResourcePreferenceResponse response = resourcePreferenceService.updateResourcePreference(id, request);
             return ResponseEntity.ok(ApiResponse.success(200, response));
