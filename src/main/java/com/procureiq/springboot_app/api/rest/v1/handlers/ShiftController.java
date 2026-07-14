@@ -27,61 +27,33 @@ public class ShiftController {
 
     @PostMapping
     public ResponseEntity<?> createShift(@RequestBody ShiftRequest request) {
-        Span span = tracer.spanBuilder("REST.createShift").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ShiftResponse response = shiftService.createShift(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getShift(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.getShift").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ShiftResponse response = shiftService.getShift(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateShift(@PathVariable Long id, @RequestBody ShiftRequest request) {
-        Span span = tracer.spanBuilder("REST.updateShift").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ShiftResponse response = shiftService.updateShift(id, request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteShift(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.deleteShift").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             shiftService.deleteShift(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Deleted shift successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }

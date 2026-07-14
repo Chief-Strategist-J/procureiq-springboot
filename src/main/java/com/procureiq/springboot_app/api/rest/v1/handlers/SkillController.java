@@ -27,61 +27,33 @@ public class SkillController {
 
     @PostMapping
     public ResponseEntity<?> createSkill(@RequestBody SkillRequest request) {
-        Span span = tracer.spanBuilder("REST.createSkill").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             SkillResponse response = skillService.createSkill(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getSkill(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.getSkill").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             SkillResponse response = skillService.getSkill(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateSkill(@PathVariable Long id, @RequestBody SkillRequest request) {
-        Span span = tracer.spanBuilder("REST.updateSkill").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             SkillResponse response = skillService.updateSkill(id, request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteSkill(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.deleteSkill").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             skillService.deleteSkill(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Deleted skill successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }

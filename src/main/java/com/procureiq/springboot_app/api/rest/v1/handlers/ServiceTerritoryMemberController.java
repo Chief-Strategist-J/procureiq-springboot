@@ -27,61 +27,33 @@ public class ServiceTerritoryMemberController {
 
     @PostMapping
     public ResponseEntity<?> createServiceTerritoryMember(@RequestBody ServiceTerritoryMemberRequest request) {
-        Span span = tracer.spanBuilder("REST.createServiceTerritoryMember").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryMemberResponse response = serviceTerritoryMemberService.createServiceTerritoryMember(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getServiceTerritoryMember(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.getServiceTerritoryMember").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryMemberResponse response = serviceTerritoryMemberService.getServiceTerritoryMember(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateServiceTerritoryMember(@PathVariable Long id, @RequestBody ServiceTerritoryMemberRequest request) {
-        Span span = tracer.spanBuilder("REST.updateServiceTerritoryMember").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceTerritoryMemberResponse response = serviceTerritoryMemberService.updateServiceTerritoryMember(id, request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteServiceTerritoryMember(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.deleteServiceTerritoryMember").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             serviceTerritoryMemberService.deleteServiceTerritoryMember(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Deleted service territory member successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }

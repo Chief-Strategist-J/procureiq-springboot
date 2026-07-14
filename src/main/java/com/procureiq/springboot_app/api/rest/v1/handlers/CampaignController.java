@@ -29,230 +29,125 @@ public class CampaignController {
 
     @GetMapping
     public ResponseEntity<?> getAllCampaigns() {
-        Span span = tracer.spanBuilder("REST.getAllCampaigns").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<CampaignResponse> response = campaignService.getAllCampaigns();
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping
     public ResponseEntity<?> createCampaign(@RequestBody CampaignRequest request) {
-        Span span = tracer.spanBuilder("REST.createCampaign").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CampaignResponse response = campaignService.createCampaign(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getCampaign(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.getCampaign").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CampaignResponse response = campaignService.getCampaign(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateCampaign(@PathVariable Long id, @RequestBody CampaignRequest request) {
-        Span span = tracer.spanBuilder("REST.updateCampaign").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             CampaignResponse response = campaignService.updateCampaign(id, request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteCampaign(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.deleteCampaign").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             campaignService.deleteCampaign(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Deleted campaign successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     // --- Scheduled Email Endpoints ---
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES)
     public ResponseEntity<?> getAllScheduledEmails() {
-        Span span = tracer.spanBuilder("REST.getAllScheduledEmails").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<ScheduledEmailResponse> response = campaignService.getAllScheduledEmails();
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES)
     public ResponseEntity<?> createScheduledEmail(@RequestBody ScheduledEmailRequest request) {
-        Span span = tracer.spanBuilder("REST.createScheduledEmail").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ScheduledEmailResponse response = campaignService.createScheduledEmail(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES_ID)
     public ResponseEntity<?> getScheduledEmail(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.getScheduledEmail").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ScheduledEmailResponse response = campaignService.getScheduledEmail(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES_ID)
     public ResponseEntity<?> updateScheduledEmail(@PathVariable Long id, @RequestBody ScheduledEmailRequest request) {
-        Span span = tracer.spanBuilder("REST.updateScheduledEmail").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ScheduledEmailResponse response = campaignService.updateScheduledEmail(id, request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES_ID)
     public ResponseEntity<?> deleteScheduledEmail(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.deleteScheduledEmail").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             campaignService.deleteScheduledEmail(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Deleted scheduled email successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     // --- Recipient Endpoints ---
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS)
     public ResponseEntity<?> getAllRecipients() {
-        Span span = tracer.spanBuilder("REST.getAllRecipients").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<RecipientResponse> response = campaignService.getAllRecipients();
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS)
     public ResponseEntity<?> createRecipient(@RequestBody RecipientRequest request) {
-        Span span = tracer.spanBuilder("REST.createRecipient").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             RecipientResponse response = campaignService.createRecipient(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS_ID)
     public ResponseEntity<?> getRecipient(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.getRecipient").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             RecipientResponse response = campaignService.getRecipient(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS_ID)
     public ResponseEntity<?> updateRecipient(@PathVariable Long id, @RequestBody RecipientRequest request) {
-        Span span = tracer.spanBuilder("REST.updateRecipient").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             RecipientResponse response = campaignService.updateRecipient(id, request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS_ID)
     public ResponseEntity<?> deleteRecipient(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.deleteRecipient").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             campaignService.deleteRecipient(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Deleted recipient successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }

@@ -26,61 +26,33 @@ public class AuthController {
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SIGNUP)
     public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
-        Span span = tracer.spanBuilder("REST.signup").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             UserResponse response = authService.signup(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
-        } catch (IllegalArgumentException e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.LOGIN)
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        Span span = tracer.spanBuilder("REST.login").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             LoginResponse response = authService.login(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (IllegalArgumentException e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ApiResponse.error(401, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.FORGOT_PASSWORD)
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
-        Span span = tracer.spanBuilder("REST.forgot-password").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             authService.forgotPassword(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "If the email matches an active account, a reset token has been generated."));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RESET_PASSWORD)
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
-        Span span = tracer.spanBuilder("REST.reset-password").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             authService.resetPassword(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Password has been reset successfully."));
-        } catch (IllegalArgumentException e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }

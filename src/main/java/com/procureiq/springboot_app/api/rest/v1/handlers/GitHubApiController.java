@@ -29,8 +29,7 @@ public class GitHubApiController {
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.DISPATCH)
     public ResponseEntity<?> triggerDispatch(@RequestBody DispatchRequest request) {
-        Span span = tracer.spanBuilder("REST.triggerDispatch").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (request.owner() == null || request.owner().trim().isEmpty()) {
                 throw new IllegalArgumentException("Repository owner is required");
             }
@@ -41,20 +40,13 @@ public class GitHubApiController {
                 throw new IllegalArgumentException("Event type is required");
             }
             gitHubApiService.triggerRepositoryDispatch(request.owner(), request.repo(), request.eventType(), request.clientPayload());
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(200, "Repository dispatch triggered successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.REPO_INFO)
     public ResponseEntity<?> getRepoInfo(@RequestParam String owner, @RequestParam String repo) {
-        Span span = tracer.spanBuilder("REST.getRepoInfo").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (owner == null || owner.trim().isEmpty()) {
                 throw new IllegalArgumentException("Repository owner is required");
             }
@@ -62,20 +54,13 @@ public class GitHubApiController {
                 throw new IllegalArgumentException("Repository name is required");
             }
             Map<String, Object> details = gitHubApiService.getRepositoryDetails(owner, repo);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, details));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORKFLOW_RUNS)
     public ResponseEntity<?> getWorkflowRuns(@RequestParam String owner, @RequestParam String repo) {
-        Span span = tracer.spanBuilder("REST.getWorkflowRuns").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (owner == null || owner.trim().isEmpty()) {
                 throw new IllegalArgumentException("Repository owner is required");
             }
@@ -83,14 +68,8 @@ public class GitHubApiController {
                 throw new IllegalArgumentException("Repository name is required");
             }
             List<Map<String, Object>> runs = gitHubApiService.getWorkflowRuns(owner, repo);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, runs));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     public record CreateWorkflowRequest(
@@ -109,8 +88,7 @@ public class GitHubApiController {
      */
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.CREATE_WORKFLOW)
     public ResponseEntity<?> createWorkflow(@RequestBody CreateWorkflowRequest request) {
-        Span span = tracer.spanBuilder("REST.createWorkflow").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (request.owner() == null || request.owner().trim().isEmpty())
                 throw new IllegalArgumentException("Repository owner is required");
             if (request.repo() == null || request.repo().trim().isEmpty())
@@ -128,14 +106,8 @@ public class GitHubApiController {
                     request.owner(), request.repo(),
                     request.workflowName(), request.yamlContent(), msg);
 
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, result));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     public record DeleteWorkflowRequest(
@@ -145,8 +117,7 @@ public class GitHubApiController {
     /** Deletes an existing .github/workflows/{workflowName}.yml from the repository. */
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.DELETE_WORKFLOW)
     public ResponseEntity<?> deleteWorkflow(@RequestBody DeleteWorkflowRequest request) {
-        Span span = tracer.spanBuilder("REST.deleteWorkflow").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (request.owner() == null || request.owner().trim().isEmpty())
                 throw new IllegalArgumentException("Repository owner is required");
             if (request.repo() == null || request.repo().trim().isEmpty())
@@ -161,14 +132,8 @@ public class GitHubApiController {
             gitHubApiService.deleteWorkflowFile(
                     request.owner(), request.repo(), request.workflowName(), msg);
 
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Workflow deleted successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }
 

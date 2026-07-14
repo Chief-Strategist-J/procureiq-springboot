@@ -48,9 +48,7 @@ public class VoiceCallController {
      */
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULE)
     public ResponseEntity<?> scheduleCall(@RequestBody Map<String, Object> body) {
-        Span span = tracer.spanBuilder("REST.scheduleVoiceCall").startSpan();
-        try (Scope scope = span.makeCurrent()) {
-
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             String phoneNumber  = (String) body.get("phoneNumber");
             String instructions = (String) body.get("instructions");
             String scheduledAtRaw = body.get("scheduledAt") != null
@@ -89,17 +87,9 @@ public class VoiceCallController {
 
             ScheduledCall saved = scheduledCallRepository.save(call);
 
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(201, saved));
-        } catch (Exception e) {
-            span.recordException(e);
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     /**
@@ -108,19 +98,10 @@ public class VoiceCallController {
      */
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULED)
     public ResponseEntity<?> listScheduledCalls() {
-        Span span = tracer.spanBuilder("REST.listScheduledCalls").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<ScheduledCall> calls = scheduledCallRepository.findAll();
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, calls));
-        } catch (Exception e) {
-            span.recordException(e);
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     /**
@@ -129,22 +110,13 @@ public class VoiceCallController {
      */
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteScheduledCall(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.deleteScheduledCall").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (!scheduledCallRepository.existsById(id)) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponse.error(404, "Scheduled call not found with ID: " + id));
             }
             scheduledCallRepository.deleteById(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Scheduled call deleted successfully"));
-        } catch (Exception e) {
-            span.recordException(e);
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }

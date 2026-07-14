@@ -32,123 +32,67 @@ public class ServiceAppointmentController {
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_SUB)
     public ResponseEntity<?> getAllServiceAppointments() {
-        Span span = tracer.spanBuilder("REST.getAllServiceAppointments").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<ServiceAppointmentResponse> response = serviceAppointmentService.getAllServiceAppointments();
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_SUB)
     public ResponseEntity<?> createServiceAppointment(@RequestBody ServiceAppointmentRequest request) {
-        Span span = tracer.spanBuilder("REST.createServiceAppointment").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceAppointmentResponse response = serviceAppointmentService.createServiceAppointment(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_ID)
     public ResponseEntity<?> getServiceAppointment(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.getServiceAppointment").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceAppointmentResponse response = serviceAppointmentService.getServiceAppointment(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_ID)
     public ResponseEntity<?> updateServiceAppointment(@PathVariable Long id, @RequestBody ServiceAppointmentRequest request) {
-        Span span = tracer.spanBuilder("REST.updateServiceAppointment").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             ServiceAppointmentResponse response = serviceAppointmentService.updateServiceAppointment(id, request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_ID)
     public ResponseEntity<?> deleteServiceAppointment(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.deleteServiceAppointment").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             serviceAppointmentService.deleteServiceAppointment(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Deleted appointment successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_ASSIGN)
     public ResponseEntity<?> assignResource(
             @PathVariable Long appointmentId,
             @RequestBody AssignResourceRequest request) {
-        Span span = tracer.spanBuilder("REST.assignResource").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             AssignedResourceResponse response = serviceAppointmentService.assignResource(appointmentId, request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.ASSIGNED_RESOURCES_ID)
     public ResponseEntity<?> deleteAssignedResource(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.deleteAssignedResource").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             serviceAppointmentService.deleteAssignedResource(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Deleted assignment successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_CANDIDATES)
     public ResponseEntity<?> getCandidates(@PathVariable Long appointmentId) {
-        Span span = tracer.spanBuilder("REST.getCandidates").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<ServiceResourceResponse> response = serviceResourceService.getCandidatesForAppointment(appointmentId);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }

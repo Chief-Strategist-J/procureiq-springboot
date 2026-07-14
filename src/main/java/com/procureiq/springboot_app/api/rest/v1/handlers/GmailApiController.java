@@ -29,34 +29,20 @@ public class GmailApiController {
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SEND)
     public ResponseEntity<?> sendEmail(@RequestBody SendEmailRequest request) {
-        Span span = tracer.spanBuilder("REST.sendEmail").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (request.to() == null || request.to().trim().isEmpty()) {
                 throw new IllegalArgumentException("Recipient 'to' address is required");
             }
             Message message = gmailApiService.sendEmail(request.to(), request.subject(), request.body());
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(200, message));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.LIST)
     public ResponseEntity<?> listMessages() {
-        Span span = tracer.spanBuilder("REST.listMessages").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<Message> messages = gmailApiService.listMessages();
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, messages));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }

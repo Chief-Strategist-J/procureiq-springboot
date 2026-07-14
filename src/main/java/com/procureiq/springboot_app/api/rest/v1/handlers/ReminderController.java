@@ -29,24 +29,15 @@ public class ReminderController {
 
     @GetMapping
     public ResponseEntity<?> getAllReminders() {
-        Span span = tracer.spanBuilder("REST.getAllReminders").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             List<Reminder> reminders = reminderRepository.findAll();
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, reminders));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping
     public ResponseEntity<?> createReminder(@RequestBody Reminder reminder) {
-        Span span = tracer.spanBuilder("REST.createReminder").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             if (reminder.getCreatedAt() == null) {
                 reminder.setCreatedAt(Instant.now());
             }
@@ -54,21 +45,13 @@ public class ReminderController {
                 reminder.setStatus("PENDING");
             }
             Reminder saved = reminderRepository.save(reminder);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(201, saved));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateReminder(@PathVariable Long id, @RequestBody Reminder details) {
-        Span span = tracer.spanBuilder("REST.updateReminder").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             Reminder existing = reminderRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Reminder not found with ID: " + id));
             
@@ -84,30 +67,15 @@ public class ReminderController {
             if (details.getSnoozeCount() != null) existing.setSnoozeCount(details.getSnoozeCount());
             
             Reminder saved = reminderRepository.save(existing);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, saved));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteReminder(@PathVariable Long id) {
-        Span span = tracer.spanBuilder("REST.deleteReminder").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             reminderRepository.deleteById(id);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Reminder deleted successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }

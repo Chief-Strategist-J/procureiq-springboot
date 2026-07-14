@@ -30,32 +30,18 @@ public class NotificationController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "all") String status) {
-        Span span = tracer.spanBuilder("REST.getNotifications").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             NotificationListResponse response = notificationService.getNotifications(userId, status, page, size);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping
     public ResponseEntity<?> sendNotification(@RequestBody SendNotificationRequest request) {
-        Span span = tracer.spanBuilder("REST.sendNotification").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             notificationService.sendNotification(request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(ApiResponse.success(202, "Notification accepted for delivery"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.STATUS_ID)
@@ -63,49 +49,28 @@ public class NotificationController {
             @PathVariable Long id,
             @RequestHeader(name = "X-User-Id", defaultValue = "1") Long userId,
             @RequestBody UpdateNotificationStatusRequest request) {
-        Span span = tracer.spanBuilder("REST.updateStatus").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             notificationService.updateStatus(userId, id, request.status());
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Status updated successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.UNREAD_COUNT)
     public ResponseEntity<?> getUnreadCount(
             @RequestHeader(name = "X-User-Id", defaultValue = "1") Long userId) {
-        Span span = tracer.spanBuilder("REST.getUnreadCount").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             UnreadCountResponse response = notificationService.getUnreadCount(userId);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, response));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(500, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.DEVICES)
     public ResponseEntity<?> registerDevice(
             @RequestHeader(name = "X-User-Id", defaultValue = "1") Long userId,
             @RequestBody RegisterDeviceRequest request) {
-        Span span = tracer.spanBuilder("REST.registerDevice").startSpan();
-        try (Scope scope = span.makeCurrent()) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             notificationService.registerDevice(userId, request);
-            span.setStatus(StatusCode.OK);
             return ResponseEntity.ok(ApiResponse.success(200, "Device registered successfully"));
-        } catch (Exception e) {
-            span.setStatus(StatusCode.ERROR, e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(400, e.getMessage()));
-        } finally {
-            span.end();
-        }
+        });
     }
 }
