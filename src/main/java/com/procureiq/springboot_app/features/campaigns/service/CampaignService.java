@@ -61,13 +61,7 @@ public class CampaignService {
     public List<CampaignResponse> getAllCampaigns() {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             return campaignRepository.findAll().stream()
-                    .map(c -> new CampaignResponse(
-                            c.getId(),
-                            c.getOrganization().getId(),
-                            c.getName(),
-                            c.getStatus(),
-                            c.getCreatedAt(),
-                            c.getUpdatedAt()))
+                    .map(CampaignResponse::fromEntity)
                     .collect(Collectors.toList());
         });
     }
@@ -81,13 +75,7 @@ public class CampaignService {
             c.setName(request.name());
             c.setStatus(request.status() != null ? request.status() : "draft");
             c = campaignRepository.save(c);
-            return new CampaignResponse(
-                    c.getId(),
-                    c.getOrganization().getId(),
-                    c.getName(),
-                    c.getStatus(),
-                    c.getCreatedAt(),
-                    c.getUpdatedAt());
+            return CampaignResponse.fromEntity(c);
         });
     }
 
@@ -96,13 +84,7 @@ public class CampaignService {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeServiceWithTracing(() -> {
             Campaign c = campaignRepository.findById(id)
                     .orElseThrow(() -> new IllegalArgumentException("Campaign not found: " + id));
-            return new CampaignResponse(
-                    c.getId(),
-                    c.getOrganization().getId(),
-                    c.getName(),
-                    c.getStatus(),
-                    c.getCreatedAt(),
-                    c.getUpdatedAt());
+            return CampaignResponse.fromEntity(c);
         });
     }
 
@@ -120,13 +102,7 @@ public class CampaignService {
             }
             c.setUpdatedAt(Instant.now());
             c = campaignRepository.save(c);
-            return new CampaignResponse(
-                    c.getId(),
-                    c.getOrganization().getId(),
-                    c.getName(),
-                    c.getStatus(),
-                    c.getCreatedAt(),
-                    c.getUpdatedAt());
+            return CampaignResponse.fromEntity(c);
         });
     }
 
