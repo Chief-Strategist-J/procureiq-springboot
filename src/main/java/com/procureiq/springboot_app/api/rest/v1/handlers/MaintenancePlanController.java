@@ -40,7 +40,7 @@ public class MaintenancePlanController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getMaintenancePlan(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getMaintenancePlan").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class MaintenancePlanController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateMaintenancePlan(@PathVariable Long id, @RequestBody MaintenancePlanRequest request) {
         Span span = tracer.spanBuilder("REST.updateMaintenancePlan").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class MaintenancePlanController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteMaintenancePlan(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteMaintenancePlan").startSpan();
         try (Scope scope = span.makeCurrent()) {

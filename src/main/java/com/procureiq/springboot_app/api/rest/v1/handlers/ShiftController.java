@@ -40,7 +40,7 @@ public class ShiftController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getShift(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getShift").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class ShiftController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateShift(@PathVariable Long id, @RequestBody ShiftRequest request) {
         Span span = tracer.spanBuilder("REST.updateShift").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class ShiftController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteShift(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteShift").startSpan();
         try (Scope scope = span.makeCurrent()) {

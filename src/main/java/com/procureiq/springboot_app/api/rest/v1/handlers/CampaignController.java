@@ -57,7 +57,7 @@ public class CampaignController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getCampaign(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getCampaign").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -72,7 +72,7 @@ public class CampaignController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateCampaign(@PathVariable Long id, @RequestBody CampaignRequest request) {
         Span span = tracer.spanBuilder("REST.updateCampaign").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -87,7 +87,7 @@ public class CampaignController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteCampaign(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteCampaign").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -104,7 +104,7 @@ public class CampaignController {
 
     // --- Scheduled Email Endpoints ---
 
-    @GetMapping("/schedules")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES)
     public ResponseEntity<?> getAllScheduledEmails() {
         Span span = tracer.spanBuilder("REST.getAllScheduledEmails").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -119,7 +119,7 @@ public class CampaignController {
         }
     }
 
-    @PostMapping("/schedules")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES)
     public ResponseEntity<?> createScheduledEmail(@RequestBody ScheduledEmailRequest request) {
         Span span = tracer.spanBuilder("REST.createScheduledEmail").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -134,7 +134,7 @@ public class CampaignController {
         }
     }
 
-    @GetMapping("/schedules/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES_ID)
     public ResponseEntity<?> getScheduledEmail(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getScheduledEmail").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -149,7 +149,7 @@ public class CampaignController {
         }
     }
 
-    @PutMapping("/schedules/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES_ID)
     public ResponseEntity<?> updateScheduledEmail(@PathVariable Long id, @RequestBody ScheduledEmailRequest request) {
         Span span = tracer.spanBuilder("REST.updateScheduledEmail").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -164,7 +164,7 @@ public class CampaignController {
         }
     }
 
-    @DeleteMapping("/schedules/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULES_ID)
     public ResponseEntity<?> deleteScheduledEmail(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteScheduledEmail").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -181,7 +181,7 @@ public class CampaignController {
 
     // --- Recipient Endpoints ---
 
-    @GetMapping("/recipients")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS)
     public ResponseEntity<?> getAllRecipients() {
         Span span = tracer.spanBuilder("REST.getAllRecipients").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -196,7 +196,7 @@ public class CampaignController {
         }
     }
 
-    @PostMapping("/recipients")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS)
     public ResponseEntity<?> createRecipient(@RequestBody RecipientRequest request) {
         Span span = tracer.spanBuilder("REST.createRecipient").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -211,7 +211,7 @@ public class CampaignController {
         }
     }
 
-    @GetMapping("/recipients/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS_ID)
     public ResponseEntity<?> getRecipient(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getRecipient").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -226,7 +226,7 @@ public class CampaignController {
         }
     }
 
-    @PutMapping("/recipients/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS_ID)
     public ResponseEntity<?> updateRecipient(@PathVariable Long id, @RequestBody RecipientRequest request) {
         Span span = tracer.spanBuilder("REST.updateRecipient").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -241,7 +241,7 @@ public class CampaignController {
         }
     }
 
-    @DeleteMapping("/recipients/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RECIPIENTS_ID)
     public ResponseEntity<?> deleteRecipient(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteRecipient").startSpan();
         try (Scope scope = span.makeCurrent()) {

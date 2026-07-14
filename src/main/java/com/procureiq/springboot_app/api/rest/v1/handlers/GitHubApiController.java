@@ -27,7 +27,7 @@ public class GitHubApiController {
 
     public record DispatchRequest(String owner, String repo, String eventType, Map<String, Object> clientPayload) {}
 
-    @PostMapping("/dispatch")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.DISPATCH)
     public ResponseEntity<?> triggerDispatch(@RequestBody DispatchRequest request) {
         Span span = tracer.spanBuilder("REST.triggerDispatch").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -51,7 +51,7 @@ public class GitHubApiController {
         }
     }
 
-    @GetMapping("/repo-info")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.REPO_INFO)
     public ResponseEntity<?> getRepoInfo(@RequestParam String owner, @RequestParam String repo) {
         Span span = tracer.spanBuilder("REST.getRepoInfo").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -72,7 +72,7 @@ public class GitHubApiController {
         }
     }
 
-    @GetMapping("/workflow-runs")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORKFLOW_RUNS)
     public ResponseEntity<?> getWorkflowRuns(@RequestParam String owner, @RequestParam String repo) {
         Span span = tracer.spanBuilder("REST.getWorkflowRuns").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -107,7 +107,7 @@ public class GitHubApiController {
      * In mock mode (no GITHUB_TOKEN), the file is stored in-memory and
      * a mock response is returned — no real GitHub call is made.
      */
-    @PostMapping("/create-workflow")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.CREATE_WORKFLOW)
     public ResponseEntity<?> createWorkflow(@RequestBody CreateWorkflowRequest request) {
         Span span = tracer.spanBuilder("REST.createWorkflow").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -143,7 +143,7 @@ public class GitHubApiController {
     ) {}
 
     /** Deletes an existing .github/workflows/{workflowName}.yml from the repository. */
-    @DeleteMapping("/delete-workflow")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.DELETE_WORKFLOW)
     public ResponseEntity<?> deleteWorkflow(@RequestBody DeleteWorkflowRequest request) {
         Span span = tracer.spanBuilder("REST.deleteWorkflow").startSpan();
         try (Scope scope = span.makeCurrent()) {

@@ -40,7 +40,7 @@ public class TimeSlotController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getTimeSlot(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getTimeSlot").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class TimeSlotController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateTimeSlot(@PathVariable Long id, @RequestBody TimeSlotRequest request) {
         Span span = tracer.spanBuilder("REST.updateTimeSlot").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class TimeSlotController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteTimeSlot(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteTimeSlot").startSpan();
         try (Scope scope = span.makeCurrent()) {

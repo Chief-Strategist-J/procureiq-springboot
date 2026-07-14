@@ -40,7 +40,7 @@ public class GithubActionTemplateController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getTemplate(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getGithubActionTemplate").startSpan();
         try (Scope scope = span.makeCurrent()) {

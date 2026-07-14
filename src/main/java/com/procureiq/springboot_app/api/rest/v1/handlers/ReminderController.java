@@ -65,7 +65,7 @@ public class ReminderController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateReminder(@PathVariable Long id, @RequestBody Reminder details) {
         Span span = tracer.spanBuilder("REST.updateReminder").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -95,7 +95,7 @@ public class ReminderController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteReminder(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteReminder").startSpan();
         try (Scope scope = span.makeCurrent()) {

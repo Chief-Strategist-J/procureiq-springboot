@@ -27,7 +27,7 @@ public class GmailApiController {
 
     public record SendEmailRequest(String to, String subject, String body) {}
 
-    @PostMapping("/send")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SEND)
     public ResponseEntity<?> sendEmail(@RequestBody SendEmailRequest request) {
         Span span = tracer.spanBuilder("REST.sendEmail").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -45,7 +45,7 @@ public class GmailApiController {
         }
     }
 
-    @GetMapping("/list")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.LIST)
     public ResponseEntity<?> listMessages() {
         Span span = tracer.spanBuilder("REST.listMessages").startSpan();
         try (Scope scope = span.makeCurrent()) {

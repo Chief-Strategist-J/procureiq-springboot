@@ -40,7 +40,7 @@ public class ServiceCrewMemberController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getServiceCrewMember(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getServiceCrewMember").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class ServiceCrewMemberController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateServiceCrewMember(@PathVariable Long id, @RequestBody ServiceCrewMemberRequest request) {
         Span span = tracer.spanBuilder("REST.updateServiceCrewMember").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class ServiceCrewMemberController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteServiceCrewMember(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteServiceCrewMember").startSpan();
         try (Scope scope = span.makeCurrent()) {

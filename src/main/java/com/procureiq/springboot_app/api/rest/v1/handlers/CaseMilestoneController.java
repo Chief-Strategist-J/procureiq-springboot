@@ -40,7 +40,7 @@ public class CaseMilestoneController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getCaseMilestone(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getCaseMilestone").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class CaseMilestoneController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateCaseMilestone(@PathVariable Long id, @RequestBody CaseMilestoneRequest request) {
         Span span = tracer.spanBuilder("REST.updateCaseMilestone").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class CaseMilestoneController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteCaseMilestone(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteCaseMilestone").startSpan();
         try (Scope scope = span.makeCurrent()) {

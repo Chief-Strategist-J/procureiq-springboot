@@ -56,7 +56,7 @@ public class WorkOrderController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getWorkOrder(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getWorkOrder").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -71,7 +71,7 @@ public class WorkOrderController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateWorkOrder(@PathVariable Long id, @RequestBody WorkOrderRequest request) {
         Span span = tracer.spanBuilder("REST.updateWorkOrder").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -86,7 +86,7 @@ public class WorkOrderController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteWorkOrder(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteWorkOrder").startSpan();
         try (Scope scope = span.makeCurrent()) {

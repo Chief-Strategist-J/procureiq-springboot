@@ -40,7 +40,7 @@ public class ResourcePreferenceController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getResourcePreference(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getResourcePreference").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class ResourcePreferenceController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateResourcePreference(@PathVariable Long id, @RequestBody ResourcePreferenceRequest request) {
         Span span = tracer.spanBuilder("REST.updateResourcePreference").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class ResourcePreferenceController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteResourcePreference(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteResourcePreference").startSpan();
         try (Scope scope = span.makeCurrent()) {

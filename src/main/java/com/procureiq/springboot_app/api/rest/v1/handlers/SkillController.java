@@ -40,7 +40,7 @@ public class SkillController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getSkill(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getSkill").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class SkillController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateSkill(@PathVariable Long id, @RequestBody SkillRequest request) {
         Span span = tracer.spanBuilder("REST.updateSkill").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class SkillController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteSkill(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteSkill").startSpan();
         try (Scope scope = span.makeCurrent()) {

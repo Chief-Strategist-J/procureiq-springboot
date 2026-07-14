@@ -40,7 +40,7 @@ public class ServiceResourceCapacityController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getServiceResourceCapacity(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getServiceResourceCapacity").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class ServiceResourceCapacityController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateServiceResourceCapacity(@PathVariable Long id, @RequestBody ServiceResourceCapacityRequest request) {
         Span span = tracer.spanBuilder("REST.updateServiceResourceCapacity").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class ServiceResourceCapacityController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteServiceResourceCapacity(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteServiceResourceCapacity").startSpan();
         try (Scope scope = span.makeCurrent()) {

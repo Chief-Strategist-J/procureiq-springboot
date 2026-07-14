@@ -24,7 +24,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/signup")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SIGNUP)
     public ResponseEntity<?> signup(@RequestBody SignupRequest request) {
         Span span = tracer.spanBuilder("REST.signup").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -39,7 +39,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.LOGIN)
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
         Span span = tracer.spanBuilder("REST.login").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -54,7 +54,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/forgot-password")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.FORGOT_PASSWORD)
     public ResponseEntity<?> forgotPassword(@RequestBody ForgotPasswordRequest request) {
         Span span = tracer.spanBuilder("REST.forgot-password").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -69,7 +69,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/reset-password")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RESET_PASSWORD)
     public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest request) {
         Span span = tracer.spanBuilder("REST.reset-password").startSpan();
         try (Scope scope = span.makeCurrent()) {

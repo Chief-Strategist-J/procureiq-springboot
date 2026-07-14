@@ -40,7 +40,7 @@ public class WorkTypeController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getWorkType(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getWorkType").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class WorkTypeController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateWorkType(@PathVariable Long id, @RequestBody WorkTypeRequest request) {
         Span span = tracer.spanBuilder("REST.updateWorkType").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class WorkTypeController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteWorkType(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteWorkType").startSpan();
         try (Scope scope = span.makeCurrent()) {

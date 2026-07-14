@@ -55,7 +55,7 @@ public class ServiceTerritoryController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getServiceTerritory(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getServiceTerritory").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class ServiceTerritoryController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateServiceTerritory(@PathVariable Long id, @RequestBody ServiceTerritoryRequest request) {
         Span span = tracer.spanBuilder("REST.updateServiceTerritory").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -85,7 +85,7 @@ public class ServiceTerritoryController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteServiceTerritory(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteServiceTerritory").startSpan();
         try (Scope scope = span.makeCurrent()) {

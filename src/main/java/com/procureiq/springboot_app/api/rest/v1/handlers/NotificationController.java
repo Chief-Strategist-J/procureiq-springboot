@@ -58,7 +58,7 @@ public class NotificationController {
         }
     }
 
-    @PutMapping("/{id}/status")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.STATUS_ID)
     public ResponseEntity<?> updateStatus(
             @PathVariable Long id,
             @RequestHeader(name = "X-User-Id", defaultValue = "1") Long userId,
@@ -76,7 +76,7 @@ public class NotificationController {
         }
     }
 
-    @GetMapping("/unread-count")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.UNREAD_COUNT)
     public ResponseEntity<?> getUnreadCount(
             @RequestHeader(name = "X-User-Id", defaultValue = "1") Long userId) {
         Span span = tracer.spanBuilder("REST.getUnreadCount").startSpan();
@@ -92,7 +92,7 @@ public class NotificationController {
         }
     }
 
-    @PostMapping("/devices")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.DEVICES)
     public ResponseEntity<?> registerDevice(
             @RequestHeader(name = "X-User-Id", defaultValue = "1") Long userId,
             @RequestBody RegisterDeviceRequest request) {

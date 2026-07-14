@@ -35,6 +35,46 @@ public final class ApiEndpoints {
     public static final String ASSET_RELATIONSHIPS = FIELD_SERVICE + "/asset-relationships";
     public static final String SERVICE_CREWS = FIELD_SERVICE + "/service-crews";
     public static final String SHIFTS = FIELD_SERVICE + "/shifts";
+
+    // Method sub-paths
+    public static final String PATH_ID = "/{id}";
+    public static final String UNREAD_COUNT = "/unread-count";
+    public static final String DEVICES = "/devices";
+    public static final String STATUS_ID = "/{id}/status";
+    
+    public static final String SCHEDULES = "/schedules";
+    public static final String SCHEDULES_ID = "/schedules/{id}";
+    
+    public static final String RECIPIENTS = "/recipients";
+    public static final String RECIPIENTS_ID = "/recipients/{id}";
+    
+    public static final String DISPATCH = "/dispatch";
+    public static final String REPO_INFO = "/repo-info";
+    public static final String WORKFLOW_RUNS = "/workflow-runs";
+    public static final String CREATE_WORKFLOW = "/create-workflow";
+    public static final String DELETE_WORKFLOW = "/delete-workflow";
+    
+    public static final String APPOINTMENTS_SUB = "/appointments";
+    public static final String APPOINTMENTS_ID = "/appointments/{id}";
+    public static final String APPOINTMENTS_ASSIGN = "/appointments/{appointmentId}/assign";
+    public static final String ASSIGNED_RESOURCES_ID = "/assigned-resources/{id}";
+    public static final String APPOINTMENTS_CANDIDATES = "/appointments/{appointmentId}/candidates";
+    
+    public static final String TEMPLATES = "/templates";
+    public static final String TEMPLATES_ID = "/templates/{id}";
+    
+    public static final String SCHEDULE = "/schedule";
+    public static final String SCHEDULED = "/scheduled";
+    
+    public static final String SEND = "/send";
+    public static final String LIST = "/list";
+    public static final String RUNS = "/runs";
+    public static final String SIGNUP = "/signup";
+    public static final String LOGIN = "/login";
+    public static final String FORGOT_PASSWORD = "/forgot-password";
+    public static final String RESET_PASSWORD = "/reset-password";
+    public static final String JOBS_ID_RUNS = "/{jobId}/runs";
+    public static final String WORKFLOWS_ID_RUNS = "/{workflowId}/runs";
     
     private ApiEndpoints() {}
 }

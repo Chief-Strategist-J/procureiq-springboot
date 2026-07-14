@@ -30,7 +30,7 @@ public class ServiceAppointmentController {
         this.serviceResourceService = serviceResourceService;
     }
 
-    @GetMapping("/appointments")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_SUB)
     public ResponseEntity<?> getAllServiceAppointments() {
         Span span = tracer.spanBuilder("REST.getAllServiceAppointments").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -45,7 +45,7 @@ public class ServiceAppointmentController {
         }
     }
 
-    @PostMapping("/appointments")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_SUB)
     public ResponseEntity<?> createServiceAppointment(@RequestBody ServiceAppointmentRequest request) {
         Span span = tracer.spanBuilder("REST.createServiceAppointment").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -60,7 +60,7 @@ public class ServiceAppointmentController {
         }
     }
 
-    @GetMapping("/appointments/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_ID)
     public ResponseEntity<?> getServiceAppointment(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getServiceAppointment").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -75,7 +75,7 @@ public class ServiceAppointmentController {
         }
     }
 
-    @PutMapping("/appointments/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_ID)
     public ResponseEntity<?> updateServiceAppointment(@PathVariable Long id, @RequestBody ServiceAppointmentRequest request) {
         Span span = tracer.spanBuilder("REST.updateServiceAppointment").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -90,7 +90,7 @@ public class ServiceAppointmentController {
         }
     }
 
-    @DeleteMapping("/appointments/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_ID)
     public ResponseEntity<?> deleteServiceAppointment(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteServiceAppointment").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -105,7 +105,7 @@ public class ServiceAppointmentController {
         }
     }
 
-    @PostMapping("/appointments/{appointmentId}/assign")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_ASSIGN)
     public ResponseEntity<?> assignResource(
             @PathVariable Long appointmentId,
             @RequestBody AssignResourceRequest request) {
@@ -122,7 +122,7 @@ public class ServiceAppointmentController {
         }
     }
 
-    @DeleteMapping("/assigned-resources/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.ASSIGNED_RESOURCES_ID)
     public ResponseEntity<?> deleteAssignedResource(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteAssignedResource").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -137,7 +137,7 @@ public class ServiceAppointmentController {
         }
     }
 
-    @GetMapping("/appointments/{appointmentId}/candidates")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.APPOINTMENTS_CANDIDATES)
     public ResponseEntity<?> getCandidates(@PathVariable Long appointmentId) {
         Span span = tracer.spanBuilder("REST.getCandidates").startSpan();
         try (Scope scope = span.makeCurrent()) {

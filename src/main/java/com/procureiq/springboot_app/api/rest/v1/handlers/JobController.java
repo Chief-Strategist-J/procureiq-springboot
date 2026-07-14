@@ -27,7 +27,7 @@ public class JobController {
 
     // --- Job Endpoints ---
 
-    @GetMapping("/jobs")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.JOBS)
     public ResponseEntity<?> getAllJobs() {
         Span span = tracer.spanBuilder("REST.getAllJobs").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -42,7 +42,7 @@ public class JobController {
         }
     }
 
-    @PostMapping("/jobs")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.JOBS)
     public ResponseEntity<?> createJob(@RequestBody JobRequest request) {
         Span span = tracer.spanBuilder("REST.createJob").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -57,7 +57,7 @@ public class JobController {
         }
     }
 
-    @GetMapping("/jobs/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.JOBS + com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getJob(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getJob").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -72,7 +72,7 @@ public class JobController {
         }
     }
 
-    @PutMapping("/jobs/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.JOBS + com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateJob(@PathVariable Long id, @RequestBody JobRequest request) {
         Span span = tracer.spanBuilder("REST.updateJob").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -87,7 +87,7 @@ public class JobController {
         }
     }
 
-    @DeleteMapping("/jobs/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.JOBS + com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteJob(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteJob").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -151,7 +151,7 @@ public class JobController {
 
     // --- Workflow Endpoints ---
 
-    @GetMapping("/workflows")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORKFLOWS)
     public ResponseEntity<?> getAllWorkflows() {
         Span span = tracer.spanBuilder("REST.getAllWorkflows").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -166,7 +166,7 @@ public class JobController {
         }
     }
 
-    @PostMapping("/workflows")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORKFLOWS)
     public ResponseEntity<?> createWorkflow(@RequestBody WorkflowRequest request) {
         Span span = tracer.spanBuilder("REST.createWorkflow").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -181,7 +181,7 @@ public class JobController {
         }
     }
 
-    @GetMapping("/workflows/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORKFLOWS + com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getWorkflow(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getWorkflow").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -196,7 +196,7 @@ public class JobController {
         }
     }
 
-    @PutMapping("/workflows/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORKFLOWS + com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateWorkflow(@PathVariable Long id, @RequestBody WorkflowRequest request) {
         Span span = tracer.spanBuilder("REST.updateWorkflow").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -211,7 +211,7 @@ public class JobController {
         }
     }
 
-    @DeleteMapping("/workflows/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORKFLOWS + com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteWorkflow(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteWorkflow").startSpan();
         try (Scope scope = span.makeCurrent()) {

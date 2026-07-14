@@ -40,7 +40,7 @@ public class ResourceAbsenceController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getResourceAbsence(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getResourceAbsence").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class ResourceAbsenceController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateResourceAbsence(@PathVariable Long id, @RequestBody ResourceAbsenceRequest request) {
         Span span = tracer.spanBuilder("REST.updateResourceAbsence").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class ResourceAbsenceController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteResourceAbsence(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteResourceAbsence").startSpan();
         try (Scope scope = span.makeCurrent()) {

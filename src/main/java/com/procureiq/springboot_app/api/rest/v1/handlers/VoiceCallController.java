@@ -46,7 +46,7 @@ public class VoiceCallController {
      *   scheduledAt   – ISO-8601 timestamp          (required)
      *   provider      – "mock" | "twilio" | "vapi"  (optional, defaults to "mock")
      */
-    @PostMapping("/schedule")
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULE)
     public ResponseEntity<?> scheduleCall(@RequestBody Map<String, Object> body) {
         Span span = tracer.spanBuilder("REST.scheduleVoiceCall").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -106,7 +106,7 @@ public class VoiceCallController {
      * GET /api/v1/voice/scheduled
      * List all scheduled voice calls regardless of status.
      */
-    @GetMapping("/scheduled")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SCHEDULED)
     public ResponseEntity<?> listScheduledCalls() {
         Span span = tracer.spanBuilder("REST.listScheduledCalls").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -127,7 +127,7 @@ public class VoiceCallController {
      * DELETE /api/v1/voice/{id}
      * Delete / cancel a scheduled voice call by ID.
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteScheduledCall(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteScheduledCall").startSpan();
         try (Scope scope = span.makeCurrent()) {

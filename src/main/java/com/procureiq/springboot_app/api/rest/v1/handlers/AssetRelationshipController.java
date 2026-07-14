@@ -40,7 +40,7 @@ public class AssetRelationshipController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getAssetRelationship(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getAssetRelationship").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -55,7 +55,7 @@ public class AssetRelationshipController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateAssetRelationship(@PathVariable Long id, @RequestBody AssetRelationshipRequest request) {
         Span span = tracer.spanBuilder("REST.updateAssetRelationship").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -70,7 +70,7 @@ public class AssetRelationshipController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteAssetRelationship(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteAssetRelationship").startSpan();
         try (Scope scope = span.makeCurrent()) {

@@ -53,7 +53,7 @@ public class OperatingHoursController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> getOperatingHours(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.getOperatingHours").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -68,7 +68,7 @@ public class OperatingHoursController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> updateOperatingHours(@PathVariable Long id, @RequestBody OperatingHoursRequest request) {
         Span span = tracer.spanBuilder("REST.updateOperatingHours").startSpan();
         try (Scope scope = span.makeCurrent()) {
@@ -83,7 +83,7 @@ public class OperatingHoursController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.PATH_ID)
     public ResponseEntity<?> deleteOperatingHours(@PathVariable Long id) {
         Span span = tracer.spanBuilder("REST.deleteOperatingHours").startSpan();
         try (Scope scope = span.makeCurrent()) {
