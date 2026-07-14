@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/service-resource-skills")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SERVICE_RESOURCE_SKILLS)
 @CrossOrigin(origins = "*")
 public class ServiceResourceSkillController {
 

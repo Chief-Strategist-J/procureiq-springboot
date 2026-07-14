@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/asset-relationships")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.ASSET_RELATIONSHIPS)
 @CrossOrigin(origins = "*")
 public class AssetRelationshipController {
 

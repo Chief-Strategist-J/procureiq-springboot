@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/gmail")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.GMAIL)
 public class GmailApiController {
 
     private final GmailApiService gmailApiService;

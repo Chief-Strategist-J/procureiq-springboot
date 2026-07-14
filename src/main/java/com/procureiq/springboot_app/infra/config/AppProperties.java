@@ -21,6 +21,12 @@ public class AppProperties {
     @Value("${jwt.expiration}")
     private long jwtExpirationMs;
 
+    @Value("${twilio.api.base:https://api.twilio.com/2010-04-01/Accounts}")
+    private String twilioApiBase;
+
+    @Value("${vapi.calls.endpoint:https://api.vapi.ai/call/phone}")
+    private String vapiCallsEndpoint;
+
     public String getGithubToken() {
         return githubToken;
     }
@@ -39,5 +45,13 @@ public class AppProperties {
 
     public long getJwtExpirationMs() {
         return jwtExpirationMs;
+    }
+
+    public String getTwilioApiBase() {
+        return twilioApiBase;
+    }
+
+    public String getVapiCallsEndpoint() {
+        return vapiCallsEndpoint;
     }
 }

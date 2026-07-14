@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/resource-absences")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RESOURCE_ABSENCES)
 @CrossOrigin(origins = "*")
 public class ResourceAbsenceController {
 

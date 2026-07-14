@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/work-types")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORK_TYPES)
 @CrossOrigin(origins = "*")
 public class WorkTypeController {
 

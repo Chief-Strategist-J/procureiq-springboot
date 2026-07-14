@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/operating-hours")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.OPERATING_HOURS)
 public class OperatingHoursController {
     private final OperatingHoursService operatingHoursService;
     private final Tracer tracer = GlobalOpenTelemetry.getTracer("springboot-app", "1.0.0");

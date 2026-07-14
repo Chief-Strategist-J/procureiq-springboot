@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/time-slots")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.TIME_SLOTS)
 @CrossOrigin(origins = "*")
 public class TimeSlotController {
 

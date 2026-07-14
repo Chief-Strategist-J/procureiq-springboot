@@ -17,18 +17,11 @@ import org.springframework.web.client.RestTemplate;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-/**
- * TwilioVoiceAdapter — initiates outbound calls via the Twilio REST API.
- *
- * Required environment variables:
- *   TWILIO_ACCOUNT_SID   - Twilio Account SID (ACxxxxxx...)
- *   TWILIO_AUTH_TOKEN    - Twilio Auth Token
- *   TWILIO_FROM_NUMBER   - Caller ID in E.164 format (e.g. "+15551234567")
- */
 @Component("twilioVoiceAdapter")
 public class TwilioVoiceAdapter implements VoiceCallPort {
 
-    private static final String TWILIO_API_BASE = "https://api.twilio.com/2010-04-01/Accounts";
+    @org.springframework.beans.factory.annotation.Autowired
+    private com.procureiq.springboot_app.infra.config.AppProperties appProperties;
 
     private final Tracer tracer = GlobalOpenTelemetry.getTracer("springboot-app-infra", "1.0.0");
     private final RestTemplate restTemplate = new RestTemplate();
@@ -50,7 +43,6 @@ public class TwilioVoiceAdapter implements VoiceCallPort {
                 );
             }
 
-            // Build Basic auth header
             String credentials = accountSid + ":" + authToken;
             String encodedCredentials = Base64.getEncoder()
                 .encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
@@ -59,7 +51,6 @@ public class TwilioVoiceAdapter implements VoiceCallPort {
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.set("Authorization", "Basic " + encodedCredentials);
 
-            // Build TwiML that reads the instructions aloud
             String twiml = "<Response><Say>" + escapeXml(instructions) + "</Say></Response>";
 
             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
@@ -67,7 +58,7 @@ public class TwilioVoiceAdapter implements VoiceCallPort {
             body.add("From", fromNumber);
             body.add("Twiml", twiml);
 
-            String url = TWILIO_API_BASE + "/" + accountSid + "/Calls.json";
+            String url = appProperties.getTwilioApiBase() + "/" + accountSid + "/Calls.json";
             HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
 
             restTemplate.postForObject(url, request, String.class);

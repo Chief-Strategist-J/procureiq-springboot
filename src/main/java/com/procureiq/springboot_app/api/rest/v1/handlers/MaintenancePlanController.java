@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/maintenance-plans")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.MAINTENANCE_PLANS)
 @CrossOrigin(origins = "*")
 public class MaintenancePlanController {
 

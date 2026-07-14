@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/service-crews")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SERVICE_CREWS)
 @CrossOrigin(origins = "*")
 public class ServiceCrewController {
 

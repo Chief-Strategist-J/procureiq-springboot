@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/work-orders")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.WORK_ORDERS)
 @CrossOrigin(origins = "*")
 public class WorkOrderController {
 

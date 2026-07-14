@@ -25,7 +25,7 @@ import java.util.Map;
  *   DELETE /api/v1/voice/{id}       — cancel / delete a scheduled call
  */
 @RestController
-@RequestMapping("/api/v1/voice")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.VOICE)
 @CrossOrigin(origins = "*")
 public class VoiceCallController {
 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/resources")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.RESOURCES)
 @CrossOrigin(origins = "*")
 public class ServiceResourceController {
 

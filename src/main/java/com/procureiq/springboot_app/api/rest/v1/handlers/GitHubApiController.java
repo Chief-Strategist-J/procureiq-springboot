@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/github")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.GITHUB)
 public class GitHubApiController {
 
     private final GitHubApiService gitHubApiService;

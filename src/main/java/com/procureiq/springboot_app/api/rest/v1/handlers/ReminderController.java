@@ -16,7 +16,7 @@ import java.time.Instant;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/reminders")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.REMINDERS)
 @CrossOrigin(origins = "*")
 public class ReminderController {
 

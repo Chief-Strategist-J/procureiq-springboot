@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/github/templates")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.GITHUB_TEMPLATES)
 public class GithubActionTemplateController {
 
     private final GithubActionTemplateService githubActionTemplateService;

@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice/milestones")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.MILESTONES)
 @CrossOrigin(origins = "*")
 public class MilestoneController {
 

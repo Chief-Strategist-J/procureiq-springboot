@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/fieldservice")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SERVICE_APPOINTMENTS)
 @CrossOrigin(origins = "*")
 public class ServiceAppointmentController {
 

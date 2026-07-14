@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/campaigns")
+@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.CAMPAIGNS)
 public class CampaignController {
 
     private final CampaignService campaignService;
