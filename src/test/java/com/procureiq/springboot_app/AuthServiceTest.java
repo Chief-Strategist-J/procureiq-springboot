@@ -1,6 +1,7 @@
 package com.procureiq.springboot_app;
 
-import com.procureiq.springboot_app.features.auth.dto.*;
+import com.procureiq.springboot_app.features.auth.dto.request.*;
+import com.procureiq.springboot_app.features.auth.dto.response.*;
 import com.procureiq.springboot_app.features.auth.entity.User;
 import com.procureiq.springboot_app.features.auth.repository.UserRepository;
 import com.procureiq.springboot_app.features.auth.service.AuthService;

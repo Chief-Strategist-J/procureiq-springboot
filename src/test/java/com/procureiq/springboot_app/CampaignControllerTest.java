@@ -1,7 +1,8 @@
 package com.procureiq.springboot_app;
 
 import tools.jackson.databind.json.JsonMapper;
-import com.procureiq.springboot_app.features.campaigns.dto.*;
+import com.procureiq.springboot_app.features.campaigns.dto.request.*;
+import com.procureiq.springboot_app.features.campaigns.dto.response.*;
 import com.procureiq.springboot_app.features.campaigns.entity.*;
 import com.procureiq.springboot_app.features.campaigns.repository.*;
 import com.procureiq.springboot_app.features.fieldservice.entity.Account;

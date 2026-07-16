@@ -1,7 +1,8 @@
 package com.procureiq.springboot_app;
 
 import tools.jackson.databind.json.JsonMapper;
-import com.procureiq.springboot_app.features.notifications.dto.*;
+import com.procureiq.springboot_app.features.notifications.dto.request.*;
+import com.procureiq.springboot_app.features.notifications.dto.response.*;
 import com.procureiq.springboot_app.features.notifications.entity.NotificationType;
 import com.procureiq.springboot_app.features.notifications.entity.ChannelDelivery;
 import com.procureiq.springboot_app.features.notifications.repository.*;

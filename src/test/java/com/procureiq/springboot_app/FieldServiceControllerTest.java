@@ -1,10 +1,10 @@
 package com.procureiq.springboot_app;
 
 import tools.jackson.databind.json.JsonMapper;
-import com.procureiq.springboot_app.features.fieldservice.dto.*;
+import com.procureiq.springboot_app.features.fieldservice.dto.request.*;
+import com.procureiq.springboot_app.features.fieldservice.dto.response.*;
 import com.procureiq.springboot_app.features.fieldservice.entity.*;
 import com.procureiq.springboot_app.features.fieldservice.repository.*;
-import com.procureiq.springboot_app.shared.types.ApiResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

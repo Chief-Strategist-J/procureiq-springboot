@@ -1,7 +1,8 @@
 package com.procureiq.springboot_app;
 
 import tools.jackson.databind.json.JsonMapper;
-import com.procureiq.springboot_app.features.jobs.dto.*;
+import com.procureiq.springboot_app.features.jobs.dto.request.*;
+import com.procureiq.springboot_app.features.jobs.dto.response.*;
 import com.procureiq.springboot_app.features.jobs.repository.*;
 import com.procureiq.springboot_app.features.campaigns.repository.OrganizationRepository;
 import org.junit.jupiter.api.BeforeEach;
