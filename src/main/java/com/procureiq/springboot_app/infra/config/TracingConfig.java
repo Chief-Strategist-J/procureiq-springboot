@@ -20,6 +20,12 @@ public class TracingConfig {
 
     @Bean
     public io.opentelemetry.api.OpenTelemetry openTelemetry() {
+        // Respect OTEL_SDK_DISABLED env var — skip full pipeline on Render free tier
+        String otelDisabled = System.getenv("OTEL_SDK_DISABLED");
+        if ("true".equalsIgnoreCase(otelDisabled)) {
+            return io.opentelemetry.api.OpenTelemetry.noop();
+        }
+
         SpanExporter loggingExporter = new SpanExporter() {
             @Override
             public CompletableResultCode export(Collection<SpanData> spans) {

@@ -32,6 +32,9 @@ services:
         value: "86400000"
       - key: OTEL_SDK_DISABLED
         value: "true"
+      - key: RENDER_EXTERNAL_URL
+        # Replace this with your actual Render app URL
+        value: "https://procureiq-springboot.onrender.com"
 
 databases:
   - name: procureiq-db
