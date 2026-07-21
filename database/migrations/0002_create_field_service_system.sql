@@ -183,7 +183,7 @@ CREATE TABLE work_orders (
     status          TEXT NOT NULL DEFAULT 'new',
     priority        SMALLINT NOT NULL DEFAULT 3,
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
-    CONSTRAINT chk_work_orders_not_self REFERENCES work_orders(id) CHECK (parent_work_order_id != id)
+    CONSTRAINT chk_work_orders_not_self CHECK (parent_work_order_id != id)
 );
 CREATE INDEX idx_work_orders_account_status ON work_orders (account_id, status);
 CREATE INDEX idx_work_orders_parent ON work_orders (parent_work_order_id);

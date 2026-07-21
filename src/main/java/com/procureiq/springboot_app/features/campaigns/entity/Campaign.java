@@ -14,7 +14,7 @@ public class Campaign {
     @JoinColumn(name = "org_id", nullable = false)
     private Organization organization;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "text")
     private String name = "";
 
     @Column(nullable = false)

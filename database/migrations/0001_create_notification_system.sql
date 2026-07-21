@@ -162,7 +162,7 @@ CREATE TABLE notifications_2026_11 PARTITION OF notifications
 CREATE TABLE notifications_2026_12 PARTITION OF notifications
     FOR VALUES FROM ('2026-12-01 00:00:00+00') TO ('2027-01-01 00:00:00+00');
 
-CREATE UNIQUE INDEX idx_notifications_dedup_key ON notifications (type_id, dedup_key) WHERE dedup_key IS NOT NULL;
+CREATE UNIQUE INDEX idx_notifications_dedup_key ON notifications (created_at, type_id, dedup_key) WHERE dedup_key IS NOT NULL;
 CREATE INDEX idx_notifications_target ON notifications (target_scope, target_id, created_at DESC);
 CREATE INDEX idx_notifications_group_key ON notifications ((metadata->>'group_key'));
 CREATE SEQUENCE notification_global_seq;

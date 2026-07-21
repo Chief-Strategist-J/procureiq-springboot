@@ -17,6 +17,21 @@ CREATE TABLE roles (
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+CREATE TABLE permissions (
+    id              BIGINT PRIMARY KEY,
+    name            TEXT NOT NULL UNIQUE, -- e.g., 'read_campaigns', 'edit_campaigns', 'run_jobs'
+    description     TEXT,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE role_permissions (
+    id              BIGINT PRIMARY KEY,
+    role_id         BIGINT NOT NULL REFERENCES roles(id) ON DELETE CASCADE,
+    permission_id   BIGINT NOT NULL REFERENCES permissions(id) ON DELETE CASCADE,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (role_id, permission_id)
+);
+
 CREATE TABLE org_user_roles (
     id              BIGINT PRIMARY KEY,
     org_user_id     BIGINT NOT NULL REFERENCES org_users(id) ON DELETE CASCADE,
