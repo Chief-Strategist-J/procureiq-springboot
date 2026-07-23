@@ -73,13 +73,11 @@ public class FieldServiceControllerTest {
 
     @Test
     public void testFieldServiceFlow() throws Exception {
-        // 0. Create default Account for testing Work Orders
         Account account = new Account();
         account.setName("Test Account");
         account = accountRepository.save(account);
         Long accountId = account.getId();
 
-        // 1. Create Operating Hours
         OperatingHoursRequest ohRequest = new OperatingHoursRequest("HQ Hours", "America/New_York");
         String ohResponseJson = mockMvc.perform(post("/api/v1/fieldservice/operating-hours")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -92,7 +90,6 @@ public class FieldServiceControllerTest {
 
         Long ohId = operatingHoursRepository.findAll().get(0).getId();
 
-        // 2. Create Service Territory
         ServiceTerritoryRequest stRequest = new ServiceTerritoryRequest("East Coast", null, ohId, true);
         mockMvc.perform(post("/api/v1/fieldservice/territories")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +98,6 @@ public class FieldServiceControllerTest {
                 .andExpect(jsonPath("$.status", is("success")))
                 .andExpect(jsonPath("$.data.name", is("East Coast")));
 
-        // 3. Create Service Resource
         ServiceResourceRequest srRequest = new ServiceResourceRequest("John Doe Crew", null, null, "crew", true);
         mockMvc.perform(post("/api/v1/fieldservice/resources")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -113,7 +109,6 @@ public class FieldServiceControllerTest {
 
         Long resourceId = serviceResourceRepository.findAll().get(0).getId();
 
-        // 4. Create Work Type
         WorkTypeRequest wtRequest = new WorkTypeRequest("Installation", 120, 15);
         mockMvc.perform(post("/api/v1/fieldservice/work-types")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -125,7 +120,6 @@ public class FieldServiceControllerTest {
 
         Long workTypeId = workTypeRepository.findAll().get(0).getId();
 
-        // 5. Create Work Order (should auto-create a Service Appointment)
         WorkOrderRequest woRequest = new WorkOrderRequest(null, null, accountId, null, null, null, workTypeId, null, "new", 3);
         mockMvc.perform(post("/api/v1/fieldservice/work-orders")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -141,7 +135,6 @@ public class FieldServiceControllerTest {
         Long appointmentId = sa.getId();
         Instant appointmentCreatedAt = sa.getCreatedAt();
 
-        // 6. Assign Resource
         AssignResourceRequest assignRequest = new AssignResourceRequest(appointmentId, appointmentCreatedAt, resourceId, null, true, "assigned");
         mockMvc.perform(post("/api/v1/fieldservice/appointments/" + appointmentId + "/assign")
                 .contentType(MediaType.APPLICATION_JSON)

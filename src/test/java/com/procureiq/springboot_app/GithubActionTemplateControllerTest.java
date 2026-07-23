@@ -32,9 +32,6 @@ public class GithubActionTemplateControllerTest {
     }
 
     private GithubActionTemplate seedTemplate() {
-        // Uses a test-only name/eventType, distinct from the real catalog seeded by
-        // database/seeds/0003_github_action_templates.sql, to avoid colliding with the
-        // event_type UNIQUE constraint against any pre-seeded rows in a shared dev DB.
         GithubActionTemplate t = new GithubActionTemplate();
         t.setName("Test Lint Sweep");
         t.setCategory("Code Quality & Review");

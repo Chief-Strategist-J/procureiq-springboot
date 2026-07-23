@@ -61,7 +61,6 @@ public class NotificationControllerTest {
         typeRepository.deleteAll();
         typeRepository.flush();
 
-        // Seed a notification type
         NotificationType type = new NotificationType();
         type.setCode("system_alert");
         type.setCategory("transactional");
@@ -83,7 +82,7 @@ public class NotificationControllerTest {
             "system_alert",
             "test-service",
             "user",
-            100L, // target user ID
+            100L, 
             null,
             payload,
             metadata,
@@ -91,13 +90,11 @@ public class NotificationControllerTest {
             null
         );
 
-        // 1. Trigger the notification
         mockMvc.perform(post("/api/v1/notifications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isAccepted());
 
-        // 2. Fetch the feed for user 100
         mockMvc.perform(get("/api/v1/notifications")
                 .header("X-User-Id", "100")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -107,7 +104,6 @@ public class NotificationControllerTest {
                 .andExpect(jsonPath("$.data.content[0].sourceService", is("test-service")))
                 .andExpect(jsonPath("$.data.content[0].status", is("pending")));
 
-        // 3. Verify unread count
         mockMvc.perform(get("/api/v1/notifications/unread-count")
                 .header("X-User-Id", "100")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -137,19 +133,16 @@ public class NotificationControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isAccepted());
 
-        // Get notification ID from feed
         String feedResponse = mockMvc.perform(get("/api/v1/notifications")
                 .header("X-User-Id", "200")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse().getContentAsString();
 
-        // Safe parser extract id using quick index lookup
         int idIndex = feedResponse.indexOf("\"id\":");
         int commaIndex = feedResponse.indexOf(",", idIndex);
         String idStr = feedResponse.substring(idIndex + 5, commaIndex).trim();
         long notifId = Long.parseLong(idStr);
 
-        // Update status to read
         UpdateNotificationStatusRequest updateReq = new UpdateNotificationStatusRequest("read");
         mockMvc.perform(put("/api/v1/notifications/" + notifId + "/status")
                 .header("X-User-Id", "200")
@@ -157,7 +150,6 @@ public class NotificationControllerTest {
                 .content(objectMapper.writeValueAsString(updateReq)))
                 .andExpect(status().isOk());
 
-        // Verify unread count is now 0
         mockMvc.perform(get("/api/v1/notifications/unread-count")
                 .header("X-User-Id", "200")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -195,15 +187,13 @@ public class NotificationControllerTest {
         delivery.setChannel("email");
         delivery.setProvider("sendgrid");
         delivery.setStatus("queued");
-        delivery.setNextRetryAt(java.time.Instant.now().minusSeconds(10)); // ready for pickup
+        delivery.setNextRetryAt(java.time.Instant.now().minusSeconds(10)); 
         delivery.setCreatedAt(java.time.Instant.now().minusSeconds(10));
         delivery.setUpdatedAt(java.time.Instant.now().minusSeconds(10));
         channelDeliveryRepository.save(delivery);
 
-        // Act: trigger the scheduled delivery processor manually
         notificationBackgroundWorker.processDeliveries();
 
-        // Assert: verify status updated to delivered
         List<ChannelDelivery> deliveries = channelDeliveryRepository.findAll();
         assertEquals(1, deliveries.size());
         assertEquals("delivered", deliveries.get(0).getStatus());
@@ -221,7 +211,7 @@ public class NotificationControllerTest {
             "system_alert",
             "test-service",
             "user",
-            500L, // target user ID
+            500L, 
             null,
             payload,
             new HashMap<>(),
@@ -229,20 +219,17 @@ public class NotificationControllerTest {
             futureTime
         );
 
-        // 1. Trigger the notification
         mockMvc.perform(post("/api/v1/notifications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isAccepted());
 
-        // 2. Fetch the feed for user 500 (should be empty because scheduled time is in the future)
         mockMvc.perform(get("/api/v1/notifications")
                 .header("X-User-Id", "500")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.content", hasSize(0)));
 
-        // 3. Verify unread count is 0
         mockMvc.perform(get("/api/v1/notifications/unread-count")
                 .header("X-User-Id", "500")
                 .contentType(MediaType.APPLICATION_JSON))

@@ -61,7 +61,6 @@ public class CampaignControllerTest {
 
     @Test
     public void testCampaignCRUD() throws Exception {
-        // 1. Create campaign
         CampaignRequest createReq = new CampaignRequest(1001L, "Summer Promo", "draft");
 
         String responseJson = mockMvc.perform(post("/api/v1/campaigns")
@@ -79,12 +78,10 @@ public class CampaignControllerTest {
         );
         assertNotNull(cResponse.id());
 
-        // 2. Get campaign
         mockMvc.perform(get("/api/v1/campaigns/" + cResponse.id()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.name", is("Summer Promo")));
 
-        // 3. Update campaign
         CampaignRequest updateReq = new CampaignRequest(1001L, "Summer Promo v2", "active");
         mockMvc.perform(put("/api/v1/campaigns/" + cResponse.id())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -93,18 +90,15 @@ public class CampaignControllerTest {
                 .andExpect(jsonPath("$.data.name", is("Summer Promo v2")))
                 .andExpect(jsonPath("$.data.status", is("active")));
 
-        // 4. Delete campaign
         mockMvc.perform(delete("/api/v1/campaigns/" + cResponse.id()))
                 .andExpect(status().isOk());
 
-        // 5. Get should fail/empty
         mockMvc.perform(get("/api/v1/campaigns/" + cResponse.id()))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testRecipientAndScheduleCRUD() throws Exception {
-        // 1. Create Recipient (Contact)
         RecipientRequest recReq = new RecipientRequest(2001L, "John Doe", "john@example.com", "1234567890");
 
         String recJson = mockMvc.perform(post("/api/v1/campaigns/recipients")
@@ -120,7 +114,6 @@ public class CampaignControllerTest {
             RecipientResponse.class
         );
 
-        // 2. Create Campaign
         Organization org = new Organization();
         org.setId(1002L);
         org.setName("Org 1002");
@@ -132,7 +125,6 @@ public class CampaignControllerTest {
         c.setOrganization(org);
         c = campaignRepository.save(c);
 
-        // 3. Create Schedule
         ScheduledEmailRequest schedReq = new ScheduledEmailRequest(
             1002L,
             c.getId(),
@@ -155,7 +147,6 @@ public class CampaignControllerTest {
             ScheduledEmailResponse.class
         );
 
-        // 4. Update Schedule
         ScheduledEmailRequest updateSchedReq = new ScheduledEmailRequest(
             1002L,
             c.getId(),
@@ -171,7 +162,6 @@ public class CampaignControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.status", is("sent")));
 
-        // 5. Delete Schedule
         mockMvc.perform(delete("/api/v1/campaigns/schedules/" + schedResponse.id()))
                 .andExpect(status().isOk());
     }

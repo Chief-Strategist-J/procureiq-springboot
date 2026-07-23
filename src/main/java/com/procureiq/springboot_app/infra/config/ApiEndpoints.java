@@ -77,5 +77,99 @@ public final class ApiEndpoints {
     public static final String JOBS_ID_RUNS = "/{jobId}/runs";
     public static final String WORKFLOWS_ID_RUNS = "/{workflowId}/runs";
     
+    public static final String KLINES       = "/klines";
+    public static final String TICKER       = "/ticker";
+    public static final String ORDERBOOK    = "/orderbook";
+    public static final String STOCKS       = "/stocks";
+    public static final String SYMBOLS      = "/symbols";
+    public static final String DETAILS      = "/details";
+    public static final String ANALYZE      = "/analyze";
+    public static final String PRICE        = "/price";
+    public static final String BOOK_TICKER  = "/book-ticker";
+    public static final String TRADES       = "/trades";
+    public static final String AVG_PRICE    = "/avg-price";
+    public static final String ALL_TICKERS  = "/all-tickers";
+    public static final String MOVERS       = "/movers";
+
+    public static final String PYTHON_ANALYTICS_TIME_SERIES = API_V1 + "/analytics/time-series";
+    
+    public static final String BINANCE_BASE_URL              = "https://api.binance.com";
+    public static final String BINANCE_KLINES_URI            = BINANCE_BASE_URL + "/api/v3/klines?symbol={symbol}&interval={interval}&limit={limit}";
+    public static final String BINANCE_TICKER_24HR_URI       = BINANCE_BASE_URL + "/api/v3/ticker/24hr?symbol={symbol}";
+    public static final String BINANCE_TICKER_ALL_URI        = BINANCE_BASE_URL + "/api/v3/ticker/24hr";
+    public static final String BINANCE_DEPTH_URI             = BINANCE_BASE_URL + "/api/v3/depth?symbol={symbol}&limit={limit}";
+    public static final String BINANCE_EXCHANGE_INFO_URI     = BINANCE_BASE_URL + "/api/v3/exchangeInfo";
+    public static final String BINANCE_PRICE_URI             = BINANCE_BASE_URL + "/api/v3/ticker/price?symbol={symbol}";
+    public static final String BINANCE_BOOK_TICKER_URI       = BINANCE_BASE_URL + "/api/v3/ticker/bookTicker?symbol={symbol}";
+    public static final String BINANCE_TRADES_URI            = BINANCE_BASE_URL + "/api/v3/trades?symbol={symbol}&limit={limit}";
+    public static final String BINANCE_AVG_PRICE_URI         = BINANCE_BASE_URL + "/api/v3/avgPrice?symbol={symbol}";
+    public static final String BINANCE_HEADER_API_KEY        = "X-MBX-APIKEY";
+
+    public static final String KEY_PRICE            = "price";
+    public static final String KEY_BID_PRICE        = "bidPrice";
+    public static final String KEY_BID_QTY          = "bidQty";
+    public static final String KEY_ASK_PRICE        = "askPrice";
+    public static final String KEY_ASK_QTY          = "askQty";
+    public static final String KEY_TRADE_ID         = "id";
+    public static final String KEY_QTY              = "qty";
+    public static final String KEY_TRADE_TIME       = "time";
+    public static final String KEY_IS_BUYER_MAKER   = "isBuyerMaker";
+    public static final String KEY_MINS             = "mins";
+
+    public static final String ALPHAVANTAGE_BASE_URL                  = "https://www.alphavantage.co/query";
+    public static final String ALPHAVANTAGE_DAILY_TIME_SERIES_URI     = ALPHAVANTAGE_BASE_URL + "?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={apiKey}";
+
+    public static final String VAPI_ENV_API_KEY         = "VAPI_API_KEY";
+    public static final String VAPI_ENV_PHONE_NUMBER_ID = "VAPI_PHONE_NUMBER_ID";
+    public static final String VAPI_ENV_ASSISTANT_ID    = "VAPI_ASSISTANT_ID";
+    public static final String VAPI_KEY_ASSISTANT_ID    = "assistantId";
+    public static final String VAPI_KEY_PHONE_NUMBER_ID = "phoneNumberId";
+    public static final String VAPI_KEY_CUSTOMER        = "customer";
+    public static final String VAPI_KEY_CUSTOMER_NUMBER = "number";
+    public static final String VAPI_KEY_OVERRIDES       = "assistantOverrides";
+    public static final String VAPI_KEY_FIRST_MESSAGE   = "firstMessage";
+
+    public static final String TWILIO_ENV_ACCOUNT_SID  = "TWILIO_ACCOUNT_SID";
+    public static final String TWILIO_ENV_AUTH_TOKEN   = "TWILIO_AUTH_TOKEN";
+    public static final String TWILIO_ENV_FROM_NUMBER  = "TWILIO_FROM_NUMBER";
+    public static final String TWILIO_HEADER_AUTH      = "Authorization";
+    public static final String TWILIO_AUTH_PREFIX      = "Basic ";
+    public static final String TWILIO_FORM_TO          = "To";
+    public static final String TWILIO_FORM_FROM        = "From";
+    public static final String TWILIO_FORM_TWIML       = "Twiml";
+    public static final String TWILIO_CALLS_PATH       = "/Calls.json";
+    public static final String TWILIO_CRED_SEPARATOR   = ":";
+    
+    public static final String KEY_OPEN                  = "open";
+    public static final String KEY_HIGH                  = "high";
+    public static final String KEY_LOW                   = "low";
+    public static final String KEY_CLOSE                 = "close";
+    public static final String KEY_VOLUME                = "volume";
+    public static final String KEY_SERIES                = "series";
+    public static final String KEY_DAILY                 = "daily";
+    public static final String KEY_TIME_SERIES           = "time series";
+    public static final String KEY_SYMBOLS               = "symbols";
+    public static final String KEY_SYMBOL                = "symbol";
+    public static final String KEY_STATUS                = "status";
+    public static final String KEY_BIDS                  = "bids";
+    public static final String KEY_ASKS                  = "asks";
+    public static final String KEY_LAST_PRICE            = "lastPrice";
+    public static final String KEY_PRICE_CHANGE_PERCENT  = "priceChangePercent";
+    public static final String KEY_HIGH_PRICE            = "highPrice";
+    public static final String KEY_LOW_PRICE             = "lowPrice";
+
+    public static final String STATUS_TRADING       = "TRADING";
+    public static final String ASSET_TYPE_CRYPTO    = "CRYPTO";
+    public static final String ASSET_TYPE_STOCK     = "STOCK";
+    public static final String SUFFIX_USDT          = "USDT";
+
+    public static final String DEFAULT_SYMBOL_BTCUSDT = "BTCUSDT";
+    public static final String DEFAULT_INTERVAL_DAILY = "1d";
+    public static final String APIKEY_DEMO            = "demo";
+    public static final String TREND_BULLISH          = "BULLISH";
+    public static final String TREND_BEARISH          = "BEARISH";
+    public static final String TREND_SIDEWAYS         = "SIDEWAYS";
+    public static final int    DEFAULT_LIMIT_FALLBACK = 30;
+
     private ApiEndpoints() {}
 }

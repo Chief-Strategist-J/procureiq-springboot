@@ -60,22 +60,18 @@ public class AuthServiceTest {
         SignupRequest signupRequest = new SignupRequest("resetuser", "password123", "reset@example.com");
         authService.signup(signupRequest);
 
-        // 1. Trigger forgot password
         ForgotPasswordRequest forgotRequest = new ForgotPasswordRequest("reset@example.com");
         authService.forgotPassword(forgotRequest);
 
-        // 2. Fetch reset token from repository
         User user = userRepository.findByEmail("reset@example.com").orElseThrow();
         String token = user.getResetToken();
         assertNotNull(token);
         assertFalse(token.isEmpty());
         assertNotNull(user.getResetTokenExpiry());
 
-        // 3. Reset password
         ResetPasswordRequest resetRequest = new ResetPasswordRequest(token, "newpassword123");
         authService.resetPassword(resetRequest);
 
-        // 4. Verify login succeeds with the new password
         LoginRequest loginRequest = new LoginRequest("resetuser", "newpassword123");
         LoginResponse loginResponse = authService.login(loginRequest);
         assertNotNull(loginResponse.getToken());

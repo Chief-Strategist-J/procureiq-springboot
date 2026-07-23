@@ -7,13 +7,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-/**
- * Sends a self-ping to /actuator/health every 10 minutes to prevent
- * the Render free-tier instance from spinning down due to inactivity.
- *
- * Set the RENDER_EXTERNAL_URL env var in render.yaml to activate.
- * Example: https://procureiq-springboot.onrender.com
- */
+
 @Component
 public class KeepAliveScheduler {
 
@@ -23,11 +17,10 @@ public class KeepAliveScheduler {
     @Value("${render.external.url:}")
     private String renderExternalUrl;
 
-    // Fires every 10 minutes (600,000 ms), first ping after 1 minute
     @Scheduled(fixedDelay = 600_000, initialDelay = 60_000)
     public void keepAlive() {
         if (renderExternalUrl == null || renderExternalUrl.isBlank()) {
-            return; // Disabled — set RENDER_EXTERNAL_URL env var to activate
+            return; 
         }
         String healthUrl = renderExternalUrl.stripTrailing() + "/actuator/health";
         try {

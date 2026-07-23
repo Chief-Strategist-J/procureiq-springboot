@@ -30,7 +30,6 @@ public class ReminderBackgroundWorkerTest {
 
     @Test
     public void testReminderProcessingAndGmailDispatch() {
-        // Create a due pending email reminder
         Reminder reminder = new Reminder();
         reminder.setTitle("Meeting with Product Team");
         reminder.setDescription("Discuss the Q3 launch specifications and data models.");
@@ -41,10 +40,8 @@ public class ReminderBackgroundWorkerTest {
         reminder.setStatus("PENDING");
         reminderRepository.save(reminder);
 
-        // Run the background worker method manually
         reminderBackgroundWorker.processReminders();
 
-        // Verify status changed to SENT
         List<Reminder> results = reminderRepository.findAll();
         assertEquals(1, results.size());
         assertEquals("SENT", results.get(0).getStatus());

@@ -24,7 +24,6 @@ public class GmailApiControllerTest {
 
     @Test
     public void testGmailSendAndListMock() throws Exception {
-        // 1. Send an email
         SendEmailRequest sendReq = new SendEmailRequest("recipient@example.com", "Test Subject", "Test Body");
 
         mockMvc.perform(post("/api/v1/gmail/send")
@@ -34,7 +33,6 @@ public class GmailApiControllerTest {
                 .andExpect(jsonPath("$.status", is("success")))
                 .andExpect(jsonPath("$.data.id", notNullValue()));
 
-        // 2. List emails
         mockMvc.perform(get("/api/v1/gmail/list"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status", is("success")))
@@ -43,7 +41,6 @@ public class GmailApiControllerTest {
 
     @Test
     public void testGmailSendValidation() throws Exception {
-        // Invalid request (missing recipient)
         SendEmailRequest invalidReq = new SendEmailRequest("", "Test Subject", "Test Body");
 
         mockMvc.perform(post("/api/v1/gmail/send")

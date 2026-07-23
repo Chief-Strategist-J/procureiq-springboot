@@ -58,7 +58,6 @@ public class JobControllerTest {
 
     @Test
     public void testJobCRUDAndTriggerRun() throws Exception {
-        // 1. Create Job
         Map<String, Object> config = new HashMap<>();
         config.put("command", "echo 'hello'");
         JobRequest createReq = new JobRequest(2001L, null, "Test ETL Job", "active", config);
@@ -78,12 +77,10 @@ public class JobControllerTest {
         );
         assertNotNull(jobResponse.id());
 
-        // 2. Get Job
         mockMvc.perform(get("/api/v1/jobs/" + jobResponse.id()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.name", is("Test ETL Job")));
 
-        // 3. Update Job
         JobRequest updateReq = new JobRequest(2001L, null, "Test ETL Job Updated", "inactive", config);
         mockMvc.perform(put("/api/v1/jobs/" + jobResponse.id())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -92,7 +89,6 @@ public class JobControllerTest {
                 .andExpect(jsonPath("$.data.name", is("Test ETL Job Updated")))
                 .andExpect(jsonPath("$.data.status", is("inactive")));
 
-        // 4. Trigger Job Run
         String runResponseJson = mockMvc.perform(post("/api/v1/jobs/" + jobResponse.id() + "/runs"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status", is("success")))
@@ -105,24 +101,20 @@ public class JobControllerTest {
         );
         assertNotNull(runResponse.id());
 
-        // 5. Get Job Run
         mockMvc.perform(get("/api/v1/jobs/runs/" + runResponse.id()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.status", is("running")));
 
-        // 6. Get Job Runs List
         mockMvc.perform(get("/api/v1/jobs/" + jobResponse.id() + "/runs"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(1)));
 
-        // 7. Delete Job
         mockMvc.perform(delete("/api/v1/jobs/" + jobResponse.id()))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void testWorkflowCRUDAndTriggerRun() throws Exception {
-        // 1. Create Workflow
         WorkflowRequest createReq = new WorkflowRequest(3001L, "Data Sync Flow", "draft");
 
         String responseJson = mockMvc.perform(post("/api/v1/workflows")
@@ -140,12 +132,10 @@ public class JobControllerTest {
         );
         assertNotNull(workflowResponse.id());
 
-        // 2. Get Workflow
         mockMvc.perform(get("/api/v1/workflows/" + workflowResponse.id()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.name", is("Data Sync Flow")));
 
-        // 3. Update Workflow
         WorkflowRequest updateReq = new WorkflowRequest(3001L, "Data Sync Flow Updated", "active");
         mockMvc.perform(put("/api/v1/workflows/" + workflowResponse.id())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -154,7 +144,6 @@ public class JobControllerTest {
                 .andExpect(jsonPath("$.data.name", is("Data Sync Flow Updated")))
                 .andExpect(jsonPath("$.data.status", is("active")));
 
-        // 4. Trigger Workflow Run
         String runResponseJson = mockMvc.perform(post("/api/v1/workflows/" + workflowResponse.id() + "/runs"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.status", is("success")))
@@ -167,17 +156,14 @@ public class JobControllerTest {
         );
         assertNotNull(runResponse.id());
 
-        // 5. Get Workflow Run
         mockMvc.perform(get("/api/v1/workflows/runs/" + runResponse.id()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.status", is("running")));
 
-        // 6. Get Workflow Runs List
         mockMvc.perform(get("/api/v1/workflows/" + workflowResponse.id() + "/runs"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data", hasSize(1)));
 
-        // 7. Delete Workflow
         mockMvc.perform(delete("/api/v1/workflows/" + workflowResponse.id()))
                 .andExpect(status().isOk());
     }

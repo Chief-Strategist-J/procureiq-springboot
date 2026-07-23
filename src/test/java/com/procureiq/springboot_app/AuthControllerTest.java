@@ -101,27 +101,23 @@ public class AuthControllerTest {
                 .content(objectMapper.writeValueAsString(signup)))
                 .andExpect(status().isCreated());
 
-        // Trigger forgot password
         ForgotPasswordRequest forgot = new ForgotPasswordRequest("reset@example.com");
         mockMvc.perform(post("/api/v1/auth/forgot-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(forgot)))
                 .andExpect(status().isOk());
 
-        // Verify token saved in DB
         User user = userRepository.findByEmail("reset@example.com").orElseThrow();
         String token = user.getResetToken();
         assertNotNull(token);
         assertFalse(token.isEmpty());
 
-        // Reset password
         ResetPasswordRequest reset = new ResetPasswordRequest(token, "newpassword123");
         mockMvc.perform(post("/api/v1/auth/reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reset)))
                 .andExpect(status().isOk());
 
-        // Login with new password
         LoginRequest login = new LoginRequest("resetuser", "newpassword123");
         mockMvc.perform(post("/api/v1/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -139,7 +135,7 @@ public class AuthControllerTest {
 
         User user = userRepository.findByEmail("expired@example.com").orElseThrow();
         user.setResetToken("expired-token-xyz");
-        user.setResetTokenExpiry(LocalDateTime.now().minusMinutes(5)); // already expired
+        user.setResetTokenExpiry(LocalDateTime.now().minusMinutes(5)); 
         userRepository.save(user);
 
         ResetPasswordRequest reset = new ResetPasswordRequest("expired-token-xyz", "newpassword123");
@@ -161,7 +157,6 @@ public class AuthControllerTest {
     @Test
     public void testForgotPasswordNonExistentEmail() throws Exception {
         ForgotPasswordRequest forgot = new ForgotPasswordRequest("nonexistent@example.com");
-        // Should return 200 OK to prevent user enumeration
         mockMvc.perform(post("/api/v1/auth/forgot-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(forgot)))
