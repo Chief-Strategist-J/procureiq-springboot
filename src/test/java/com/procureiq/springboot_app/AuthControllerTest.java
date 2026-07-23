@@ -142,7 +142,7 @@ public class AuthControllerTest {
         mockMvc.perform(post("/api/v1/auth/reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reset)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -169,7 +169,7 @@ public class AuthControllerTest {
         mockMvc.perform(post("/api/v1/auth/reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reset)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnauthorized());
     }
 
     @Test

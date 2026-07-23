@@ -39,6 +39,9 @@ public class ReminderController {
     @PostMapping
     public ResponseEntity<?> createReminder(@jakarta.validation.Valid @RequestBody Reminder reminder) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
+            if (reminder.getDueAt() == null) {
+                reminder.setDueAt(Instant.now());
+            }
             if (reminder.getCreatedAt() == null) {
                 reminder.setCreatedAt(Instant.now());
             }
