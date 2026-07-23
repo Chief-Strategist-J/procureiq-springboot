@@ -45,7 +45,7 @@ public class IdentityAdminController {
             @RequestParam("principalType") String principalType,
             @RequestParam("principalId") Long principalId) {
         List<RoleAssignment> list = roleManagementService.getAssignments(orgId, principalType, principalId);
-        return ResponseEntity.ok(ApiListResponse.success(list));
+        return ResponseEntity.ok(ApiListResponse.success(200, list));
     }
 
     @GetMapping("/organizations/{orgId}/audit-events")
@@ -53,14 +53,14 @@ public class IdentityAdminController {
         List<AuditEvent> events = auditLogService.getLogs(orgId);
         List<AuditEventResponse> list = events.stream()
                 .map(e -> new AuditEventResponse(
-                        e.getId(), e.getOrgId(), e.getActorType(), e.getActorId(),
+                        e.getId(), e.getOrganization() != null ? e.getOrganization().getId() : null, e.getActorType(), e.getActorId(),
                         e.getAction(), e.getResourceType(), e.getResourceId(),
                         e.getSeverity(), e.getBeforeValue(), e.getAfterValue(),
                         e.getRequestId(), e.getSessionId(), e.getIpAddress(),
                         e.getUserAgent(), e.getPrevHash(), e.getEntryHash(),
                         e.getOccurredAt()
                 )).collect(Collectors.toList());
-        return ResponseEntity.ok(ApiListResponse.success(list));
+        return ResponseEntity.ok(ApiListResponse.success(200, list));
     }
 
     @PostMapping("/organizations/{orgId}/audit-events/verify")
