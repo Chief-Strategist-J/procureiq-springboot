@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.API_V1)
+@RequestMapping
 public class JobController {
 
     private final JobService jobService;

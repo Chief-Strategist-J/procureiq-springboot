@@ -13,12 +13,12 @@ public class TravelTimeCache {
     private ServiceTerritory originTerritory;
 
     @Id
-    @Column(name = "dest_lat_bucket")
-    private Integer destLatBucket;
+    @Column(name = "dest_lat_bucket", columnDefinition = "smallint")
+    private Short destLatBucket;
 
     @Id
-    @Column(name = "dest_lng_bucket")
-    private Integer destLngBucket;
+    @Column(name = "dest_lng_bucket", columnDefinition = "smallint")
+    private Short destLngBucket;
 
     @Column(name = "estimated_minutes", nullable = false)
     private Integer estimatedMinutes;
@@ -38,11 +38,11 @@ public class TravelTimeCache {
     public ServiceTerritory getOriginTerritory() { return originTerritory; }
     public void setOriginTerritory(ServiceTerritory originTerritory) { this.originTerritory = originTerritory; }
 
-    public Integer getDestLatBucket() { return destLatBucket; }
-    public void setDestLatBucket(Integer destLatBucket) { this.destLatBucket = destLatBucket; }
+    public Short getDestLatBucket() { return destLatBucket; }
+    public void setDestLatBucket(Short destLatBucket) { this.destLatBucket = destLatBucket; }
 
-    public Integer getDestLngBucket() { return destLngBucket; }
-    public void setDestLngBucket(Integer destLngBucket) { this.destLngBucket = destLngBucket; }
+    public Short getDestLngBucket() { return destLngBucket; }
+    public void setDestLngBucket(Short destLngBucket) { this.destLngBucket = destLngBucket; }
 
     public Integer getEstimatedMinutes() { return estimatedMinutes; }
     public void setEstimatedMinutes(Integer estimatedMinutes) { this.estimatedMinutes = estimatedMinutes; }

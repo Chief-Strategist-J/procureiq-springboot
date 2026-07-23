@@ -5,3 +5,4 @@
 
 DROP INDEX IF EXISTS idx_scheduled_calls_status_scheduled_at;
 DROP TABLE IF EXISTS scheduled_calls;
+DROP TABLE IF EXISTS reminders CASCADE;

@@ -13,8 +13,8 @@ public class TimeSlot {
     @JoinColumn(name = "operating_hours_id", nullable = false)
     private OperatingHours operatingHours;
 
-    @Column(name = "day_of_week", nullable = false)
-    private Integer dayOfWeek;
+    @Column(name = "day_of_week", nullable = false, columnDefinition = "smallint")
+    private Short dayOfWeek;
 
     @Column(name = "start_time", nullable = false)
     private LocalTime startTime;
@@ -37,8 +37,8 @@ public class TimeSlot {
     public OperatingHours getOperatingHours() { return operatingHours; }
     public void setOperatingHours(OperatingHours operatingHours) { this.operatingHours = operatingHours; }
 
-    public Integer getDayOfWeek() { return dayOfWeek; }
-    public void setDayOfWeek(Integer dayOfWeek) { this.dayOfWeek = dayOfWeek; }
+    public Short getDayOfWeek() { return dayOfWeek; }
+    public void setDayOfWeek(Short dayOfWeek) { this.dayOfWeek = dayOfWeek; }
 
     public LocalTime getStartTime() { return startTime; }
     public void setStartTime(LocalTime startTime) { this.startTime = startTime; }

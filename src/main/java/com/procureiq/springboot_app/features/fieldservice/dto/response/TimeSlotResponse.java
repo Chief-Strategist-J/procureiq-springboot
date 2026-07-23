@@ -13,7 +13,7 @@ public record TimeSlotResponse(
         return new TimeSlotResponse(
             entity.getId(),
             entity.getOperatingHours().getId(),
-            entity.getDayOfWeek(),
+            entity.getDayOfWeek() != null ? entity.getDayOfWeek().intValue() : null,
             entity.getStartTime(),
             entity.getEndTime()
         );

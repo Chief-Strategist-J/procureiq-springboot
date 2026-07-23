@@ -5,12 +5,12 @@ import java.util.Objects;
 
 public class TravelTimeCacheId implements Serializable {
     private Long originTerritory;
-    private Integer destLatBucket;
-    private Integer destLngBucket;
+    private Short destLatBucket;
+    private Short destLngBucket;
 
     public TravelTimeCacheId() {}
 
-    public TravelTimeCacheId(Long originTerritory, Integer destLatBucket, Integer destLngBucket) {
+    public TravelTimeCacheId(Long originTerritory, Short destLatBucket, Short destLngBucket) {
         this.originTerritory = originTerritory;
         this.destLatBucket = destLatBucket;
         this.destLngBucket = destLngBucket;
@@ -19,11 +19,11 @@ public class TravelTimeCacheId implements Serializable {
     public Long getOriginTerritory() { return originTerritory; }
     public void setOriginTerritory(Long originTerritory) { this.originTerritory = originTerritory; }
 
-    public Integer getDestLatBucket() { return destLatBucket; }
-    public void setDestLatBucket(Integer destLatBucket) { this.destLatBucket = destLatBucket; }
+    public Short getDestLatBucket() { return destLatBucket; }
+    public void setDestLatBucket(Short destLatBucket) { this.destLatBucket = destLatBucket; }
 
-    public Integer getDestLngBucket() { return destLngBucket; }
-    public void setDestLngBucket(Integer destLngBucket) { this.destLngBucket = destLngBucket; }
+    public Short getDestLngBucket() { return destLngBucket; }
+    public void setDestLngBucket(Short destLngBucket) { this.destLngBucket = destLngBucket; }
 
     @Override
     public boolean equals(Object o) {

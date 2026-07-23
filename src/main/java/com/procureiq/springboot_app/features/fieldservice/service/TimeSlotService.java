@@ -32,7 +32,7 @@ public class TimeSlotService {
 
             TimeSlot ts = new TimeSlot();
             ts.setOperatingHours(oh);
-            ts.setDayOfWeek(request.dayOfWeek());
+            ts.setDayOfWeek(request.dayOfWeek() != null ? request.dayOfWeek().shortValue() : null);
             ts.setStartTime(request.startTime());
             ts.setEndTime(request.endTime());
             ts = timeSlotRepository.save(ts);
@@ -61,7 +61,7 @@ public class TimeSlotService {
 
             ts.setOperatingHours(oh);
             if (request.dayOfWeek() != null) {
-                ts.setDayOfWeek(request.dayOfWeek());
+                ts.setDayOfWeek(request.dayOfWeek().shortValue());
             }
             if (request.startTime() != null) {
                 ts.setStartTime(request.startTime());

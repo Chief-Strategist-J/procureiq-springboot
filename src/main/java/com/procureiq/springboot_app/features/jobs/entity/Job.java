@@ -28,7 +28,7 @@ public class Job {
     private String status = "active";
 
     @Convert(converter = JsonMapConverter.class)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "jsonb")
     private Map<String, Object> config = new HashMap<>();
 
     @Column(name = "created_at", nullable = false)

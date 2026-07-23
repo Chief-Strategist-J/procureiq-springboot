@@ -34,7 +34,7 @@ public class SkillRequirementService {
             sr.setSkill(skill);
             sr.setRequiredForType(request.requiredForType());
             sr.setRequiredForId(request.requiredForId());
-            sr.setMinSkillLevel(request.minSkillLevel() != null ? request.minSkillLevel() : 1);
+            sr.setMinSkillLevel(request.minSkillLevel() != null ? request.minSkillLevel().shortValue() : (short) 1);
             sr = skillRequirementRepository.save(sr);
 
             return mapToResponse(sr);
@@ -67,7 +67,7 @@ public class SkillRequirementService {
                 sr.setRequiredForId(request.requiredForId());
             }
             if (request.minSkillLevel() != null) {
-                sr.setMinSkillLevel(request.minSkillLevel());
+                sr.setMinSkillLevel(request.minSkillLevel().shortValue());
             }
             sr = skillRequirementRepository.save(sr);
 
@@ -88,7 +88,7 @@ public class SkillRequirementService {
             sr.getSkill().getId(),
             sr.getRequiredForType(),
             sr.getRequiredForId(),
-            sr.getMinSkillLevel()
+            sr.getMinSkillLevel() != null ? sr.getMinSkillLevel().intValue() : null
         );
     }
 }

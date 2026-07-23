@@ -19,8 +19,8 @@ public class ServiceResourceSkill {
     @JoinColumn(name = "skill_id", nullable = false)
     private Skill skill;
 
-    @Column(name = "skill_level", nullable = false)
-    private Integer skillLevel = 1;
+    @Column(name = "skill_level", nullable = false, columnDefinition = "smallint")
+    private Short skillLevel = 1;
 
     @Column(name = "valid_from", nullable = false)
     private LocalDate validFrom = LocalDate.now();
@@ -46,8 +46,8 @@ public class ServiceResourceSkill {
     public Skill getSkill() { return skill; }
     public void setSkill(Skill skill) { this.skill = skill; }
 
-    public Integer getSkillLevel() { return skillLevel; }
-    public void setSkillLevel(Integer skillLevel) { this.skillLevel = skillLevel; }
+    public Short getSkillLevel() { return skillLevel; }
+    public void setSkillLevel(Short skillLevel) { this.skillLevel = skillLevel; }
 
     public LocalDate getValidFrom() { return validFrom; }
     public void setValidFrom(LocalDate validFrom) { this.validFrom = validFrom; }

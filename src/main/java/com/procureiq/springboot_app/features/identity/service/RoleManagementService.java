@@ -6,7 +6,7 @@ import com.procureiq.springboot_app.features.identity.entity.User;
 import com.procureiq.springboot_app.features.campaigns.entity.Organization;
 import com.procureiq.springboot_app.features.identity.repository.RoleAssignmentRepository;
 import com.procureiq.springboot_app.features.identity.repository.RoleRepository;
-import com.procureiq.springboot_app.features.identity.repository.UserRepository;
+import com.procureiq.springboot_app.features.identity.repository.IdentityUserRepository;
 import com.procureiq.springboot_app.features.identity.dto.request.AssignRoleRequest;
 import com.procureiq.springboot_app.shared.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -21,14 +21,14 @@ public class RoleManagementService {
 
     private final RoleAssignmentRepository roleAssignmentRepository;
     private final RoleRepository roleRepository;
-    private final UserRepository userRepository;
+    private final IdentityUserRepository userRepository;
     private final com.procureiq.springboot_app.features.campaigns.repository.OrganizationRepository organizationRepository;
     private final AuditLogService auditLogService;
 
     public RoleManagementService(
             RoleAssignmentRepository roleAssignmentRepository,
             RoleRepository roleRepository,
-            UserRepository userRepository,
+            IdentityUserRepository userRepository,
             com.procureiq.springboot_app.features.campaigns.repository.OrganizationRepository organizationRepository,
             AuditLogService auditLogService) {
         this.roleAssignmentRepository = roleAssignmentRepository;

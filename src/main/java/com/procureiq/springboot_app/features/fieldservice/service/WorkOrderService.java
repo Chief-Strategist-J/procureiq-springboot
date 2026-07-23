@@ -91,7 +91,7 @@ public class WorkOrderService {
                 wo.setStatus(request.status());
             }
             if (request.priority() != null) {
-                wo.setPriority(request.priority());
+                wo.setPriority(request.priority().shortValue());
             }
 
             wo = workOrderRepository.save(wo);
@@ -169,7 +169,7 @@ public class WorkOrderService {
                 wo.setStatus(request.status());
             }
             if (request.priority() != null) {
-                wo.setPriority(request.priority());
+                wo.setPriority(request.priority().shortValue());
             }
             wo = workOrderRepository.save(wo);
             return WorkOrderResponse.fromEntity(wo);

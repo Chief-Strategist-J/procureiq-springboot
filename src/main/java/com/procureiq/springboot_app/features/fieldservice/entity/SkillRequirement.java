@@ -18,8 +18,8 @@ public class SkillRequirement {
     @Column(name = "required_for_id", nullable = false)
     private Long requiredForId;
 
-    @Column(name = "min_skill_level", nullable = false)
-    private Integer minSkillLevel = 1;
+    @Column(name = "min_skill_level", nullable = false, columnDefinition = "smallint")
+    private Short minSkillLevel = 1;
 
     public SkillRequirement() {}
 
@@ -42,6 +42,6 @@ public class SkillRequirement {
     public Long getRequiredForId() { return requiredForId; }
     public void setRequiredForId(Long requiredForId) { this.requiredForId = requiredForId; }
 
-    public Integer getMinSkillLevel() { return minSkillLevel; }
-    public void setMinSkillLevel(Integer minSkillLevel) { this.minSkillLevel = minSkillLevel; }
+    public Short getMinSkillLevel() { return minSkillLevel; }
+    public void setMinSkillLevel(Short minSkillLevel) { this.minSkillLevel = minSkillLevel; }
 }

@@ -18,8 +18,8 @@ public class Milestone {
     @Column(name = "target_minutes", nullable = false)
     private Integer targetMinutes;
 
-    @Column(nullable = false)
-    private Integer sequence;
+    @Column(nullable = false, columnDefinition = "smallint")
+    private Short sequence;
 
     public Milestone() {}
 
@@ -42,6 +42,6 @@ public class Milestone {
     public Integer getTargetMinutes() { return targetMinutes; }
     public void setTargetMinutes(Integer targetMinutes) { this.targetMinutes = targetMinutes; }
 
-    public Integer getSequence() { return sequence; }
-    public void setSequence(Integer sequence) { this.sequence = sequence; }
+    public Short getSequence() { return sequence; }
+    public void setSequence(Short sequence) { this.sequence = sequence; }
 }

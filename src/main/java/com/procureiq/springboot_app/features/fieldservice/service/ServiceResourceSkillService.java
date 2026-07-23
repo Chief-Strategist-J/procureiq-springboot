@@ -41,7 +41,7 @@ public class ServiceResourceSkillService {
             ServiceResourceSkill srs = new ServiceResourceSkill();
             srs.setServiceResource(sr);
             srs.setSkill(skill);
-            srs.setSkillLevel(request.skillLevel() != null ? request.skillLevel() : 1);
+            srs.setSkillLevel(request.skillLevel() != null ? request.skillLevel().shortValue() : (short) 1);
             srs.setValidFrom(request.validFrom() != null ? request.validFrom() : java.time.LocalDate.now());
             srs.setValidTo(request.validTo());
             srs = serviceResourceSkillRepository.save(srs);
@@ -73,7 +73,7 @@ public class ServiceResourceSkillService {
             srs.setServiceResource(sr);
             srs.setSkill(skill);
             if (request.skillLevel() != null) {
-                srs.setSkillLevel(request.skillLevel());
+                srs.setSkillLevel(request.skillLevel().shortValue());
             }
             if (request.validFrom() != null) {
                 srs.setValidFrom(request.validFrom());
@@ -99,7 +99,7 @@ public class ServiceResourceSkillService {
             srs.getId(),
             srs.getServiceResource().getId(),
             srs.getSkill().getId(),
-            srs.getSkillLevel(),
+            srs.getSkillLevel() != null ? srs.getSkillLevel().intValue() : null,
             srs.getValidFrom(),
             srs.getValidTo()
         );

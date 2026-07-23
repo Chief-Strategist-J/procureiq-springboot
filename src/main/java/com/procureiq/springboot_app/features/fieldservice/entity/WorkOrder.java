@@ -44,8 +44,8 @@ public class WorkOrder {
     @Column(nullable = false)
     private String status = "new";
 
-    @Column(nullable = false)
-    private Integer priority = 3;
+    @Column(nullable = false, columnDefinition = "smallint")
+    private Short priority = 3;
 
     @Column(name = "created_at", nullable = false)
     private Instant createdAt = Instant.now();
@@ -92,8 +92,8 @@ public class WorkOrder {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public Integer getPriority() { return priority; }
-    public void setPriority(Integer priority) { this.priority = priority; }
+    public Short getPriority() { return priority; }
+    public void setPriority(Short priority) { this.priority = priority; }
 
     public Instant getCreatedAt() { return createdAt; }
     public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }

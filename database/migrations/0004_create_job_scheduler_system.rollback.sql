@@ -13,8 +13,7 @@ DROP TABLE IF EXISTS workflow_runs CASCADE;
 DROP TABLE IF EXISTS workflow_edges CASCADE;
 DROP TABLE IF EXISTS workflow_steps CASCADE;
 
--- Recreate the original tables dropped from 0003 for compatibility
-CREATE TABLE workflow_nodes (
+CREATE TABLE IF NOT EXISTS workflow_nodes (
     id              BIGINT PRIMARY KEY,
     workflow_id     BIGINT NOT NULL REFERENCES workflows(id) ON DELETE CASCADE,
     type            TEXT NOT NULL,

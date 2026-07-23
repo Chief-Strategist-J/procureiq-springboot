@@ -28,7 +28,7 @@ public record WorkOrderResponse(
                     entity.getWorkType() != null ? entity.getWorkType().getId() : null,
                     entity.getPriceBook() != null ? entity.getPriceBook().getId() : null,
                     entity.getStatus(),
-                    entity.getPriority(),
+                    entity.getPriority() != null ? entity.getPriority().intValue() : null,
                     entity.getCreatedAt()
         );
     }

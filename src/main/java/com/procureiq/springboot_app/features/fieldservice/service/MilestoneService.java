@@ -35,7 +35,7 @@ public class MilestoneService {
             m.setEntitlementProcess(ep);
             m.setName(request.name());
             m.setTargetMinutes(request.targetMinutes());
-            m.setSequence(request.sequence());
+            m.setSequence(request.sequence() != null ? request.sequence().shortValue() : null);
             m = milestoneRepository.save(m);
 
             return mapToResponse(m);
@@ -68,7 +68,7 @@ public class MilestoneService {
                 m.setTargetMinutes(request.targetMinutes());
             }
             if (request.sequence() != null) {
-                m.setSequence(request.sequence());
+                m.setSequence(request.sequence().shortValue());
             }
             m = milestoneRepository.save(m);
 
@@ -89,7 +89,7 @@ public class MilestoneService {
             m.getEntitlementProcess().getId(),
             m.getName(),
             m.getTargetMinutes(),
-            m.getSequence()
+            m.getSequence() != null ? m.getSequence().intValue() : null
         );
     }
 }

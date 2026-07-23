@@ -19,10 +19,14 @@ DROP TABLE IF EXISTS roles CASCADE;
 DROP TABLE IF EXISTS permissions CASCADE;
 
 CREATE TABLE users (
-    id              BIGINT PRIMARY KEY,
-    email           TEXT UNIQUE NOT NULL,
-    is_active       BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    id                 BIGINT PRIMARY KEY,
+    username           TEXT UNIQUE,
+    password           TEXT,
+    email              TEXT UNIQUE NOT NULL,
+    reset_token        TEXT,
+    reset_token_expiry TIMESTAMPTZ,
+    is_active          BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at         TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TABLE service_accounts (
@@ -126,9 +130,11 @@ CREATE TABLE effective_permissions_cache (
     permission_code TEXT NOT NULL,
     scope_type      TEXT NOT NULL,
     scope_id        BIGINT,
-    computed_at     TIMESTAMPTZ NOT NULL DEFAULT now(),
-    PRIMARY KEY (principal_type, principal_id, org_id, permission_code, scope_type, COALESCE(scope_id, -1))
+    computed_at     TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+CREATE UNIQUE INDEX idx_effective_permissions_cache_pk ON effective_permissions_cache 
+    (principal_type, principal_id, org_id, permission_code, scope_type, COALESCE(scope_id, -1));
 
 -- Recursive lookup resolution function helper
 CREATE OR REPLACE FUNCTION user_has_permission(

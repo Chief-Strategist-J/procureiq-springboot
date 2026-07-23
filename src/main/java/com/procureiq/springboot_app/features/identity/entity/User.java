@@ -3,7 +3,7 @@ package com.procureiq.springboot_app.features.identity.entity;
 import jakarta.persistence.*;
 import java.time.Instant;
 
-@Entity
+@Entity(name = "IdentityUser")
 @Table(name = "users")
 public class User {
     @Id
