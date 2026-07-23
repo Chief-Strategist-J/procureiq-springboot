@@ -11,6 +11,7 @@ public final class ApiEndpoints {
     public static final String WORKFLOWS = API_V1 + "/workflows";
     public static final String VOICE = API_V1 + "/voice";
     public static final String REMINDERS = API_V1 + "/reminders";
+    public static final String CRYPTO = API_V1 + "/crypto";
     public static final String GITHUB_TEMPLATES = API_V1 + "/github/templates";
     
     public static final String FIELD_SERVICE = API_V1 + "/fieldservice";
