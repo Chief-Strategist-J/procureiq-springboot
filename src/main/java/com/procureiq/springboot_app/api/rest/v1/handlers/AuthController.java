@@ -57,4 +57,12 @@ public class AuthController {
             return ResponseEntity.ok(ApiSingleResponse.success(200, "Password has been reset successfully."));
         });
     }
+
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.VERIFY_EMAIL)
+    public ResponseEntity<?> verifyEmail(@jakarta.validation.Valid @RequestBody VerifyEmailRequest request) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
+            authService.verifyEmail(request);
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Email has been verified successfully."));
+        });
+    }
 }

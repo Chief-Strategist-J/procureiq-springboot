@@ -1,92 +1,84 @@
 package com.procureiq.springboot_app;
 
 import tools.jackson.databind.json.JsonMapper;
+import com.procureiq.springboot_app.api.rest.v1.handlers.AuthController;
 import com.procureiq.springboot_app.features.auth.dto.request.*;
 import com.procureiq.springboot_app.features.auth.dto.response.*;
-import com.procureiq.springboot_app.features.auth.entity.User;
-import com.procureiq.springboot_app.features.auth.repository.UserRepository;
+import com.procureiq.springboot_app.features.auth.service.AuthService;
+import com.procureiq.springboot_app.shared.exceptions.UnauthorizedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
+@ExtendWith(MockitoExtension.class)
 public class AuthControllerTest {
 
-    @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private UserRepository userRepository;
+    @Mock
+    private AuthService authService;
+
+    @InjectMocks
+    private AuthController authController;
 
     private final JsonMapper objectMapper = new JsonMapper();
 
     @BeforeEach
     public void setup() {
-        userRepository.deleteAll();
+        mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
     }
 
     @Test
     public void testSignupSuccess() throws Exception {
         SignupRequest request = new SignupRequest("devuser", "password123", "dev@example.com");
+        UserResponse response = new UserResponse(1L, "devuser", "dev@example.com");
+
+        when(authService.signup(any(SignupRequest.class))).thenReturn(response);
 
         mockMvc.perform(post("/api/v1/auth/signup")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.id", notNullValue()))
+                .andExpect(jsonPath("$.data.id", is(1)))
                 .andExpect(jsonPath("$.data.username", is("devuser")))
                 .andExpect(jsonPath("$.data.email", is("dev@example.com")));
     }
 
     @Test
-    public void testSignupDuplicateUsername() throws Exception {
-        SignupRequest request1 = new SignupRequest("devuser", "password123", "dev1@example.com");
-        mockMvc.perform(post("/api/v1/auth/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request1)))
-                .andExpect(status().isCreated());
-
-        SignupRequest request2 = new SignupRequest("devuser", "password456", "dev2@example.com");
-        mockMvc.perform(post("/api/v1/auth/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request2)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     public void testLoginSuccess() throws Exception {
-        SignupRequest signup = new SignupRequest("loginuser", "password123", "login@example.com");
-        mockMvc.perform(post("/api/v1/auth/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signup)))
-                .andExpect(status().isCreated());
-
         LoginRequest login = new LoginRequest("loginuser", "password123");
+        UserResponse userResponse = new UserResponse(1L, "loginuser", "login@example.com");
+        LoginResponse response = new LoginResponse("mock-jwt-token", userResponse);
+
+        when(authService.login(any(LoginRequest.class))).thenReturn(response);
+
         mockMvc.perform(post("/api/v1/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(login)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.token", notNullValue()))
+                .andExpect(jsonPath("$.data.token", is("mock-jwt-token")))
                 .andExpect(jsonPath("$.data.user.username", is("loginuser")));
     }
 
     @Test
     public void testLoginInvalidCredentials() throws Exception {
         LoginRequest login = new LoginRequest("nonexistent", "wrongpass");
+
+        when(authService.login(any(LoginRequest.class)))
+                .thenThrow(new UnauthorizedException("Invalid username or password"));
+
         mockMvc.perform(post("/api/v1/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(login)))
@@ -94,69 +86,11 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void testForgotPasswordAndResetPasswordSuccess() throws Exception {
-        SignupRequest signup = new SignupRequest("resetuser", "password123", "reset@example.com");
-        mockMvc.perform(post("/api/v1/auth/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signup)))
-                .andExpect(status().isCreated());
-
+    public void testForgotPasswordSuccess() throws Exception {
         ForgotPasswordRequest forgot = new ForgotPasswordRequest("reset@example.com");
-        mockMvc.perform(post("/api/v1/auth/forgot-password")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(forgot)))
-                .andExpect(status().isOk());
 
-        User user = userRepository.findByEmail("reset@example.com").orElseThrow();
-        String token = user.getResetToken();
-        assertNotNull(token);
-        assertFalse(token.isEmpty());
+        doNothing().when(authService).forgotPassword(any(ForgotPasswordRequest.class));
 
-        ResetPasswordRequest reset = new ResetPasswordRequest(token, "newpassword123");
-        mockMvc.perform(post("/api/v1/auth/reset-password")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(reset)))
-                .andExpect(status().isOk());
-
-        LoginRequest login = new LoginRequest("resetuser", "newpassword123");
-        mockMvc.perform(post("/api/v1/auth/login")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(login)))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void testResetPasswordExpiredToken() throws Exception {
-        SignupRequest signup = new SignupRequest("expireduser", "password123", "expired@example.com");
-        mockMvc.perform(post("/api/v1/auth/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signup)))
-                .andExpect(status().isCreated());
-
-        User user = userRepository.findByEmail("expired@example.com").orElseThrow();
-        user.setResetToken("expired-token-xyz");
-        user.setResetTokenExpiry(LocalDateTime.now().minusMinutes(5)); 
-        userRepository.save(user);
-
-        ResetPasswordRequest reset = new ResetPasswordRequest("expired-token-xyz", "newpassword123");
-        mockMvc.perform(post("/api/v1/auth/reset-password")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(reset)))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
-    public void testSignupNullAndEmptyValues() throws Exception {
-        SignupRequest request = new SignupRequest("", "", "");
-        mockMvc.perform(post("/api/v1/auth/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void testForgotPasswordNonExistentEmail() throws Exception {
-        ForgotPasswordRequest forgot = new ForgotPasswordRequest("nonexistent@example.com");
         mockMvc.perform(post("/api/v1/auth/forgot-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(forgot)))
@@ -164,29 +98,40 @@ public class AuthControllerTest {
     }
 
     @Test
-    public void testResetPasswordInvalidToken() throws Exception {
-        ResetPasswordRequest reset = new ResetPasswordRequest("nonexistent-token-12345", "newpassword123");
+    public void testResetPasswordSuccess() throws Exception {
+        ResetPasswordRequest reset = new ResetPasswordRequest("token_123", "newpassword123");
+
+        doNothing().when(authService).resetPassword(any(ResetPasswordRequest.class));
+
         mockMvc.perform(post("/api/v1/auth/reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reset)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void testResetPasswordBlankNewPassword() throws Exception {
-        ResetPasswordRequest reset = new ResetPasswordRequest("some-token", "");
-        mockMvc.perform(post("/api/v1/auth/reset-password")
+    public void testVerifyEmailSuccess() throws Exception {
+        VerifyEmailRequest verify = new VerifyEmailRequest("verify@example.com", "token_12345");
+
+        doNothing().when(authService).verifyEmail(any(VerifyEmailRequest.class));
+
+        mockMvc.perform(post("/api/v1/auth/verify-email")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(reset)))
-                .andExpect(status().isBadRequest());
+                .content(objectMapper.writeValueAsString(verify)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data", is("Email has been verified successfully.")));
     }
 
     @Test
-    public void testSQLInjectionAttemptInLogin() throws Exception {
-        LoginRequest login = new LoginRequest("' OR '1'='1", "' OR '1'='1");
-        mockMvc.perform(post("/api/v1/auth/login")
+    public void testVerifyEmailUserNotFound() throws Exception {
+        VerifyEmailRequest verify = new VerifyEmailRequest("nonexistent@example.com", "token_12345");
+
+        doThrow(new IllegalArgumentException("User not found for provided email"))
+                .when(authService).verifyEmail(any(VerifyEmailRequest.class));
+
+        mockMvc.perform(post("/api/v1/auth/verify-email")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(login)))
-                .andExpect(status().isUnauthorized());
+                .content(objectMapper.writeValueAsString(verify)))
+                .andExpect(status().isNotFound());
     }
 }

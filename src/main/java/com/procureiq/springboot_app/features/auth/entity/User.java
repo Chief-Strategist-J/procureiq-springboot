@@ -25,6 +25,12 @@ public class User {
     @Column(name = "reset_token_expiry")
     private java.time.LocalDateTime resetTokenExpiry = java.time.LocalDateTime.of(1970, 1, 1, 0, 0);
 
+    @Column(name = "email_verified")
+    private boolean emailVerified = false;
+
+    @Column(name = "verification_token")
+    private String verificationToken = "";
+
     public User() {}
 
     public User(String username, String password, String email) {
@@ -79,5 +85,21 @@ public class User {
 
     public void setResetTokenExpiry(java.time.LocalDateTime resetTokenExpiry) {
         this.resetTokenExpiry = resetTokenExpiry != null ? resetTokenExpiry : java.time.LocalDateTime.of(1970, 1, 1, 0, 0);
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public String getVerificationToken() {
+        return verificationToken != null ? verificationToken : "";
+    }
+
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken != null ? verificationToken : "";
     }
 }
