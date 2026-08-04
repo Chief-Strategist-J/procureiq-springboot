@@ -4,12 +4,8 @@ import com.procureiq.springboot_app.features.auth.dto.request.*;
 import com.procureiq.springboot_app.features.auth.dto.response.*;
 import com.procureiq.springboot_app.features.auth.service.AuthService;
 import com.procureiq.springboot_app.shared.types.single.ApiSingleResponse;
-import com.procureiq.springboot_app.shared.types.list.ApiListResponse;
 import io.opentelemetry.api.GlobalOpenTelemetry;
-import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.StatusCode;
 import io.opentelemetry.api.trace.Tracer;
-import io.opentelemetry.context.Scope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +35,23 @@ public class AuthController {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
             LoginResponse response = authService.login(request);
             return ResponseEntity.ok(ApiSingleResponse.success(200, response));
+        });
+    }
+
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.REFRESH_TOKEN)
+    public ResponseEntity<?> refreshToken(@jakarta.validation.Valid @RequestBody RefreshTokenRequest request) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
+            RefreshTokenResponse response = authService.refreshToken(request);
+            return ResponseEntity.ok(ApiSingleResponse.success(200, response));
+        });
+    }
+
+    @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.LOGOUT)
+    public ResponseEntity<?> logout(@RequestBody(required = false) RefreshTokenRequest request) {
+        return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
+            String token = request != null ? request.getRefreshToken() : "";
+            authService.logout(token);
+            return ResponseEntity.ok(ApiSingleResponse.success(200, "Logout successful. Session invalidated."));
         });
     }
 

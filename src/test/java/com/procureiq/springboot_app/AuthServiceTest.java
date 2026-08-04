@@ -6,6 +6,7 @@ import com.procureiq.springboot_app.features.auth.entity.User;
 import com.procureiq.springboot_app.features.auth.repository.UserRepository;
 import com.procureiq.springboot_app.features.auth.service.AuthService;
 import com.procureiq.springboot_app.infra.config.AppProperties;
+import com.procureiq.springboot_app.shared.exceptions.UnauthorizedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,13 +74,30 @@ public class AuthServiceTest {
         User mockUser = new User("testuser", "encoded_pass", "test@example.com");
         mockUser.setId(1L);
 
-        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(mockUser));
+        when(userRepository.findByUsernameOrEmail("testuser", "testuser")).thenReturn(Optional.of(mockUser));
         when(passwordEncoder.matches("password123", "encoded_pass")).thenReturn(true);
 
         LoginResponse response = authService.login(loginRequest);
 
         assertNotNull(response.getToken());
+        assertNotNull(response.getRefreshToken());
         assertEquals("testuser", response.getUser().getUsername());
+    }
+
+    @Test
+    public void testRefreshTokenSuccess() {
+        RefreshTokenRequest refreshRequest = new RefreshTokenRequest("valid-refresh-token");
+        User mockUser = new User("testuser", "encoded_pass", "test@example.com");
+        mockUser.setRefreshToken("valid-refresh-token");
+        mockUser.setRefreshTokenExpiry(LocalDateTime.now().plusDays(7));
+
+        when(userRepository.findByRefreshToken("valid-refresh-token")).thenReturn(Optional.of(mockUser));
+
+        RefreshTokenResponse response = authService.refreshToken(refreshRequest);
+
+        assertNotNull(response.getToken());
+        assertNotNull(response.getRefreshToken());
+        assertNotEquals("valid-refresh-token", response.getRefreshToken());
     }
 
     @Test

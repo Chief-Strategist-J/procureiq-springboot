@@ -4,6 +4,7 @@ public class UserResponse {
     private Long id = 0L;
     private String username = "";
     private String email = "";
+    private String role = "user";
 
     public UserResponse() {}
 
@@ -11,6 +12,14 @@ public class UserResponse {
         this.id = id != null ? id : 0L;
         this.username = username != null ? username : "";
         this.email = email != null ? email : "";
+        this.role = "user";
+    }
+
+    public UserResponse(Long id, String username, String email, String role) {
+        this.id = id != null ? id : 0L;
+        this.username = username != null ? username : "";
+        this.email = email != null ? email : "";
+        this.role = role != null ? role : "user";
     }
 
     public Long getId() {
@@ -35,5 +44,13 @@ public class UserResponse {
 
     public void setEmail(String email) {
         this.email = email != null ? email : "";
+    }
+
+    public String getRole() {
+        return role != null ? role : "user";
+    }
+
+    public void setRole(String role) {
+        this.role = role != null ? role : "user";
     }
 }

@@ -1,6 +1,7 @@
 package com.procureiq.springboot_app.features.auth.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -19,11 +20,29 @@ public class User {
     @Column(unique = true, nullable = false)
     private String email = "";
 
+    @Column(name = "role", nullable = false)
+    private String role = "user";
+
+    @Column(name = "failed_attempt_count")
+    private int failedAttemptCount = 0;
+
+    @Column(name = "account_non_locked")
+    private boolean accountNonLocked = true;
+
+    @Column(name = "lock_time")
+    private LocalDateTime lockTime;
+
+    @Column(name = "refresh_token")
+    private String refreshToken = "";
+
+    @Column(name = "refresh_token_expiry")
+    private LocalDateTime refreshTokenExpiry = LocalDateTime.of(1970, 1, 1, 0, 0);
+
     @Column(name = "reset_token")
     private String resetToken = "";
 
     @Column(name = "reset_token_expiry")
-    private java.time.LocalDateTime resetTokenExpiry = java.time.LocalDateTime.of(1970, 1, 1, 0, 0);
+    private LocalDateTime resetTokenExpiry = LocalDateTime.of(1970, 1, 1, 0, 0);
 
     @Column(name = "email_verified")
     private boolean emailVerified = false;
@@ -37,6 +56,14 @@ public class User {
         this.username = username != null ? username : "";
         this.password = password != null ? password : "";
         this.email = email != null ? email : "";
+        this.role = "user";
+    }
+
+    public User(String username, String password, String email, String role) {
+        this.username = username != null ? username : "";
+        this.password = password != null ? password : "";
+        this.email = email != null ? email : "";
+        this.role = role != null ? role : "user";
     }
 
     public Long getId() {
@@ -71,6 +98,54 @@ public class User {
         this.email = email != null ? email : "";
     }
 
+    public String getRole() {
+        return role != null ? role : "user";
+    }
+
+    public void setRole(String role) {
+        this.role = role != null ? role : "user";
+    }
+
+    public int getFailedAttemptCount() {
+        return failedAttemptCount;
+    }
+
+    public void setFailedAttemptCount(int failedAttemptCount) {
+        this.failedAttemptCount = failedAttemptCount;
+    }
+
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public LocalDateTime getLockTime() {
+        return lockTime;
+    }
+
+    public void setLockTime(LocalDateTime lockTime) {
+        this.lockTime = lockTime;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken != null ? refreshToken : "";
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken != null ? refreshToken : "";
+    }
+
+    public LocalDateTime getRefreshTokenExpiry() {
+        return refreshTokenExpiry != null ? refreshTokenExpiry : LocalDateTime.of(1970, 1, 1, 0, 0);
+    }
+
+    public void setRefreshTokenExpiry(LocalDateTime refreshTokenExpiry) {
+        this.refreshTokenExpiry = refreshTokenExpiry != null ? refreshTokenExpiry : LocalDateTime.of(1970, 1, 1, 0, 0);
+    }
+
     public String getResetToken() {
         return resetToken != null ? resetToken : "";
     }
@@ -79,12 +154,12 @@ public class User {
         this.resetToken = resetToken != null ? resetToken : "";
     }
 
-    public java.time.LocalDateTime getResetTokenExpiry() {
-        return resetTokenExpiry != null ? resetTokenExpiry : java.time.LocalDateTime.of(1970, 1, 1, 0, 0);
+    public LocalDateTime getResetTokenExpiry() {
+        return resetTokenExpiry != null ? resetTokenExpiry : LocalDateTime.of(1970, 1, 1, 0, 0);
     }
 
-    public void setResetTokenExpiry(java.time.LocalDateTime resetTokenExpiry) {
-        this.resetTokenExpiry = resetTokenExpiry != null ? resetTokenExpiry : java.time.LocalDateTime.of(1970, 1, 1, 0, 0);
+    public void setResetTokenExpiry(LocalDateTime resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry != null ? resetTokenExpiry : LocalDateTime.of(1970, 1, 1, 0, 0);
     }
 
     public boolean isEmailVerified() {

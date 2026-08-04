@@ -7,15 +7,20 @@ import com.procureiq.springboot_app.features.auth.dto.response.*;
 import com.procureiq.springboot_app.features.auth.entity.User;
 import com.procureiq.springboot_app.features.auth.repository.UserRepository;
 import com.procureiq.springboot_app.infra.config.TracingHelper;
+import com.procureiq.springboot_app.shared.exceptions.UnauthorizedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
-import java.time.LocalDateTime;
 
 @Service
 public class AuthService {
+
+    private static final int MAX_FAILED_ATTEMPTS = 3;
+    private static final long LOCK_TIME_DURATION_MINUTES = 15;
+    private static final long REFRESH_TOKEN_EXPIRATION_DAYS = 7;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -54,37 +59,106 @@ public class AuthService {
             User user = new User(
                 request.getUsername(),
                 passwordEncoder.encode(request.getPassword()),
-                request.getEmail()
+                request.getEmail(),
+                "user"
             );
 
             User savedUser = userRepository.save(user);
-            return new UserResponse(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
+            return new UserResponse(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), savedUser.getRole());
         });
     }
 
     public LoginResponse login(LoginRequest request) {
         return TracingHelper.executeServiceWithTracing(() -> {
-            if (request.getUsername() == null || request.getUsername().trim().isEmpty() ||
-                request.getPassword() == null || request.getPassword().trim().isEmpty()) {
-                throw new IllegalArgumentException("Username and password cannot be empty");
+            String identifier = request.getUsername() != null ? request.getUsername().trim() : "";
+            String password = request.getPassword() != null ? request.getPassword().trim() : "";
+
+            if (identifier.isEmpty() || password.isEmpty()) {
+                throw new IllegalArgumentException("Username/email and password cannot be empty");
             }
 
-            User user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new com.procureiq.springboot_app.shared.exceptions.UnauthorizedException("Invalid username or password"));
+            User user = userRepository.findByUsernameOrEmail(identifier, identifier)
+                .orElseThrow(() -> new UnauthorizedException("Invalid username or password"));
 
-            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                throw new com.procureiq.springboot_app.shared.exceptions.UnauthorizedException("Invalid username or password");
+            // Check Account Lockout State
+            if (!user.isAccountNonLocked()) {
+                if (user.getLockTime() != null && user.getLockTime().plusMinutes(LOCK_TIME_DURATION_MINUTES).isBefore(LocalDateTime.now())) {
+                    // Lock time expired -> unlock account
+                    user.setAccountNonLocked(true);
+                    user.setFailedAttemptCount(0);
+                    user.setLockTime(null);
+                } else {
+                    throw new UnauthorizedException("Account is temporarily locked due to multiple failed login attempts. Please try again later.");
+                }
             }
 
-            String token = JWT.create()
-                .withIssuer("procureiq")
-                .withSubject(user.getUsername())
-                .withClaim("email", user.getEmail())
-                .withExpiresAt(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .sign(jwtAlgorithm);
+            // Verify Password
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                int attempts = user.getFailedAttemptCount() + 1;
+                user.setFailedAttemptCount(attempts);
+                if (attempts >= MAX_FAILED_ATTEMPTS) {
+                    user.setAccountNonLocked(false);
+                    user.setLockTime(LocalDateTime.now());
+                }
+                userRepository.save(user);
+                throw new UnauthorizedException("Invalid username or password");
+            }
 
-            UserResponse userResponse = new UserResponse(user.getId(), user.getUsername(), user.getEmail());
-            return new LoginResponse(token, userResponse);
+            // Successful Login -> Reset Lockout Counters
+            user.setFailedAttemptCount(0);
+            user.setAccountNonLocked(true);
+            user.setLockTime(null);
+
+            // Generate Access Token & Refresh Token Pair
+            String accessToken = generateAccessToken(user);
+            String refreshToken = UUID.randomUUID().toString();
+
+            user.setRefreshToken(refreshToken);
+            user.setRefreshTokenExpiry(LocalDateTime.now().plusDays(REFRESH_TOKEN_EXPIRATION_DAYS));
+            userRepository.save(user);
+
+            UserResponse userResponse = new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
+            return new LoginResponse(accessToken, refreshToken, userResponse);
+        });
+    }
+
+    public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
+        return TracingHelper.executeServiceWithTracing(() -> {
+            String token = request.getRefreshToken() != null ? request.getRefreshToken().trim() : "";
+            if (token.isEmpty()) {
+                throw new IllegalArgumentException("Refresh token cannot be empty");
+            }
+
+            User user = userRepository.findByRefreshToken(token)
+                .orElseThrow(() -> new UnauthorizedException("Invalid or revoked refresh token"));
+
+            if (user.getRefreshTokenExpiry().isBefore(LocalDateTime.now())) {
+                user.setRefreshToken("");
+                userRepository.save(user);
+                throw new UnauthorizedException("Refresh token has expired. Please login again.");
+            }
+
+            // Rotate Refresh Token (Issue new access token & new refresh token pair)
+            String newAccessToken = generateAccessToken(user);
+            String newRefreshToken = UUID.randomUUID().toString();
+
+            user.setRefreshToken(newRefreshToken);
+            user.setRefreshTokenExpiry(LocalDateTime.now().plusDays(REFRESH_TOKEN_EXPIRATION_DAYS));
+            userRepository.save(user);
+
+            return new RefreshTokenResponse(newAccessToken, newRefreshToken);
+        });
+    }
+
+    public void logout(String refreshToken) {
+        TracingHelper.executeServiceVoidWithTracing(() -> {
+            if (refreshToken != null && !refreshToken.trim().isEmpty()) {
+                userRepository.findByRefreshToken(refreshToken.trim()).ifPresent(user -> {
+                    user.setRefreshToken("");
+                    user.setRefreshTokenExpiry(LocalDateTime.of(1970, 1, 1, 0, 0));
+                    userRepository.save(user);
+                });
+            }
         });
     }
 
@@ -116,10 +190,10 @@ public class AuthService {
             }
 
             User user = userRepository.findByResetToken(request.getToken())
-                    .orElseThrow(() -> new com.procureiq.springboot_app.shared.exceptions.UnauthorizedException("Invalid or expired reset token"));
+                    .orElseThrow(() -> new UnauthorizedException("Invalid or expired reset token"));
 
             if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
-                throw new com.procureiq.springboot_app.shared.exceptions.UnauthorizedException("Invalid or expired reset token");
+                throw new UnauthorizedException("Invalid or expired reset token");
             }
 
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
@@ -145,5 +219,15 @@ public class AuthService {
             user.setVerificationToken("");
             userRepository.save(user);
         });
+    }
+
+    private String generateAccessToken(User user) {
+        return JWT.create()
+            .withIssuer("procureiq")
+            .withSubject(user.getUsername())
+            .withClaim("email", user.getEmail())
+            .withClaim("role", user.getRole())
+            .withExpiresAt(new Date(System.currentTimeMillis() + jwtExpirationMs))
+            .sign(jwtAlgorithm);
     }
 }

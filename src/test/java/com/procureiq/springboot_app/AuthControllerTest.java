@@ -43,7 +43,7 @@ public class AuthControllerTest {
     @Test
     public void testSignupSuccess() throws Exception {
         SignupRequest request = new SignupRequest("devuser", "password123", "dev@example.com");
-        UserResponse response = new UserResponse(1L, "devuser", "dev@example.com");
+        UserResponse response = new UserResponse(1L, "devuser", "dev@example.com", "user");
 
         when(authService.signup(any(SignupRequest.class))).thenReturn(response);
 
@@ -59,8 +59,8 @@ public class AuthControllerTest {
     @Test
     public void testLoginSuccess() throws Exception {
         LoginRequest login = new LoginRequest("loginuser", "password123");
-        UserResponse userResponse = new UserResponse(1L, "loginuser", "login@example.com");
-        LoginResponse response = new LoginResponse("mock-jwt-token", userResponse);
+        UserResponse userResponse = new UserResponse(1L, "loginuser", "login@example.com", "user");
+        LoginResponse response = new LoginResponse("mock-jwt-token", "mock-refresh-token", userResponse);
 
         when(authService.login(any(LoginRequest.class))).thenReturn(response);
 
@@ -69,7 +69,34 @@ public class AuthControllerTest {
                 .content(objectMapper.writeValueAsString(login)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.token", is("mock-jwt-token")))
+                .andExpect(jsonPath("$.data.refreshToken", is("mock-refresh-token")))
                 .andExpect(jsonPath("$.data.user.username", is("loginuser")));
+    }
+
+    @Test
+    public void testRefreshTokenSuccess() throws Exception {
+        RefreshTokenRequest refreshRequest = new RefreshTokenRequest("valid-refresh-token");
+        RefreshTokenResponse response = new RefreshTokenResponse("new-jwt-token", "new-refresh-token");
+
+        when(authService.refreshToken(any(RefreshTokenRequest.class))).thenReturn(response);
+
+        mockMvc.perform(post("/api/v1/auth/refresh")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(refreshRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.token", is("new-jwt-token")))
+                .andExpect(jsonPath("$.data.refreshToken", is("new-refresh-token")));
+    }
+
+    @Test
+    public void testLogoutSuccess() throws Exception {
+        RefreshTokenRequest refreshRequest = new RefreshTokenRequest("valid-refresh-token");
+        doNothing().when(authService).logout(any(String.class));
+
+        mockMvc.perform(post("/api/v1/auth/logout")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(refreshRequest)))
+                .andExpect(status().isOk());
     }
 
     @Test
