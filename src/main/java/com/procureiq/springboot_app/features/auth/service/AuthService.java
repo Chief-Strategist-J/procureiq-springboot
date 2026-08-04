@@ -80,10 +80,8 @@ public class AuthService {
             User user = userRepository.findByUsernameOrEmail(identifier, identifier)
                 .orElseThrow(() -> new UnauthorizedException("Invalid username or password"));
 
-            // Check Account Lockout State
             if (!user.isAccountNonLocked()) {
                 if (user.getLockTime() != null && user.getLockTime().plusMinutes(LOCK_TIME_DURATION_MINUTES).isBefore(LocalDateTime.now())) {
-                    // Lock time expired -> unlock account
                     user.setAccountNonLocked(true);
                     user.setFailedAttemptCount(0);
                     user.setLockTime(null);
@@ -92,7 +90,6 @@ public class AuthService {
                 }
             }
 
-            // Verify Password
             if (!passwordEncoder.matches(password, user.getPassword())) {
                 int attempts = user.getFailedAttemptCount() + 1;
                 user.setFailedAttemptCount(attempts);
@@ -104,12 +101,10 @@ public class AuthService {
                 throw new UnauthorizedException("Invalid username or password");
             }
 
-            // Successful Login -> Reset Lockout Counters
             user.setFailedAttemptCount(0);
             user.setAccountNonLocked(true);
             user.setLockTime(null);
 
-            // Generate Access Token & Refresh Token Pair
             String accessToken = generateAccessToken(user);
             String refreshToken = UUID.randomUUID().toString();
 
@@ -138,7 +133,6 @@ public class AuthService {
                 throw new UnauthorizedException("Refresh token has expired. Please login again.");
             }
 
-            // Rotate Refresh Token (Issue new access token & new refresh token pair)
             String newAccessToken = generateAccessToken(user);
             String newRefreshToken = UUID.randomUUID().toString();
 
