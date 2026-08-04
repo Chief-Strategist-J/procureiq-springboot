@@ -1,8 +1,11 @@
 package com.procureiq.springboot_app.features.auth.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.validation.constraints.NotBlank;
 
 public class LoginRequest {
+
+    @JsonAlias({"email", "username", "identifier"})
     @NotBlank(message = "Username cannot be blank")
     private String username = "";
 
