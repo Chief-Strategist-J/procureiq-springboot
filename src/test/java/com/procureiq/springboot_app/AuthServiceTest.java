@@ -21,6 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.procureiq.springboot_app.shared.ports.NotificationSender;
+import com.procureiq.springboot_app.shared.exceptions.ResourceNotFoundException;
+
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
 
@@ -33,13 +36,16 @@ public class AuthServiceTest {
     @Mock
     private AppProperties appProperties;
 
+    @Mock
+    private NotificationSender notificationSender;
+
     private AuthService authService;
 
     @BeforeEach
     public void setup() {
         when(appProperties.getJwtSecret()).thenReturn("test-secret-key-12345");
         when(appProperties.getJwtExpirationMs()).thenReturn(86400000L);
-        authService = new AuthService(userRepository, passwordEncoder, appProperties);
+        authService = new AuthService(userRepository, passwordEncoder, appProperties, notificationSender);
     }
 
     @Test
@@ -101,7 +107,7 @@ public class AuthServiceTest {
     }
 
     @Test
-    public void testForgotPasswordSuccess() {
+    public void testForgotPasswordSuccess() throws Exception {
         ForgotPasswordRequest forgotRequest = new ForgotPasswordRequest("reset@example.com");
         User mockUser = new User("resetuser", "pass", "reset@example.com");
 
@@ -110,8 +116,33 @@ public class AuthServiceTest {
         authService.forgotPassword(forgotRequest);
 
         verify(userRepository).save(mockUser);
+        verify(notificationSender).send(eq("email"), eq("smtp"), eq("reset@example.com"), anyString(), anyString());
         assertNotNull(mockUser.getResetToken());
         assertFalse(mockUser.getResetToken().isEmpty());
+    }
+
+    @Test
+    public void testForgotPasswordUserNotFound() {
+        ForgotPasswordRequest forgotRequest = new ForgotPasswordRequest("nonexistent@example.com");
+        when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class, () -> authService.forgotPassword(forgotRequest));
+    }
+
+    @Test
+    public void testForgotPasswordDeliveryFailure() throws Exception {
+        ForgotPasswordRequest forgotRequest = new ForgotPasswordRequest("reset@example.com");
+        User mockUser = new User("resetuser", "pass", "reset@example.com");
+
+        when(userRepository.findByEmail("reset@example.com")).thenReturn(Optional.of(mockUser));
+        doThrow(new RuntimeException("SMTP Connection Timeout")).when(notificationSender)
+                .send(anyString(), anyString(), anyString(), anyString(), anyString());
+
+        assertThrows(IllegalStateException.class, () -> authService.forgotPassword(forgotRequest));
+
+        // Verifies the reset token was cleared back to empty/epoch values
+        assertEquals("", mockUser.getResetToken());
+        assertEquals(LocalDateTime.of(1970, 1, 1, 0, 0), mockUser.getResetTokenExpiry());
     }
 
     @Test

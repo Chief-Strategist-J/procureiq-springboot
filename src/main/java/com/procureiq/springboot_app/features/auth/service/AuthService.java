@@ -15,6 +15,9 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
+import com.procureiq.springboot_app.shared.ports.NotificationSender;
+import com.procureiq.springboot_app.shared.exceptions.ResourceNotFoundException;
+
 @Service
 public class AuthService {
 
@@ -26,15 +29,18 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final Algorithm jwtAlgorithm;
     private final long jwtExpirationMs;
+    private final NotificationSender notificationSender;
 
     public AuthService(
             UserRepository userRepository,
             PasswordEncoder passwordEncoder,
-            com.procureiq.springboot_app.infra.config.AppProperties appProperties) {
+            com.procureiq.springboot_app.infra.config.AppProperties appProperties,
+            NotificationSender notificationSender) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtAlgorithm = Algorithm.HMAC256(appProperties.getJwtSecret());
         this.jwtExpirationMs = appProperties.getJwtExpirationMs();
+        this.notificationSender = notificationSender;
     }
 
     public UserResponse signup(SignupRequest request) {
@@ -163,14 +169,25 @@ public class AuthService {
             }
 
             User user = userRepository.findByEmail(request.getEmail())
-                    .orElseThrow(() -> new IllegalArgumentException("If email exists, a reset token will be generated."));
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + request.getEmail()));
 
             String token = UUID.randomUUID().toString();
             user.setResetToken(token);
             user.setResetTokenExpiry(LocalDateTime.now().plusHours(1));
             userRepository.save(user);
 
-            System.out.printf("[DEV ONLY] Password reset token for %s: %s%n", user.getEmail(), token);
+            String resetLink = "http://localhost:3000/reset-password?token=" + token;
+            String emailBody = "Hello,\n\nYou requested to reset your password. Click the link below to reset it:\n"
+                    + resetLink + "\n\nThis link will expire in 1 hour.\n\nBest regards,\nProcureIQ Team";
+            
+            try {
+                notificationSender.send("email", "smtp", user.getEmail(), "Password Reset Request", emailBody);
+            } catch (Exception e) {
+                user.setResetToken("");
+                user.setResetTokenExpiry(LocalDateTime.of(1970, 1, 1, 0, 0));
+                userRepository.save(user);
+                throw new IllegalStateException("Failed to send password reset email via SMTP", e);
+            }
         });
     }
 
