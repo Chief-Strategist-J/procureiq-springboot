@@ -44,8 +44,10 @@ public class IdentityAdminController {
             @PathVariable("orgId") Long orgId,
             @RequestParam(value = "principalType", required = false, defaultValue = "user") String principalType,
             @RequestParam(value = "principalId", required = false, defaultValue = "1") Long principalId) {
-        List<RoleAssignment> list = roleManagementService.getAssignments(orgId, principalType, principalId);
-        List<com.procureiq.springboot_app.features.identity.dto.response.RoleAssignmentResponse> responseList = list.stream().map(a -> new com.procureiq.springboot_app.features.identity.dto.response.RoleAssignmentResponse(
+        List<RoleAssignment> assignments = roleManagementService.getAssignments(orgId, principalType, principalId);
+        List<com.procureiq.springboot_app.features.identity.dto.response.RoleAssignmentResponse> responseList = new java.util.ArrayList<>(assignments.size());
+        for (RoleAssignment a : assignments) {
+            responseList.add(new com.procureiq.springboot_app.features.identity.dto.response.RoleAssignmentResponse(
                 a.getId(),
                 a.getOrganization() != null ? a.getOrganization().getId() : orgId,
                 a.getRole() != null ? a.getRole().getId() : null,
@@ -56,22 +58,36 @@ public class IdentityAdminController {
                 a.getScopeId(),
                 a.getExpiresAt(),
                 a.getCreatedAt()
-        )).collect(Collectors.toList());
+            ));
+        }
         return ResponseEntity.ok(ApiListResponse.success(200, responseList));
     }
 
     @GetMapping("/organizations/{orgId}/audit-events")
     public ResponseEntity<?> getAuditEvents(@PathVariable("orgId") Long orgId) {
         List<AuditEvent> events = auditLogService.getLogs(orgId);
-        List<AuditEventResponse> list = events.stream()
-                .map(e -> new AuditEventResponse(
-                        e.getId(), e.getOrganization() != null ? e.getOrganization().getId() : null, e.getActorType(), e.getActorId(),
-                        e.getAction(), e.getResourceType(), e.getResourceId(),
-                        e.getSeverity(), e.getBeforeValue(), e.getAfterValue(),
-                        e.getRequestId(), e.getSessionId(), e.getIpAddress(),
-                        e.getUserAgent(), e.getPrevHash(), e.getEntryHash(),
-                        e.getOccurredAt()
-                )).collect(Collectors.toList());
+        List<AuditEventResponse> list = new java.util.ArrayList<>(events.size());
+        for (AuditEvent e : events) {
+            list.add(new AuditEventResponse(
+                e.getId(),
+                e.getOrganization() != null ? e.getOrganization().getId() : null,
+                e.getActorType(),
+                e.getActorId(),
+                e.getAction(),
+                e.getResourceType(),
+                e.getResourceId(),
+                e.getSeverity(),
+                e.getBeforeValue(),
+                e.getAfterValue(),
+                e.getRequestId(),
+                e.getSessionId(),
+                e.getIpAddress(),
+                e.getUserAgent(),
+                e.getPrevHash(),
+                e.getEntryHash(),
+                e.getOccurredAt()
+            ));
+        }
         return ResponseEntity.ok(ApiListResponse.success(200, list));
     }
 

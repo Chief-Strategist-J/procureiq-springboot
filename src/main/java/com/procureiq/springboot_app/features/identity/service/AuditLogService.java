@@ -59,8 +59,8 @@ public class AuditLogService {
             dataMap.put("resource_type", resourceType);
             dataMap.put("resource_id", resourceId);
             dataMap.put("severity", severity);
-            dataMap.put("before_value", beforeValue);
-            dataMap.put("after_value", afterValue);
+            dataMap.put("before_value", parseJsonIfNeeded(beforeValue));
+            dataMap.put("after_value", parseJsonIfNeeded(afterValue));
             dataMap.put("request_id", requestId);
             dataMap.put("session_id", sessionId);
             dataMap.put("ip_address", ipAddress);
@@ -90,10 +90,12 @@ public class AuditLogService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<AuditEvent> getLogs(Long orgId) {
         return auditEventRepository.findByOrgId(orgId);
     }
 
+    @Transactional(readOnly = true)
     public ChainVerificationResult verifyChainIntegrity(Long orgId) {
         try {
             List<AuditEvent> events = auditEventRepository.findByOrgIdAscending(orgId);
@@ -105,15 +107,15 @@ public class AuditLogService {
                 }
 
                 Map<String, Object> dataMap = new TreeMap<>();
-                dataMap.put("org_id", event.getOrganization().getId());
+                dataMap.put("org_id", event.getOrganization() != null ? event.getOrganization().getId() : orgId);
                 dataMap.put("actor_type", event.getActorType());
                 dataMap.put("actor_id", event.getActorId());
                 dataMap.put("action", event.getAction());
                 dataMap.put("resource_type", event.getResourceType());
                 dataMap.put("resource_id", event.getResourceId());
                 dataMap.put("severity", event.getSeverity());
-                dataMap.put("before_value", event.getBeforeValue());
-                dataMap.put("after_value", event.getAfterValue());
+                dataMap.put("before_value", parseJsonIfNeeded(event.getBeforeValue()));
+                dataMap.put("after_value", parseJsonIfNeeded(event.getAfterValue()));
                 dataMap.put("request_id", event.getRequestId());
                 dataMap.put("session_id", event.getSessionId());
                 dataMap.put("ip_address", event.getIpAddress());
@@ -142,6 +144,15 @@ public class AuditLogService {
             return ChainVerificationResult.success();
         } catch (Exception e) {
             return ChainVerificationResult.failure(null, "VERIFICATION", "Crypto parsing error during verification: " + e.getMessage());
+        }
+    }
+
+    private Object parseJsonIfNeeded(String jsonStr) {
+        if (jsonStr == null || jsonStr.isBlank()) return null;
+        try {
+            return objectMapper.readValue(jsonStr, Object.class);
+        } catch (Exception e) {
+            return jsonStr;
         }
     }
 }

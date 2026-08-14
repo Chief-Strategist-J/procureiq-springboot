@@ -41,10 +41,14 @@ public class RoleManagementService {
     @Transactional(readOnly = true)
     public List<RoleAssignment> getAssignments(Long orgId, String principalType, Long principalId) {
         List<RoleAssignment> list = roleAssignmentRepository.findByOrganizationIdAndPrincipalTypeAndPrincipalId(orgId, principalType, principalId);
-        list.forEach(a -> {
-            if (a.getRole() != null) a.getRole().getName();
-            if (a.getOrganization() != null) a.getOrganization().getName();
-        });
+        for (RoleAssignment assignment : list) {
+            if (assignment.getRole() != null) {
+                assignment.getRole().getName();
+            }
+            if (assignment.getOrganization() != null) {
+                assignment.getOrganization().getName();
+            }
+        }
         return list;
     }
 
