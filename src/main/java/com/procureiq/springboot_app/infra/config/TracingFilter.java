@@ -66,6 +66,18 @@ public class TracingFilter extends OncePerRequestFilter {
             MDC.put("correlation_id", correlationId);
 
             filterChain.doFilter(request, response);
+
+            int status = response.getStatus();
+            span.setAttribute("http.status_code", status);
+            if (status >= 400) {
+                span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, "HTTP Status " + status);
+            } else {
+                span.setStatus(io.opentelemetry.api.trace.StatusCode.OK);
+            }
+        } catch (Exception ex) {
+            span.recordException(ex);
+            span.setStatus(io.opentelemetry.api.trace.StatusCode.ERROR, ex.getMessage());
+            throw ex;
         } finally {
             MDC.remove("trace_id");
             MDC.remove("span_id");

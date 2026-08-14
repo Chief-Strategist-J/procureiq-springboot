@@ -43,23 +43,28 @@ public class AuthService {
         this.notificationSender = notificationSender;
     }
 
-    public UserResponse signup(SignupRequest request) {
+    public SignupResponse signup(SignupRequest request) {
         return TracingHelper.executeServiceWithTracing(() -> {
-            if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+            if (com.procureiq.springboot_app.shared.utils.StringUtils.isEmpty(request.getUsername())) {
                 throw new IllegalArgumentException("Username cannot be empty");
             }
-            if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            if (com.procureiq.springboot_app.shared.utils.StringUtils.isEmpty(request.getEmail())) {
                 throw new IllegalArgumentException("Email cannot be empty");
             }
-            if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+            if (com.procureiq.springboot_app.shared.utils.StringUtils.isEmpty(request.getPassword())) {
                 throw new IllegalArgumentException("Password cannot be empty");
             }
 
-            if (userRepository.existsByUsername(request.getUsername())) {
-                throw new IllegalArgumentException("Username already exists");
-            }
-            if (userRepository.existsByEmail(request.getEmail())) {
-                throw new IllegalArgumentException("Email already exists");
+            java.util.Optional<User> existingUserOpt = userRepository.findByEmail(request.getEmail());
+            if (existingUserOpt.isPresent()) {
+                User existingUser = existingUserOpt.get();
+                if (passwordEncoder.matches(request.getPassword(), existingUser.getPassword())) {
+                    String accessToken = generateAccessToken(existingUser);
+                    UserResponse userResponse = new UserResponse(existingUser.getId(), existingUser.getUsername(), existingUser.getEmail(), existingUser.getRole());
+                    return new SignupResponse(userResponse, accessToken, true);
+                } else {
+                    throw new com.procureiq.springboot_app.shared.exceptions.UserAlreadyExistsException("An account with this email address already exists. Please sign in with your credentials.");
+                }
             }
 
             User user = new User(
@@ -70,7 +75,9 @@ public class AuthService {
             );
 
             User savedUser = userRepository.save(user);
-            return new UserResponse(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), savedUser.getRole());
+            String accessToken = generateAccessToken(savedUser);
+            UserResponse userResponse = new UserResponse(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), savedUser.getRole());
+            return new SignupResponse(userResponse, accessToken, true);
         });
     }
 

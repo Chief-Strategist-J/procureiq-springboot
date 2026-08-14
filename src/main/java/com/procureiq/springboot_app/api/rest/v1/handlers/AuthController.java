@@ -25,8 +25,10 @@ public class AuthController {
     @PostMapping(com.procureiq.springboot_app.infra.config.ApiEndpoints.SIGNUP)
     public ResponseEntity<?> signup(@jakarta.validation.Valid @RequestBody SignupRequest request) {
         return com.procureiq.springboot_app.infra.config.TracingHelper.executeWithTracing(() -> {
-            UserResponse response = authService.signup(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ApiSingleResponse.success(201, response));
+            SignupResponse response = authService.signup(request);
+            HttpStatus status = response.isAutoLogin() ? HttpStatus.OK : HttpStatus.CREATED;
+            int code = response.isAutoLogin() ? 200 : 201;
+            return ResponseEntity.status(status).body(ApiSingleResponse.success(code, response));
         });
     }
 

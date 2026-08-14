@@ -1,0 +1,3 @@
+CREATE SEQUENCE IF NOT EXISTS users_id_seq START WITH 1 INCREMENT BY 1;
+ALTER TABLE users ALTER COLUMN id SET DEFAULT nextval('users_id_seq');
+ALTER SEQUENCE users_id_seq OWNED BY users.id;

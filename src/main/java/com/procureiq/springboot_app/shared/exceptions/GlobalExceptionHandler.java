@@ -30,6 +30,27 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ApiSingleResponse.success(400, errorPayload), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<?> handleUserAlreadyExists(UserAlreadyExistsException ex) {
+        return new ResponseEntity<>(ApiSingleResponse.success(409, ex.getMessage()), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex) {
+        return new ResponseEntity<>(ApiSingleResponse.success(400, ex.getMessage()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
+    public ResponseEntity<?> handleDataIntegrityViolation(org.springframework.dao.DataIntegrityViolationException ex) {
+        String msg = ex.getMessage() != null ? ex.getMessage() : "";
+        boolean isEmail = msg.contains("uq_users_email") || msg.contains("users_email_key") || msg.contains("email");
+        HttpStatus status = isEmail ? HttpStatus.CONFLICT : HttpStatus.BAD_REQUEST;
+        String responseMsg = isEmail
+            ? "An account with this email address already exists. Please sign in instead."
+            : "Database constraint violation occurred";
+        return new ResponseEntity<>(ApiSingleResponse.success(status.value(), responseMsg), status);
+    }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
         return new ResponseEntity<>(ApiSingleResponse.success(404, ex.getMessage()), HttpStatus.NOT_FOUND);
@@ -37,6 +58,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGenericException(Exception ex) {
-        return new ResponseEntity<>(ApiSingleResponse.success(500, ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        String msg = ex.getMessage() != null ? ex.getMessage() : "An unexpected server error occurred";
+        return new ResponseEntity<>(ApiSingleResponse.success(500, msg), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
