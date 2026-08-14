@@ -42,8 +42,8 @@ public class IdentityAdminController {
     @GetMapping("/organizations/{orgId}/assignments")
     public ResponseEntity<?> getAssignments(
             @PathVariable("orgId") Long orgId,
-            @RequestParam("principalType") String principalType,
-            @RequestParam("principalId") Long principalId) {
+            @RequestParam(value = "principalType", required = false, defaultValue = "user") String principalType,
+            @RequestParam(value = "principalId", required = false, defaultValue = "1") Long principalId) {
         List<RoleAssignment> list = roleManagementService.getAssignments(orgId, principalType, principalId);
         return ResponseEntity.ok(ApiListResponse.success(200, list));
     }

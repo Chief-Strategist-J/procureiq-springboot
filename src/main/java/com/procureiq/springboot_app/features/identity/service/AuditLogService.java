@@ -25,10 +25,10 @@ public class AuditLogService {
     public AuditLogService(
             AuditEventRepository auditEventRepository,
             JdbcTemplate jdbcTemplate,
-            ObjectMapper objectMapper) {
+            @org.springframework.lang.Nullable ObjectMapper objectMapper) {
         this.auditEventRepository = auditEventRepository;
         this.jdbcTemplate = jdbcTemplate;
-        this.objectMapper = objectMapper;
+        this.objectMapper = objectMapper != null ? objectMapper : new ObjectMapper();
     }
 
     @Transactional

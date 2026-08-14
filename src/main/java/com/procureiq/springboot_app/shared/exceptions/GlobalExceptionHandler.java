@@ -32,12 +32,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<?> handleUserAlreadyExists(UserAlreadyExistsException ex) {
-        return new ResponseEntity<>(ApiSingleResponse.success(409, ex.getMessage()), HttpStatus.CONFLICT);
+        return new ResponseEntity<>(ApiSingleResponse.error(409, ex.getMessage()), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException ex) {
-        return new ResponseEntity<>(ApiSingleResponse.success(400, ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ApiSingleResponse.error(400, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(org.springframework.dao.DataIntegrityViolationException.class)
@@ -48,17 +48,17 @@ public class GlobalExceptionHandler {
         String responseMsg = isEmail
             ? "An account with this email address already exists. Please sign in instead."
             : "Database constraint violation occurred";
-        return new ResponseEntity<>(ApiSingleResponse.success(status.value(), responseMsg), status);
+        return new ResponseEntity<>(ApiSingleResponse.error(status.value(), responseMsg), status);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
-        return new ResponseEntity<>(ApiSingleResponse.success(404, ex.getMessage()), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(ApiSingleResponse.error(404, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGenericException(Exception ex) {
         String msg = ex.getMessage() != null ? ex.getMessage() : "An unexpected server error occurred";
-        return new ResponseEntity<>(ApiSingleResponse.success(500, msg), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(ApiSingleResponse.error(500, msg), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
