@@ -45,7 +45,19 @@ public class IdentityAdminController {
             @RequestParam(value = "principalType", required = false, defaultValue = "user") String principalType,
             @RequestParam(value = "principalId", required = false, defaultValue = "1") Long principalId) {
         List<RoleAssignment> list = roleManagementService.getAssignments(orgId, principalType, principalId);
-        return ResponseEntity.ok(ApiListResponse.success(200, list));
+        List<com.procureiq.springboot_app.features.identity.dto.response.RoleAssignmentResponse> responseList = list.stream().map(a -> new com.procureiq.springboot_app.features.identity.dto.response.RoleAssignmentResponse(
+                a.getId(),
+                a.getOrganization() != null ? a.getOrganization().getId() : orgId,
+                a.getRole() != null ? a.getRole().getId() : null,
+                a.getRole() != null ? a.getRole().getName() : "user",
+                a.getPrincipalType(),
+                a.getPrincipalId(),
+                a.getScopeType(),
+                a.getScopeId(),
+                a.getExpiresAt(),
+                a.getCreatedAt()
+        )).collect(Collectors.toList());
+        return ResponseEntity.ok(ApiListResponse.success(200, responseList));
     }
 
     @GetMapping("/organizations/{orgId}/audit-events")
