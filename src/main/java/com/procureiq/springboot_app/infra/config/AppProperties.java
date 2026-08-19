@@ -27,6 +27,12 @@ public class AppProperties {
     @Value("${vapi.calls.endpoint:https://api.vapi.ai/call/phone}")
     private String vapiCallsEndpoint;
 
+    @Value("${jwt.issuer:procureiq}")
+    private String jwtIssuer;
+
+    @Value("${app.frontend.reset-password-url:http://localhost:3000/reset-password?token=}")
+    private String resetPasswordUrlBase;
+
     public String getGithubToken() {
         return githubToken;
     }
@@ -45,6 +51,14 @@ public class AppProperties {
 
     public long getJwtExpirationMs() {
         return jwtExpirationMs;
+    }
+
+    public String getJwtIssuer() {
+        return jwtIssuer != null ? jwtIssuer : "procureiq";
+    }
+
+    public String getResetPasswordUrlBase() {
+        return resetPasswordUrlBase != null ? resetPasswordUrlBase : "http://localhost:3000/reset-password?token=";
     }
 
     public String getTwilioApiBase() {

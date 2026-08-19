@@ -37,7 +37,9 @@ public final class TracingHelper {
             }
         } catch (final Exception ignored) {}
 
-        final Span span = tracer.spanBuilder(spanName).startSpan();
+        final Span span = tracer.spanBuilder(spanName)
+            .setParent(io.opentelemetry.context.Context.current())
+            .startSpan();
         try (final Scope scope = span.makeCurrent()) {
             final ResponseEntity<?> response = block.call();
             span.setStatus(StatusCode.OK);
@@ -65,7 +67,9 @@ public final class TracingHelper {
             }
         } catch (final Exception ignored) {}
 
-        final Span span = tracer.spanBuilder(spanName).startSpan();
+        final Span span = tracer.spanBuilder(spanName)
+            .setParent(io.opentelemetry.context.Context.current())
+            .startSpan();
         try (final Scope scope = span.makeCurrent()) {
             final T result = block.execute();
             span.setStatus(StatusCode.OK);

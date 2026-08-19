@@ -1,15 +1,26 @@
 package com.procureiq.springboot_app.features.auth.entity;
 
+import com.procureiq.springboot_app.shared.tenant.TenantContext;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+    @UniqueConstraint(name = "uk_users_email_tenant", columnNames = {"email", "tenant_id"})
+})
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "tenant_id", nullable = false)
+    private String tenantId = "default";
 
     @Column(nullable = false)
     private String username = "";
@@ -17,7 +28,7 @@ public class User {
     @Column(nullable = false)
     private String password = "";
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "email", nullable = false)
     private String email = "";
 
     @Column(name = "role", nullable = false)
@@ -50,6 +61,9 @@ public class User {
     @Column(name = "verification_token")
     private String verificationToken = "";
 
+    @Column(name = "role_metadata", length = 2000)
+    private String roleMetadata = "{}";
+
     public User() {}
 
     public User(String username, String password, String email) {
@@ -57,6 +71,7 @@ public class User {
         this.password = password != null ? password : "";
         this.email = email != null ? email : "";
         this.role = "user";
+        this.tenantId = TenantContext.getTenantId();
     }
 
     public User(String username, String password, String email, String role) {
@@ -64,6 +79,113 @@ public class User {
         this.password = password != null ? password : "";
         this.email = email != null ? email : "";
         this.role = role != null ? role : "user";
+        this.tenantId = TenantContext.getTenantId();
+    }
+
+    public User(String username, String password, String email, String role, String tenantId) {
+        this.username = username != null ? username : "";
+        this.password = password != null ? password : "";
+        this.email = email != null ? email : "";
+        this.role = role != null ? role : "user";
+        this.tenantId = Optional.ofNullable(tenantId)
+            .map(String::trim)
+            .map(t -> t.toLowerCase(Locale.ROOT))
+            .filter(t -> !t.isEmpty())
+            .orElseGet(TenantContext::getTenantId);
+    }
+
+    public static User create(String username, String encodedPassword, String email, String role, String roleMetadata, String tenantId) {
+        String resolvedTenantId = Optional.ofNullable(tenantId)
+            .map(String::trim)
+            .map(t -> t.toLowerCase(Locale.ROOT))
+            .filter(t -> !t.isEmpty())
+            .orElseGet(TenantContext::getTenantId);
+
+        User user = new User(username, encodedPassword, email, role, resolvedTenantId);
+        user.setRoleMetadata(roleMetadata != null ? roleMetadata : "{}");
+        return user;
+    }
+
+    public static User create(String username, String encodedPassword, String email, String role, String roleMetadata) {
+        return create(username, encodedPassword, email, role, roleMetadata, TenantContext.getTenantId());
+    }
+
+    public List<String> getRolesList() {
+        return Arrays.stream(getRole().split(","))
+            .map(String::trim)
+            .filter(r -> !r.isEmpty())
+            .collect(Collectors.toList());
+    }
+
+    public boolean hasRole(String roleName) {
+        return Optional.ofNullable(roleName)
+            .map(String::trim)
+            .map(r -> getRolesList().contains(r))
+            .orElse(false);
+    }
+
+    public User withSuccessfulLogin(String refreshToken, LocalDateTime expiry) {
+        this.failedAttemptCount = 0;
+        this.accountNonLocked = true;
+        this.lockTime = null;
+        this.refreshToken = refreshToken != null ? refreshToken : "";
+        this.refreshTokenExpiry = expiry != null ? expiry : LocalDateTime.of(1970, 1, 1, 0, 0);
+        return this;
+    }
+
+    public User withRefreshToken(String refreshToken, LocalDateTime expiry) {
+        this.refreshToken = refreshToken != null ? refreshToken : "";
+        this.refreshTokenExpiry = expiry != null ? expiry : LocalDateTime.of(1970, 1, 1, 0, 0);
+        return this;
+    }
+
+    public User withClearedRefreshToken() {
+        this.refreshToken = "";
+        this.refreshTokenExpiry = LocalDateTime.of(1970, 1, 1, 0, 0);
+        return this;
+    }
+
+    public User withResetToken(String resetToken, LocalDateTime expiry) {
+        this.resetToken = resetToken != null ? resetToken : "";
+        this.resetTokenExpiry = expiry != null ? expiry : LocalDateTime.of(1970, 1, 1, 0, 0);
+        return this;
+    }
+
+    public User withClearedResetToken() {
+        this.resetToken = "";
+        this.resetTokenExpiry = LocalDateTime.of(1970, 1, 1, 0, 0);
+        return this;
+    }
+
+    public User withUpdatedPassword(String encodedPassword) {
+        this.password = encodedPassword != null ? encodedPassword : "";
+        return withClearedResetToken();
+    }
+
+    public User withEmailVerified() {
+        this.emailVerified = true;
+        this.verificationToken = "";
+        return this;
+    }
+
+    public String getTenantId() {
+        return tenantId != null ? tenantId.toLowerCase(Locale.ROOT) : TenantContext.getTenantId();
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = Optional.ofNullable(tenantId)
+            .map(String::trim)
+            .map(t -> t.toLowerCase(Locale.ROOT))
+            .filter(t -> !t.isEmpty())
+            .orElseGet(TenantContext::getTenantId);
+    }
+
+    public String getRoleMetadata() {
+        return roleMetadata != null ? roleMetadata : "{}";
+    }
+
+    public void setRoleMetadata(String roleMetadata) {
+        this.roleMetadata = roleMetadata != null ? roleMetadata : "{}";
     }
 
     public Long getId() {
