@@ -46,24 +46,53 @@ public class TracingFilter extends OncePerRequestFilter {
                 .getTextMapPropagator()
                 .extract(Context.current(), request, getter);
 
-        String correlationId = request.getHeader("X-Correlation-Id");
+        String correlationId = getHeader(request, "X-Correlation-Id", "Correlation-ID");
         if (correlationId == null || correlationId.trim().isEmpty()) {
             correlationId = UUID.randomUUID().toString();
         }
+
+        String requestId = getHeader(request, "X-Request-Id", "Request-ID");
+        if (requestId == null || requestId.trim().isEmpty()) {
+            requestId = "req-" + System.currentTimeMillis() + "-" + UUID.randomUUID().toString().substring(0, 8);
+        }
+
+        String tenantId = getHeader(request, "X-Tenant-Id", "Tenant-ID");
+        if (tenantId == null || tenantId.trim().isEmpty()) {
+            tenantId = "default-tenant";
+        }
+
+        String idempotencyKey = getHeader(request, "Idempotency-Key", "X-Idempotency-Key", "idempotency-key");
 
         String spanName = "HTTP " + request.getMethod() + " " + request.getRequestURI();
 
         Span span = tracer.spanBuilder(spanName)
                 .setParent(extractedContext)
+                .setAttribute("http.method", request.getMethod())
+                .setAttribute("http.target", request.getRequestURI())
+                .setAttribute("tenant.id", tenantId)
+                .setAttribute("request.id", requestId)
+                .setAttribute("correlation.id", correlationId)
                 .startSpan();
 
+        if (idempotencyKey != null && !idempotencyKey.isBlank()) {
+            span.setAttribute("idempotency.key", idempotencyKey);
+            response.setHeader("Idempotency-Key", idempotencyKey);
+        }
+
         response.setHeader("X-Correlation-Id", correlationId);
+        response.setHeader("X-Request-Id", requestId);
+        response.setHeader("X-Tenant-Id", tenantId);
         response.setHeader("X-Trace-Id", span.getSpanContext().getTraceId());
 
         try (Scope scope = span.makeCurrent()) {
             MDC.put("trace_id", span.getSpanContext().getTraceId());
             MDC.put("span_id", span.getSpanContext().getSpanId());
             MDC.put("correlation_id", correlationId);
+            MDC.put("request_id", requestId);
+            MDC.put("tenant_id", tenantId);
+            if (idempotencyKey != null) {
+                MDC.put("idempotency_key", idempotencyKey);
+            }
 
             filterChain.doFilter(request, response);
 
@@ -82,7 +111,20 @@ public class TracingFilter extends OncePerRequestFilter {
             MDC.remove("trace_id");
             MDC.remove("span_id");
             MDC.remove("correlation_id");
+            MDC.remove("request_id");
+            MDC.remove("tenant_id");
+            MDC.remove("idempotency_key");
             span.end();
         }
+    }
+
+    private String getHeader(HttpServletRequest request, String... headerNames) {
+        for (String headerName : headerNames) {
+            String val = request.getHeader(headerName);
+            if (val != null && !val.trim().isEmpty()) {
+                return val;
+            }
+        }
+        return null;
     }
 }
