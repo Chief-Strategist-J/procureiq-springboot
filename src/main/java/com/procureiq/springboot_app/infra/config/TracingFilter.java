@@ -62,6 +62,8 @@ public class TracingFilter extends OncePerRequestFilter {
         }
 
         String idempotencyKey = getHeader(request, "Idempotency-Key", "X-Idempotency-Key", "idempotency-key");
+        String sessionId = getHeader(request, "X-Session-Id", "Session-ID");
+        if (sessionId == null) sessionId = "";
 
         String spanName = "HTTP " + request.getMethod() + " " + request.getRequestURI();
 
@@ -79,12 +81,27 @@ public class TracingFilter extends OncePerRequestFilter {
             response.setHeader("Idempotency-Key", idempotencyKey);
         }
 
+        if (!sessionId.isBlank()) {
+            span.setAttribute("session.id", sessionId);
+            response.setHeader("X-Session-Id", sessionId);
+        }
+
         response.setHeader("X-Correlation-Id", correlationId);
         response.setHeader("X-Request-Id", requestId);
         response.setHeader("X-Tenant-Id", tenantId);
         response.setHeader("X-Trace-Id", span.getSpanContext().getTraceId());
 
         try (Scope scope = span.makeCurrent()) {
+            RequestContext.set(new RequestContext.RequestDetails(
+                    span.getSpanContext().getTraceId(),
+                    span.getSpanContext().getSpanId(),
+                    correlationId,
+                    requestId,
+                    tenantId,
+                    idempotencyKey != null ? idempotencyKey : "",
+                    sessionId
+            ));
+
             MDC.put("trace_id", span.getSpanContext().getTraceId());
             MDC.put("span_id", span.getSpanContext().getSpanId());
             MDC.put("correlation_id", correlationId);
@@ -92,6 +109,9 @@ public class TracingFilter extends OncePerRequestFilter {
             MDC.put("tenant_id", tenantId);
             if (idempotencyKey != null) {
                 MDC.put("idempotency_key", idempotencyKey);
+            }
+            if (!sessionId.isBlank()) {
+                MDC.put("session_id", sessionId);
             }
 
             filterChain.doFilter(request, response);
@@ -114,6 +134,8 @@ public class TracingFilter extends OncePerRequestFilter {
             MDC.remove("request_id");
             MDC.remove("tenant_id");
             MDC.remove("idempotency_key");
+            MDC.remove("session_id");
+            RequestContext.clear();
             span.end();
         }
     }

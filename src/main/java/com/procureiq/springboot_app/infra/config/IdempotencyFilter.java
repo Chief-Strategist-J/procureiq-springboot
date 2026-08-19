@@ -43,7 +43,7 @@ public class IdempotencyFilter implements Filter {
         }
 
         String method = httpRequest.getMethod();
-        String idempotencyKey = httpRequest.getHeader(IDEMPOTENCY_KEY_HEADER);
+        String idempotencyKey = getIdempotencyKey(httpRequest);
 
         // Only enforce idempotency on state-mutating requests (POST, PUT, DELETE, PATCH) with key provided
         if (idempotencyKey == null || idempotencyKey.isBlank() || "GET".equalsIgnoreCase(method) || "HEAD".equalsIgnoreCase(method)) {
@@ -51,14 +51,18 @@ public class IdempotencyFilter implements Filter {
             return;
         }
 
+        String tenantId = TenantContext.getCurrentTenant();
+        String cacheKey = tenantId + ":" + idempotencyKey;
+
         // Check if idempotency key has already been executed
-        CacheEntry cached = IDEMPOTENCY_CACHE.get(idempotencyKey);
+        CacheEntry cached = IDEMPOTENCY_CACHE.get(cacheKey);
         if (cached != null) {
             httpResponse.setStatus(cached.statusCode);
             if (cached.contentType != null) {
                 httpResponse.setContentType(cached.contentType);
             }
-            httpResponse.setHeader(IDEMPOTENCY_KEY_HEADER, idempotencyKey);
+            httpResponse.setHeader("Idempotency-Key", idempotencyKey);
+            httpResponse.setHeader("X-Idempotency-Key", idempotencyKey);
             httpResponse.setHeader("X-Cache-Lookup", "HIT-IDEMPOTENT");
             httpResponse.getOutputStream().write(cached.responseBody);
             return;
@@ -73,10 +77,22 @@ public class IdempotencyFilter implements Filter {
 
         // Store response in idempotency cache if request succeeded or yielded deterministic business output
         if (status >= 200 && status < 500) {
-            IDEMPOTENCY_CACHE.put(idempotencyKey, new CacheEntry(status, responseArray, responseWrapper.getContentType()));
+            IDEMPOTENCY_CACHE.put(cacheKey, new CacheEntry(status, responseArray, responseWrapper.getContentType()));
         }
 
-        httpResponse.setHeader(IDEMPOTENCY_KEY_HEADER, idempotencyKey);
+        httpResponse.setHeader("Idempotency-Key", idempotencyKey);
+        httpResponse.setHeader("X-Idempotency-Key", idempotencyKey);
         responseWrapper.copyBodyToResponse();
+    }
+
+    private String getIdempotencyKey(HttpServletRequest request) {
+        String key = request.getHeader("Idempotency-Key");
+        if (key == null || key.isBlank()) {
+            key = request.getHeader("X-Idempotency-Key");
+        }
+        if (key == null || key.isBlank()) {
+            key = request.getHeader("idempotency-key");
+        }
+        return key;
     }
 }
