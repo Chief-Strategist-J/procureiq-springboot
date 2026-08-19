@@ -54,24 +54,26 @@ public class AuthServiceTest {
         User mockUser = new User("testuser", "encoded_pass", "test@example.com");
         mockUser.setId(1L);
 
-        when(userRepository.existsByUsername("testuser")).thenReturn(false);
-        when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.empty());
         when(passwordEncoder.encode("password123")).thenReturn("encoded_pass");
         when(userRepository.save(any(User.class))).thenReturn(mockUser);
 
-        UserResponse response = authService.signup(signupRequest);
+        SignupResponse response = authService.signup(signupRequest);
 
-        assertEquals(1L, response.getId());
-        assertEquals("testuser", response.getUsername());
-        assertEquals("test@example.com", response.getEmail());
+        assertNotNull(response);
+        assertEquals(1L, response.getUser().getId());
+        assertEquals("testuser", response.getUser().getUsername());
+        assertEquals("test@example.com", response.getUser().getEmail());
     }
 
     @Test
     public void testSignupDuplicateUsername() {
         SignupRequest signupRequest = new SignupRequest("testuser", "password123", "test@example.com");
-        when(userRepository.existsByUsername("testuser")).thenReturn(true);
+        User mockUser = new User("testuser", "encoded_pass", "test@example.com");
+        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(mockUser));
+        when(passwordEncoder.matches("password123", "encoded_pass")).thenReturn(false);
 
-        assertThrows(IllegalArgumentException.class, () -> authService.signup(signupRequest));
+        assertThrows(com.procureiq.springboot_app.shared.exceptions.UserAlreadyExistsException.class, () -> authService.signup(signupRequest));
     }
 
     @Test

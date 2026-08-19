@@ -43,7 +43,8 @@ public class AuthControllerTest {
     @Test
     public void testSignupSuccess() throws Exception {
         SignupRequest request = new SignupRequest("devuser", "password123", "dev@example.com");
-        UserResponse response = new UserResponse(1L, "devuser", "dev@example.com", "user");
+        UserResponse userResponse = new UserResponse(1L, "devuser", "dev@example.com", "user");
+        SignupResponse response = new SignupResponse(userResponse, "mock-access-token", false);
 
         when(authService.signup(any(SignupRequest.class))).thenReturn(response);
 
@@ -51,9 +52,9 @@ public class AuthControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.id", is(1)))
-                .andExpect(jsonPath("$.data.username", is("devuser")))
-                .andExpect(jsonPath("$.data.email", is("dev@example.com")));
+                .andExpect(jsonPath("$.data.user.id", is(1)))
+                .andExpect(jsonPath("$.data.user.username", is("devuser")))
+                .andExpect(jsonPath("$.data.user.email", is("dev@example.com")));
     }
 
     @Test
