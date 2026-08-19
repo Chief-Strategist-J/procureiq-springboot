@@ -47,6 +47,9 @@ public final class TracingHelper {
             span.setStatus(StatusCode.ERROR, e.getMessage());
             HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
 
+            String rawMsg = e.getMessage() != null ? e.getMessage() : "";
+            String userMsg = rawMsg;
+
             if (e instanceof org.springframework.web.bind.MethodArgumentNotValidException) {
                 status = HttpStatus.BAD_REQUEST;
                 final String validationMsg = ((org.springframework.web.bind.MethodArgumentNotValidException) e)
@@ -57,22 +60,35 @@ public final class TracingHelper {
                         .body(ApiSingleResponse.error(status.value(), "Validation failed: " + validationMsg));
             }
 
-            if (e instanceof com.procureiq.springboot_app.shared.exceptions.ResourceNotFoundException) {
+            if (e instanceof com.procureiq.springboot_app.shared.exceptions.UserAlreadyExistsException) {
+                status = HttpStatus.CONFLICT;
+                userMsg = rawMsg.isBlank() ? "User already exists with this email address or username" : rawMsg;
+            } else if (e instanceof org.springframework.dao.DataIntegrityViolationException) {
+                boolean isEmail = rawMsg.contains("uq_users_email") || rawMsg.contains("users_email_key") || rawMsg.contains("email");
+                status = isEmail ? HttpStatus.CONFLICT : HttpStatus.BAD_REQUEST;
+                userMsg = isEmail ? "An account with this email address already exists. Please sign in instead." : "Database constraint violation occurred";
+            } else if (e instanceof org.springframework.security.authentication.BadCredentialsException) {
+                status = HttpStatus.UNAUTHORIZED;
+                userMsg = "Invalid username or password. Please check your credentials.";
+            } else if (e instanceof com.procureiq.springboot_app.shared.exceptions.ResourceNotFoundException) {
                 status = HttpStatus.NOT_FOUND;
             } else if (e instanceof com.procureiq.springboot_app.shared.exceptions.UnauthorizedException) {
                 status = HttpStatus.UNAUTHORIZED;
             } else if (e instanceof com.procureiq.springboot_app.shared.exceptions.ForbiddenException) {
                 status = HttpStatus.FORBIDDEN;
             } else if (e instanceof IllegalArgumentException || e instanceof IllegalStateException) {
-                if (e.getMessage() != null && e.getMessage().toLowerCase().contains("not found")) {
+                if (rawMsg.toLowerCase().contains("not found")) {
                     status = HttpStatus.NOT_FOUND;
                 } else {
                     status = HttpStatus.BAD_REQUEST;
                 }
+            } else if (rawMsg.contains("JDBC Connection") || rawMsg.contains("database \"procureiq\" does not exist") || e instanceof org.springframework.transaction.CannotCreateTransactionException) {
+                status = HttpStatus.SERVICE_UNAVAILABLE;
+                userMsg = "Database connection failed. Please verify that the database container is running and healthy.";
             }
 
             return ResponseEntity.status(status)
-                    .body(ApiSingleResponse.error(status.value(), e.getMessage()));
+                    .body(ApiSingleResponse.error(status.value(), userMsg));
         } finally {
             span.end();
         }
